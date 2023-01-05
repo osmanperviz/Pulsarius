@@ -3,7 +3,7 @@ defmodule Pulsarius.Monitoring.Monitor do
   import Ecto.Changeset
 
   schema "monitoring" do
-
+    field :name, :string
 
     timestamps()
   end
@@ -11,7 +11,7 @@ defmodule Pulsarius.Monitoring.Monitor do
   @doc false
   def changeset(monitor, attrs) do
     monitor
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
   end
 end
