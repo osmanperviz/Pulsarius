@@ -16,14 +16,14 @@
 <table>
   <thead>
     <tr>
-
-      <th></th>
+      <th>name</th>
+      <th>actions</th>
     </tr>
   </thead>
   <tbody id="monitoring">
     <%= for monitor <- @monitoring do %>
       <tr id={"monitor-#{monitor.id}"}>
-
+        <td><%= monitor.name %></td>
         <td>
           <span><%= live_redirect "Show", to: Routes.monitor_show_path(@socket, :show, monitor) %></span>
           <span><%= live_patch "Edit", to: Routes.monitor_index_path(@socket, :edit, monitor) %></span>

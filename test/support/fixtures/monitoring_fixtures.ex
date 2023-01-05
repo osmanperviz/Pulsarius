@@ -10,9 +10,7 @@ defmodule Pulsarius.MonitoringFixtures do
   def monitor_fixture(attrs \\ %{}) do
     {:ok, monitor} =
       attrs
-      |> Enum.into(%{
-
-      })
+      |> Enum.into(%{})
       |> Pulsarius.Monitoring.create_monitor()
 
     monitor

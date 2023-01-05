@@ -3,6 +3,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
 
   alias Pulsarius.Monitoring
   alias Pulsarius.Monitoring.Monitor
+  alias Pulsarius.Configurations.Configuration
 
   @impl true
   def mount(_params, _session, socket) do
@@ -23,7 +24,9 @@ defmodule PulsariusWeb.MonitorLive.Index do
   defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "New Monitor")
-    |> assign(:monitor, %Monitor{})
+    |> assign(:monitor, %Monitor{configuration: %Configuration{}})
+
+    # dbg(socket.assigns.monitor)
   end
 
   defp apply_action(socket, :index, _params) do

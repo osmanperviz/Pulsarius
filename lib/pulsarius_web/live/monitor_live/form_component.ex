@@ -15,7 +15,7 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"monitor" => monitor_params}, socket) do
-  dbg(monitor_params)
+    # dbg(monitor_params)
     changeset =
       socket.assigns.monitor
       |> Monitoring.change_monitor(monitor_params)

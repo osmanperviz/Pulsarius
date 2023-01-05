@@ -4,11 +4,20 @@ defmodule Pulsarius.Configurations.Configuration do
 
   alias Pulsarius.Monitoring.Monitor
 
+  @type t :: %__MODULE__{
+          frequency_check_in_seconds: String.t(),
+          url_to_monitor: String.t()
+        }
+
+  @primary_key {:id, :binary_id, autogenerate: true}
+
   schema "configuration" do
-    field :frequency_check_in_seconds, :integer
+    field :frequency_check_in_seconds, :string
     field :url_to_monitor, :string
 
-    belongs_to :monitor, Monitor, type: :binary_id, on_replace: :delete
+    belongs_to :monitor, Monitor,
+      foreign_key: :monitor_id,
+      type: :binary_id
 
     timestamps()
   end
