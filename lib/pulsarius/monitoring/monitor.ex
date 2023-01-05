@@ -4,6 +4,7 @@ defmodule Pulsarius.Monitoring.Monitor do
 
   schema "monitoring" do
     field :name, :string
+    field :status, Ecto.Enum, values: [:active, :inactive] 
 
     timestamps()
   end
@@ -11,7 +12,7 @@ defmodule Pulsarius.Monitoring.Monitor do
   @doc false
   def changeset(monitor, attrs) do
     monitor
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :status])
     |> validate_required([:name])
   end
 end
