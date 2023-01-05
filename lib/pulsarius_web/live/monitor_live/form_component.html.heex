@@ -10,6 +10,7 @@
     phx-submit="save">
   
     <div>
+      <%= text_input f, :name, placeholder: "Pronounceable monitor name", class: "form-control" %>
       <%= submit "Save", phx_disable_with: "Saving..." %>
     </div>
   </.form>
