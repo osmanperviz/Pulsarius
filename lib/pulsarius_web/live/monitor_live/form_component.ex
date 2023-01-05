@@ -43,7 +43,15 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
 
   defp save_monitor(socket, :new, monitor_params) do
     case Monitoring.create_monitor(monitor_params) do
-      {:ok, _monitor} ->
+      {:ok, monitor} ->
+        {:ok, pid} =
+          DynamicSupervisor.start_child(
+            Pulsarius.DynamicSupervisor,
+            {Pulsarius.EndpointChecker, monitor}
+          )
+
+        Process.monitor(pid)
+
         {:noreply,
          socket
          |> put_flash(:info, "Monitor created successfully")

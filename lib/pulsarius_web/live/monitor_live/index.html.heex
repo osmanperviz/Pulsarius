@@ -17,6 +17,7 @@
   <thead>
     <tr>
       <th>name</th>
+      <th>status</th>
       <th>actions</th>
     </tr>
   </thead>
@@ -24,6 +25,7 @@
     <%= for monitor <- @monitoring do %>
       <tr id={"monitor-#{monitor.id}"}>
         <td><%= monitor.name %></td>
+        <td><%= monitor.status %></td>
         <td>
           <span><%= live_redirect "Show", to: Routes.monitor_show_path(@socket, :show, monitor) %></span>
           <span><%= live_patch "Edit", to: Routes.monitor_index_path(@socket, :edit, monitor) %></span>

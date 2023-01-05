@@ -10,7 +10,7 @@ defmodule Pulsarius.Monitoring.Monitor do
 
   schema "monitoring" do
     field :name, :string
-    field :status, Ecto.Enum, values: [:active, :inactive]
+    field :status, Ecto.Enum, values: [:initializing, :active, :inactive], default: :initializing
 
     has_one :configuration, Configuration, on_replace: :delete
 

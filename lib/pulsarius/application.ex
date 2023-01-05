@@ -15,9 +15,13 @@ defmodule Pulsarius.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Pulsarius.PubSub},
       # Start the Endpoint (http/https)
-      PulsariusWeb.Endpoint
+      PulsariusWeb.Endpoint,
       # Start a worker by calling: Pulsarius.Worker.start_link(arg)
       # {Pulsarius.Worker, arg}
+
+       {DynamicSupervisor, name: Pulsarius.DynamicSupervisor, strategy: :one_for_one},
+       {Registry, [keys: :unique, name: :endpoint_checker]},
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
