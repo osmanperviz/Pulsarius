@@ -35,7 +35,7 @@ defmodule Pulsarius.Monitoring do
       ** (Ecto.NoResultsError)
 
   """
-  def get_monitor!(id), do: Repo.get!(Monitor, id)
+  def get_monitor!(id), do: Repo.get!(Monitor, id) |> Repo.preload(:configuration)
 
   @doc """
   Creates a monitor.
