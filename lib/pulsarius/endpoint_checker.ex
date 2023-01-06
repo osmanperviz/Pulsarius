@@ -15,27 +15,27 @@ defmodule Pulsarius.EndpointChecker do
   end
 
   def init(state) do
-    monitor =
+    {:ok, monitor} =
       HTTPoison.get!(state.configuration.url_to_monitor)
       |> handle_response(state)
 
-    schedule_work()
+    schedule_check()
 
     {:ok, monitor}
   end
 
   def handle_info(:ping_endpoint, state) do
-    monitor =
+    {:ok, monitor} =
       HTTPoison.get!(state.configuration.url_to_monitor)
       |> handle_response(state)
 
     # Schedule work to be performed again
-    schedule_work()
+    schedule_check()
 
     {:noreply, monitor}
   end
 
-  defp schedule_work() do
+  defp schedule_check() do
     Process.send_after(self(), :ping_endpoint, 1000)
   end
 
@@ -43,29 +43,11 @@ defmodule Pulsarius.EndpointChecker do
     {:via, Registry, {@registry, monitor_id}}
   end
 
-  defp handle_response(%HTTPoison.Response{status_code: status_code} = _response, monitor) do
-    case status_code do
-      200 ->
-        dbg(monitor)
-        {:ok, monitor} = set_monitor_state_to_active(monitor)
-        monitor
-
-      _ ->
-        {:ok, monitor} = set_monitor_status_to_inactive(monitor)
-        monitor
-    end
+  defp handle_response(%HTTPoison.Response{status_code: 200} = _response, monitor) do
+    Monitoring.update_monitor(monitor, %{status: :active})
   end
 
-  defp set_monitor_state_to_active(%Monitor{status: status} = monitor)
-       when status in [:initializing, :inactive],
-       do: Monitoring.update_monitor(monitor, %{status: :active})
-
-  defp set_monitor_state_to_active(monitor), do: {:ok, monitor}
-
-  defp set_monitor_status_to_inactive(%Monitor{status: status} = monitor)
-       when status in [:initializing, :active],
-       do: Monitoring.update_monitor(monitor, %{status: :inactive})
-
-  defp set_monitor_status_to_inactive(monitor),
-    do: {:ok, monitor}
+  defp handle_response(%HTTPoison.Response{status_code: _status_code} = _response, monitor) do
+    Monitoring.update_monitor(monitor, %{status: :inactive})
+  end
 end
