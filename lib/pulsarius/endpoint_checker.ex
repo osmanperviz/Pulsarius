@@ -1,4 +1,7 @@
 defmodule Pulsarius.EndpointChecker do
+@moduledoc """
+The actual process that monitors and ping web services
+"""
   use GenServer
 
   alias Pulsarius.Monitoring

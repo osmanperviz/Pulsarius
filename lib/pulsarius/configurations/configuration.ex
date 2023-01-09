@@ -1,4 +1,7 @@
 defmodule Pulsarius.Configurations.Configuration do
+  @moduledoc """
+  This module holding configuration data 
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

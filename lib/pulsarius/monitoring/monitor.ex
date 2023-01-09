@@ -1,4 +1,7 @@
 defmodule Pulsarius.Monitoring.Monitor do
+  @moduledoc """
+  Represent an entity that needs to be monitored
+  """
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query, warn: false

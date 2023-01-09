@@ -1,4 +1,7 @@
 defmodule Pulsarius.EndpointDynamicSupervisor do
+  @moduledoc """
+  Module responsible for spinning monitoring processes
+  """
   use DynamicSupervisor
   require Logger
 
@@ -15,12 +18,19 @@ defmodule Pulsarius.EndpointDynamicSupervisor do
 
   def init(_init_arg), do: DynamicSupervisor.init(strategy: :one_for_one)
 
+  @doc """
+  When app goes down or when we are deploying all processes are shotdown,
+  on app start we have to start all monitor processes again.
+  """
   def auto_start_monitoring() do
     Monitor.with_active_state()
     |> Repo.all()
     |> Enum.each(&start_monitoring/1)
   end
 
+  @doc """
+  Dynamically starting monitor process responsible for pinging predefined URL 
+  """
   @spec start_monitoring(Monitor.t()) :: :ok
   def start_monitoring(monitor) do
     {:ok, pid} =
