@@ -1,10 +1,14 @@
 defmodule Pulsarius.Monitoring.Monitor do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query, warn: false
 
   alias Pulsarius.Configurations.Configuration
 
-  @type t :: %__MODULE__{}
+  @type t :: %__MODULE__{
+          name: String.t(),
+          status: String.t()
+        }
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
@@ -23,5 +27,13 @@ defmodule Pulsarius.Monitoring.Monitor do
     |> cast(attrs, [:name, :status])
     |> validate_required([:name])
     |> cast_assoc(:configuration)
+  end
+
+  @spec with_active_state(Ecto.Queryable.t()) :: Ecto.Query.t()
+  def with_active_state(queryable \\ __MODULE__) do
+    from m in queryable,
+      # TODO: define what is active state
+      where: m.status in [:initializing, :active, :inactive],
+      preload: [:configuration]
   end
 end

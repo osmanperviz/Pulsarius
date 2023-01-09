@@ -15,7 +15,6 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"monitor" => monitor_params}, socket) do
-    # dbg(monitor_params)
     changeset =
       socket.assigns.monitor
       |> Monitoring.change_monitor(monitor_params)
@@ -44,13 +43,7 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   defp save_monitor(socket, :new, monitor_params) do
     case Monitoring.create_monitor(monitor_params) do
       {:ok, monitor} ->
-        {:ok, pid} =
-          DynamicSupervisor.start_child(
-            Pulsarius.DynamicSupervisor,
-            {Pulsarius.EndpointChecker, monitor}
-          )
-
-        Process.monitor(pid)
+        Pulsarius.EndpointDynamicSupervisor.start_monitoring(monitor)
 
         {:noreply,
          socket

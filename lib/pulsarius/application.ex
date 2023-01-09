@@ -16,12 +16,13 @@ defmodule Pulsarius.Application do
       {Phoenix.PubSub, name: Pulsarius.PubSub},
       # Start the Endpoint (http/https)
       PulsariusWeb.Endpoint,
+      {Pulsarius.EndpointDynamicSupervisor,
+       name: Pulsarius.EndpointDynamicSupervisor, strategy: :one_for_one},
+      {Registry, [keys: :unique, name: :endpoint_checker]},
+      # On application boot start all stopped monitoring processes
+      {Task, fn -> Pulsarius.EndpointDynamicSupervisor.auto_start_monitoring() end}
       # Start a worker by calling: Pulsarius.Worker.start_link(arg)
       # {Pulsarius.Worker, arg}
-
-       {DynamicSupervisor, name: Pulsarius.DynamicSupervisor, strategy: :one_for_one},
-       {Registry, [keys: :unique, name: :endpoint_checker]},
-
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
