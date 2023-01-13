@@ -25,8 +25,6 @@ defmodule PulsariusWeb.MonitorLive.Index do
     socket
     |> assign(:page_title, "New Monitor")
     |> assign(:monitor, %Monitor{configuration: %Configuration{}})
-
-    # dbg(socket.assigns.monitor)
   end
 
   defp apply_action(socket, :index, _params) do
