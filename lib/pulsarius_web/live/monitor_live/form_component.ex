@@ -24,6 +24,8 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   end
 
   def handle_event("save", %{"monitor" => monitor_params}, socket) do
+    # TODO: convert frequency_check from minutes to milliseconds or
+    # deliver that already from server to dropdow than no need to convertion
     save_monitor(socket, socket.assigns.action, monitor_params)
   end
 
