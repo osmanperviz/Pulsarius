@@ -30,7 +30,12 @@ defmodule Pulsarius.Configurations.Configuration do
   @doc false
   def changeset(configuration, attrs) do
     configuration
-    |> cast(attrs, [:url_to_monitor, :frequency_check_in_seconds, :sms_notification, :email_notification])
+    |> cast(attrs, [
+      :url_to_monitor,
+      :frequency_check_in_seconds,
+      :sms_notification,
+      :email_notification
+    ])
     |> validate_required([:url_to_monitor, :frequency_check_in_seconds])
   end
 end
