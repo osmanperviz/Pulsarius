@@ -1,7 +1,7 @@
 <h1>Listing Users</h1>
 
 <%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.user_index_path(@socket, :index)}>
+  <.modal return_to={Routes.user_index_path(@socket, :index)} title={@page_title}>
     <.live_component
       module={PulsariusWeb.UserLive.FormComponent}
       id={@user.id || :new}
