@@ -27,6 +27,21 @@ defmodule Pulsarius.EndpointChecker do
     {:ok, monitor}
   end
 
+  ## Public functions
+  def update_state(monitor) do
+    GenServer.call(via_tuple(monitor.id), {:update_state, monitor})
+  end
+
+  def stop_monitoring(monitor) do
+    GenServer.stop(via_tuple(monitor.id))
+  end
+
+  ## Callbacks
+
+  def handle_call({:update_state, updated_monitor}, _params, state) do
+    {:reply, :ok, updated_monitor}
+  end
+
   def handle_info(:ping_endpoint, state) do
     {:ok, monitor} =
       HTTPoison.get!(state.configuration.url_to_monitor)
@@ -52,5 +67,16 @@ defmodule Pulsarius.EndpointChecker do
 
   defp handle_response(%HTTPoison.Response{status_code: _status_code} = _response, monitor) do
     Monitoring.update_monitor(monitor, %{status: :inactive})
+  end
+
+  defp call_endpoint_checker(monitor) do
+    case Registry.lookup(@registry, monitor.id) do
+      [{pid, _}] ->
+        GenServer.call(pid, {:update_state, monitor})
+
+      _ ->
+        Logger.warn("Unable to locate endpoint checker assigned to #{monitor.id}")
+        {:error, :unable_to_locate_endpoint_checker}
+    end
   end
 end

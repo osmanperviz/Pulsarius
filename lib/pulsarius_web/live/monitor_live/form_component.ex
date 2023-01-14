@@ -31,7 +31,10 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
 
   defp save_monitor(socket, :edit, monitor_params) do
     case Monitoring.update_monitor(socket.assigns.monitor, monitor_params) do
-      {:ok, _monitor} ->
+      {:ok, monitor} ->
+        # update related running monitor process
+        Pulsarius.EndpointChecker.update_state(monitor)
+
         {:noreply,
          socket
          |> put_flash(:info, "Monitor updated successfully")

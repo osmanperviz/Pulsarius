@@ -37,6 +37,9 @@ defmodule PulsariusWeb.MonitorLive.Index do
   def handle_event("delete", %{"id" => id}, socket) do
     monitor = Monitoring.get_monitor!(id)
     {:ok, _} = Monitoring.delete_monitor(monitor)
+    
+    # stop related running monitor process
+    Pulsarius.EndpointChecker.stop_monitoring(monitor)
 
     {:noreply, assign(socket, :monitoring, list_monitoring())}
   end
