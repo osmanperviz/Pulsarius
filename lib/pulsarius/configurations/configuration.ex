@@ -17,6 +17,8 @@ defmodule Pulsarius.Configurations.Configuration do
   schema "configuration" do
     field :frequency_check_in_seconds, :string
     field :url_to_monitor, :string
+    field :email_notification, :boolean, default: false
+    field :sms_notification, :boolean, default: false
 
     belongs_to :monitor, Monitor,
       foreign_key: :monitor_id,
@@ -28,7 +30,7 @@ defmodule Pulsarius.Configurations.Configuration do
   @doc false
   def changeset(configuration, attrs) do
     configuration
-    |> cast(attrs, [:url_to_monitor, :frequency_check_in_seconds])
+    |> cast(attrs, [:url_to_monitor, :frequency_check_in_seconds, :sms_notification, :email_notification])
     |> validate_required([:url_to_monitor, :frequency_check_in_seconds])
   end
 end
