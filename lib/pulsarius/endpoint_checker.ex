@@ -27,8 +27,8 @@ defmodule Pulsarius.EndpointChecker do
 
   def init(monitor) do
     {:ok, monitor} =
-      HTTPoison.get!(state.configuration.url_to_monitor)
-      |> handle_response(state)
+      HTTPoison.get!(monitor.configuration.url_to_monitor)
+      |> handle_response(monitor)
 
     schedule_check(monitor)
 
@@ -49,7 +49,7 @@ defmodule Pulsarius.EndpointChecker do
 
   ## Callbacks
 
-  def handle_call({:update_state, updated_monitor}, _params, state) do
+  def handle_call({:update_state, updated_monitor}, _params, _state) do
     schedule_check(updated_monitor)
 
     {:reply, :ok, updated_monitor}
