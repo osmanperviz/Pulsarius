@@ -26,10 +26,8 @@ defmodule Pulsarius.EndpointChecker do
   end
 
   def init(monitor) do
-    {:ok, monitor} =
-      HTTPoison.get!(monitor.configuration.url_to_monitor)
-      |> handle_response(monitor)
-
+    {:ok, monitor} = ping_endpoint(monitor)
+    
     schedule_check(monitor)
 
     {:ok, monitor}
@@ -87,7 +85,7 @@ defmodule Pulsarius.EndpointChecker do
     {:ok, monitor}
   end
 
-  defp ping_endpoint(%Monitor{status: status} = monitor) do
+  defp ping_endpoint(monitor) do
     HTTPoison.get!(monitor.configuration.url_to_monitor)
     |> handle_response(monitor)
   end
