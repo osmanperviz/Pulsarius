@@ -21,7 +21,7 @@ defmodule Pulsarius.EndpointChecker do
   In case monitoring is paused, we just spin process and wait further instructions, 
   monitoring should be manually unpause
   """
-  def init(%Monitor{status: status} = monitor) when status == "paused" do
+  def init(%Monitor{status: status} = monitor) when status == :paused do
     {:ok, monitor}
   end
 
@@ -56,21 +56,19 @@ defmodule Pulsarius.EndpointChecker do
   end
 
   def handle_info(:ping_endpoint, monitor) do
-    {:ok, monitor} =
-      HTTPoison.get!(monitor.configuration.url_to_monitor)
-      |> handle_response(monitor)
-
+    {:ok, monitor} = ping_endpoint(monitor)
+    
     # Schedule work to be performed again
     schedule_check(monitor)
 
     {:noreply, monitor}
   end
 
-  defp schedule_check(%Monitor{status: status} = monitor) when status == "paused",
+  defp schedule_check(%Monitor{status: status} = monitor) when status == :paused,
     do: :ok
 
   defp schedule_check(monitor) do
-    Process.send_after(self(), :ping_endpoint, 1000)
+    Process.send_after(self(), :ping_endpoint, 2000)
   end
 
   defp via_tuple(monitor_id) do
@@ -83,6 +81,18 @@ defmodule Pulsarius.EndpointChecker do
 
   defp handle_response(%HTTPoison.Response{status_code: _status_code} = _response, monitor) do
     Monitoring.update_monitor(monitor, %{status: :inactive})
+  end
+
+  defp ping_endpoint(%Monitor{status: status} = monitor) when status == :paused do
+  {:ok, monitor}
+  end
+
+  defp ping_endpoint(%Monitor{status: status} = monitor) do
+  {:ok, monitor} =
+      HTTPoison.get!(monitor.configuration.url_to_monitor)
+      |> handle_response(monitor)
+      |> dbg()
+
   end
 
   defp call_endpoint_checker(monitor, action) do

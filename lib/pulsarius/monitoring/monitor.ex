@@ -39,7 +39,7 @@ defmodule Pulsarius.Monitoring.Monitor do
   def with_active_state(queryable \\ __MODULE__) do
     from m in queryable,
       # TODO: define what is active state
-      where: m.status in [:initializing, :active, :inactive],
+      where: m.status in [:initializing, :active, :inactive, :paused],
       preload: [:configuration]
   end
 end
