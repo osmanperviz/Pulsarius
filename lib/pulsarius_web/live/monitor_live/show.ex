@@ -16,19 +16,16 @@ defmodule PulsariusWeb.MonitorLive.Show do
      |> assign(:monitor, Monitoring.get_monitor!(id))}
   end
 
-  
-   def handle_event("pause-monitoring",_params, %{assigns: assigns} = socket) do
+  def handle_event("pause-monitoring", _params, %{assigns: assigns} = socket) do
     {:ok, monitor} = Monitoring.update_monitor(assigns.monitor, %{status: "paused"})
-
 
     :ok = Pulsarius.EndpointChecker.update_state(monitor)
 
     {:noreply, assign(socket, :monitor, monitor)}
   end
 
-  def handle_event("unpause-monitoring",_params, %{assigns: assigns} = socket) do
+  def handle_event("unpause-monitoring", _params, %{assigns: assigns} = socket) do
     {:ok, monitor} = Monitoring.update_monitor(assigns.monitor, %{status: "active"})
-
 
     :ok = Pulsarius.EndpointChecker.update_state(monitor)
 

@@ -57,7 +57,7 @@ defmodule Pulsarius.EndpointChecker do
 
   def handle_info(:ping_endpoint, monitor) do
     {:ok, monitor} = ping_endpoint(monitor)
-    
+
     # Schedule work to be performed again
     schedule_check(monitor)
 
@@ -84,15 +84,12 @@ defmodule Pulsarius.EndpointChecker do
   end
 
   defp ping_endpoint(%Monitor{status: status} = monitor) when status == :paused do
-  {:ok, monitor}
+    {:ok, monitor}
   end
 
   defp ping_endpoint(%Monitor{status: status} = monitor) do
-  {:ok, monitor} =
-      HTTPoison.get!(monitor.configuration.url_to_monitor)
-      |> handle_response(monitor)
-      |> dbg()
-
+    HTTPoison.get!(monitor.configuration.url_to_monitor)
+    |> handle_response(monitor)
   end
 
   defp call_endpoint_checker(monitor, action) do
