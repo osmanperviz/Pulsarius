@@ -1,6 +1,4 @@
 <div>
-  <h2><%= @title %></h2>
-
   <.form
     let={f}
     for={@changeset}
@@ -29,9 +27,8 @@
           <%= checkbox(c, :email_notification) %>
         </div>
       <% end %>
-
       <div class="form-group">
-        <%= submit("Save", phx_disable_with: "Saving...") %>
+        <%= submit("Save", phx_disable_with: "Saving...", class: "btn btn-primary btn-lg btn-block") %>
       </div>
     </div>
   </.form>

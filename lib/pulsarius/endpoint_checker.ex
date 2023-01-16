@@ -28,10 +28,13 @@ defmodule Pulsarius.EndpointChecker do
   end
 
   ## Public functions
+
+  @spec update_state(Monitor.t()) :: :ok | {:error, :unable_to_locate_endpoint_checker}
   def update_state(monitor) do
-    GenServer.call(via_tuple(monitor.id), {:update_state, monitor})
+    call_endpoint_checker(monitor, {:update_state, monitor})
   end
 
+  @spec stop_monitoring(Monitor.t()) :: :ok | System.stacktrace()
   def stop_monitoring(monitor) do
     GenServer.stop(via_tuple(monitor.id))
   end
@@ -69,10 +72,10 @@ defmodule Pulsarius.EndpointChecker do
     Monitoring.update_monitor(monitor, %{status: :inactive})
   end
 
-  defp call_endpoint_checker(monitor) do
+  defp call_endpoint_checker(monitor, action) do
     case Registry.lookup(@registry, monitor.id) do
       [{pid, _}] ->
-        GenServer.call(pid, {:update_state, monitor})
+        GenServer.call(pid, action)
 
       _ ->
         Logger.warn("Unable to locate endpoint checker assigned to #{monitor.id}")
