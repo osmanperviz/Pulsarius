@@ -24,12 +24,17 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   end
 
   def handle_event("save", %{"monitor" => monitor_params}, socket) do
+    # TODO: convert frequency_check from minutes to milliseconds or
+    # deliver that already from server to dropdow than no need to convertion
     save_monitor(socket, socket.assigns.action, monitor_params)
   end
 
   defp save_monitor(socket, :edit, monitor_params) do
     case Monitoring.update_monitor(socket.assigns.monitor, monitor_params) do
-      {:ok, _monitor} ->
+      {:ok, monitor} ->
+        # update related running monitor process
+        Pulsarius.EndpointChecker.update_state(monitor)
+
         {:noreply,
          socket
          |> put_flash(:info, "Monitor updated successfully")

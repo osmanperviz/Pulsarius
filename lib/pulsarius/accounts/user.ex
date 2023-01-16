@@ -2,14 +2,13 @@ defmodule Pulsarius.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-    @type t :: %__MODULE__{
+  @type t :: %__MODULE__{
           email: String.t(),
           first_name: String.t(),
           last_name: String.t()
         }
 
   @primary_key {:id, :binary_id, autogenerate: true}
-
 
   schema "users" do
     field :email, :string

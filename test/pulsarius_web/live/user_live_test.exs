@@ -5,7 +5,11 @@ defmodule PulsariusWeb.UserLiveTest do
   import Pulsarius.AccountsFixtures
 
   @create_attrs %{email: "some email", first_name: "some first_name", last_name: "some last_name"}
-  @update_attrs %{email: "some updated email", first_name: "some updated first_name", last_name: "some updated last_name"}
+  @update_attrs %{
+    email: "some updated email",
+    first_name: "some updated first_name",
+    last_name: "some updated last_name"
+  }
   @invalid_attrs %{email: nil, first_name: nil, last_name: nil}
 
   defp create_user(_) do

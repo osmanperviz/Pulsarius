@@ -7,21 +7,32 @@
     phx-change="validate"
     phx-submit="save"
   >
-    <form>
-      <div class="form-outline mb-4">
-        <%= text_input(f, :name, placeholder: "Pronounceable monitor name", class: "form-control") %>
-      </div>
+    <div>
+      <%= text_input(f, :name, placeholder: "Pronounceable monitor name", class: "form-control") %>
       <%= inputs_for f, :configuration, fn c -> %>
-        <div class="form-outline mb-4">
-          <%= text_input(c, :frequency_check_in_seconds,
-            placeholder: "Frequency Check",
-            class: "form-control"
-          ) %>
+        <%= select(c, :frequency_check_in_seconds, ["1 minutes": 1, "5 minutes": 5],
+          "phx-throttle": "300",
+          class: "form-control mt-3"
+        ) %>
+        <%= text_input(c, :url_to_monitor,
+          placeholder: "Application URL",
+          class: "form-control mt-3"
+        ) %>
+        <div class="form-check form-check-inline">
+          <%= label(c, :sms_notification, "Send sms") %>
+          <%= checkbox(c, :sms_notification) %>
         </div>
-        <%= text_input(c, :url_to_monitor, placeholder: "Application URL", class: "form-control") %>
+        <div class="form-check form-check-inline">
+          <%= label(c, :email_notification, "Send e-mail") %>
+          <%= checkbox(c, :email_notification) %>
+        </div>
       <% end %>
-
-      <%= submit("Save", class: "btn btn-primary btn-lg mt-4", phx_disable_with: "Saving...") %>
-    </form>
+      <div class="form-group">
+        <%= submit("Save",
+          phx_disable_with: "Saving...",
+          class: "btn btn-primary btn-lg btn-block"
+        ) %>
+      </div>
+    </div>
   </.form>
 </div>
