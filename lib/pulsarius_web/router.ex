@@ -39,6 +39,11 @@ defmodule PulsariusWeb.Router do
       pipe_through :browser
 
       live_dashboard "/dashboard", metrics: PulsariusWeb.Telemetry
+
+      live "/monitors", PulsariusWeb.MonitorLive.Index, :index
+      live "/monitors/new", PulsariusWeb.MonitorLive.Index, :new
+      live "/monitors/:id/edit", PulsariusWeb.MonitorLive.Index, :edit
+      live "/monitors/:id", PulsariusWeb.MonitorLive.Show, :show
     end
   end
 
