@@ -1,0 +1,21 @@
+<h1>Show Monitor</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.monitor_show_path(@socket, :show, @monitor)}>
+    <.live_component
+      module={PulsariusWeb.MonitorLive.FormComponent}
+      id={@monitor.id}
+      title={@page_title}
+      action={@live_action}
+      monitor={@monitor}
+      return_to={Routes.monitor_show_path(@socket, :show, @monitor)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.monitor_show_path(@socket, :edit, @monitor), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.monitor_index_path(@socket, :index) %></span>

@@ -1,0 +1,22 @@
+<div>
+  <h2><%= @title %></h2>
+
+  <.form
+    let={f}
+    for={@changeset}
+    id="monitor-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save">
+  
+    <div>
+      <%= text_input f, :name, placeholder: "Pronounceable monitor name", class: "form-control" %>
+       <%= inputs_for f, :configuration, fn c -> %>
+         <%= text_input c, :frequency_check_in_seconds, placeholder: "Frequency Check", class: "form-control" %>
+         <%= text_input c, :url_to_monitor, placeholder: "Application URL", class: "form-control" %>
+       <% end %>
+     
+      <%= submit "Save", phx_disable_with: "Saving..." %>
+    </div>
+  </.form>
+</div>
