@@ -13,9 +13,10 @@
   </.modal>
 <% end %>
 
-<ul>
+<ul></ul>
 
-</ul>
-
-<span><%= live_patch "Edit", to: Routes.monitor_show_path(@socket, :edit, @monitor), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.monitor_index_path(@socket, :index) %></span>
+<span>
+  <%= live_patch("Edit", to: Routes.monitor_show_path(@socket, :edit, @monitor), class: "button") %>
+</span>
+|
+<span><%= live_redirect("Back", to: Routes.monitor_index_path(@socket, :index)) %></span>
