@@ -1,29 +1,76 @@
-<h1>Show Monitor</h1>
+<div class="row">
+  <div class="col">
+    <h1 class="mt-5 mb-4">
+      <%= @monitor.name %> Monitor
 
-<%= if @live_action in [:edit] do %>
-  <.modal return_to={Routes.monitor_show_path(@socket, :show, @monitor)}>
-    <.live_component
-      module={PulsariusWeb.MonitorLive.FormComponent}
-      id={@monitor.id}
-      title={@page_title}
-      action={@live_action}
-      monitor={@monitor}
-      return_to={Routes.monitor_show_path(@socket, :show, @monitor)}
-    />
-  </.modal>
-<% end %>
-
-<div class="container mb-3">
-  <%= if @monitor.status == :active do %>
-    <div class="btn btn-sm btn-primary" phx-click="pause-monitoring">Pause this monitor</div>
-  <% else %>
-    <div class="btn btn-sm btn-primary" phx-click="unpause-monitoring">Unpause this monitor</div>
-  <% end %>
-  <span>Status: <%= @monitor.status %></span>
+        <%= if @monitor.status==:active do %>
+          <span class="badge rounded-pill text-bg-success ms-3">Active</span>
+          <% else %>
+            <span class="badge rounded-pill text-bg-warning ms-3">Paused</span>
+            <% end %>
+    </h1>
+  </div>
 </div>
-
-<span>
-  <%= live_patch("Edit", to: Routes.monitor_show_path(@socket, :edit, @monitor), class: "button") %>
-</span>
-|
-<span><%= live_redirect("Back", to: Routes.monitor_index_path(@socket, :index)) %></span>
+<div class="row">
+  <div class="col-lg-2 mt-3">
+    <%= if @monitor.status==:active do %>
+      <div class="btn btn-sm btn-outline-light" phx-click="pause-monitoring">Pause monitor</div>
+      <% else %>
+        <div class="btn btn-sm btn-warning" phx-click="unpause-monitoring">Activate Monitor</div>
+        <% end %>
+  </div>
+  <div class="col-lg-6 mt-3">
+    <table>
+      <tr>
+        <td>Frequency Check:</td>
+        <td class="ps-2">
+          <%= @monitor.configuration.frequency_check_in_seconds %>
+            <%= if @monitor.configuration.frequency_check_in_seconds=="1" do %>
+              second
+              <% else %>
+                seconds
+                <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>URL:</td>
+        <td class="ps-2">
+          <%= @monitor.configuration.url_to_monitor %>
+        </td>
+      </tr>
+      <tr>
+        <td>Email Notification:</td>
+        <td class="ps-2">
+          <%= if @monitor.configuration.email_notification do %>
+            <span class="badge text-bg-success">On</span>
+            <% else %>
+              <span class="badge text-bg-danger">Off</span>
+              <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td>SMS Notification:</td>
+        <td class="ps-2">
+          <%= if @monitor.configuration.sms_notification do %>
+            <span class="badge text-bg-success">On</span>
+            <% else %>
+              <span class="badge text-bg-danger">Off</span>
+              <% end %>
+        </td>
+      </tr>
+    </table>
+    <%= live_patch("Change Configuration", to: Routes.monitor_show_path(@socket, :edit, @monitor),
+      class: "btn btn-sm btn-outline-light mt-5" ) %>
+  </div>
+  <div class="col-lg mt-3">
+    <h3>Recent Events</h3>
+    <div class="alert alert-success" role="alert">
+      <h5 class="alert-heading">Healthy again!</h5>
+      <p>Service is back to normal.</p>
+    </div>
+    <div class="alert alert-danger" role="alert">
+      <h5 class="alert-heading">Service Unhealthy!</h5>
+      <p>Service did not respond properly.</p>
+    </div>
+  </div>
+</div>
