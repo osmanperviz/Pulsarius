@@ -152,7 +152,4 @@ defmodule Pulsarius.EndpointChecker do
       number_of_success_retry: 0
     }
   end
-
-  defp reset_state(state),
-    do: %{state | incident: nil, number_of_success_retry: 0, in_incident_mode: false}
 end

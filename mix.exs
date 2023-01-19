@@ -49,7 +49,8 @@ defmodule Pulsarius.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:httpoison, "~> 1.8"}
+      {:httpoison, "~> 1.8"},
+      {:phoenix_swoosh, "~> 1.0"}
     ]
   end
 
