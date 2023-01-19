@@ -20,9 +20,10 @@ defmodule Pulsarius.Application do
        name: Pulsarius.EndpointDynamicSupervisor, strategy: :one_for_one},
       {Registry, [keys: :unique, name: :endpoint_checker]},
       # On application boot it starts all interrupted monitor processes again.
-      {Task, fn -> Pulsarius.EndpointDynamicSupervisor.auto_start_monitoring() end}
+      {Task, fn -> Pulsarius.EndpointDynamicSupervisor.auto_start_monitoring() end},
       # Start a worker by calling: Pulsarius.Worker.start_link(arg)
       # {Pulsarius.Worker, arg}
+      Pulsarius.Notifications.NotificationServer
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

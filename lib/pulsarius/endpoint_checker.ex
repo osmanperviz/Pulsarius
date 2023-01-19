@@ -11,6 +11,7 @@ defmodule Pulsarius.EndpointChecker do
   require Logger
 
   @registry :endpoint_checker
+  @topic "INCIDENT_CREATED"
 
   def start_link(monitor) do
     GenServer.start_link(
@@ -99,6 +100,8 @@ defmodule Pulsarius.EndpointChecker do
        when state.in_incident_mode == false do
     {:ok, monitor} = Monitoring.update_monitor(state.monitor, %{status: :inactive})
     {:ok, incident} = Incidents.create_incident(monitor)
+
+    Pulsarius.broadcast(@topic, {:incident_created, incident})
 
     %{state | monitor: monitor, incident: incident, in_incident_mode: true}
   end
