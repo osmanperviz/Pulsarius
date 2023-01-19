@@ -23,7 +23,7 @@ defmodule Pulsarius.EndpointDynamicSupervisor do
   on app start we have to start all monitor processes again.
   """
   def auto_start_monitoring() do
-    Monitor.with_active_state()
+    Monitor.with_active_state_and_active_incident()
     |> Repo.all()
     |> Enum.each(&start_monitoring/1)
   end

@@ -7,6 +7,7 @@ defmodule Pulsarius.Monitoring.Monitor do
   import Ecto.Query, warn: false
 
   alias Pulsarius.Configurations.Configuration
+  alias Pulsarius.Incidents.Incident
 
   @type t :: %__MODULE__{
           name: String.t(),
@@ -24,6 +25,8 @@ defmodule Pulsarius.Monitoring.Monitor do
 
     has_one :configuration, Configuration, on_replace: :delete
 
+    has_one :active_incident, Incident, where: [status: :active]
+
     timestamps()
   end
 
@@ -35,11 +38,11 @@ defmodule Pulsarius.Monitoring.Monitor do
     |> cast_assoc(:configuration)
   end
 
-  @spec with_active_state(Ecto.Queryable.t()) :: Ecto.Query.t()
-  def with_active_state(queryable \\ __MODULE__) do
+  @spec with_active_state_and_active_incident(Ecto.Queryable.t()) :: Ecto.Query.t()
+  def with_active_state_and_active_incident(queryable \\ __MODULE__) do
     from m in queryable,
       # TODO: define what is active state
       where: m.status in [:initializing, :active, :inactive, :paused],
-      preload: [:configuration]
+      preload: [:configuration, :active_incident]
   end
 end

@@ -6,13 +6,16 @@ defmodule Pulsarius.EndpointChecker do
 
   alias Pulsarius.Monitoring
   alias Pulsarius.Monitoring.Monitor
+  alias Pulsarius.Incidents
+
+  require Logger
 
   @registry :endpoint_checker
 
   def start_link(monitor) do
     GenServer.start_link(
       __MODULE__,
-      monitor,
+      build_initial_state(monitor),
       name: via_tuple(monitor.id)
     )
   end
@@ -21,16 +24,15 @@ defmodule Pulsarius.EndpointChecker do
   In case monitoring is paused, we just spin process and wait further instructions, 
   monitoring should be manually unpause
   """
-  def init(%Monitor{status: status} = monitor) when status == :paused do
-    {:ok, monitor}
+  def init(%{monitor: monitor} = state) when monitor.status == :paused do
+    {:ok, state}
   end
 
-  def init(monitor) do
-    {:ok, monitor} = ping_endpoint(monitor)
-    
-    schedule_check(monitor)
-
-    {:ok, monitor}
+  def init(state) do
+    state
+    |> schedule_check()
+    |> then(&schedule_check(&1))
+    |> then(&{:ok, &1})
   end
 
   ## Public functions
@@ -47,47 +49,79 @@ defmodule Pulsarius.EndpointChecker do
 
   ## Callbacks
 
-  def handle_call({:update_state, updated_monitor}, _params, _state) do
+  def handle_call({:update_state, updated_monitor}, _params, state) do
     schedule_check(updated_monitor)
 
-    {:reply, :ok, updated_monitor}
+    {:reply, :ok, %{state | monitor: updated_monitor}}
   end
 
-  def handle_info(:ping_endpoint, monitor) do
-    {:ok, monitor} = ping_endpoint(monitor)
-
-    # Schedule work to be performed again
-    schedule_check(monitor)
-
-    {:noreply, monitor}
+  def handle_info(:ping_endpoint, state) when state.monitor == :paused do
+    {:noreply, state}
   end
 
-  defp schedule_check(%Monitor{status: status} = monitor) when status == :paused,
-    do: :ok
+  def handle_info(:ping_endpoint, state) do
+    ping_endpoint(state.monitor)
+    |> handle_response(state)
+    |> then(&schedule_check(&1))
+    |> then(&{:noreply, &1})
+  end
 
-  defp schedule_check(monitor) do
+  defp schedule_check(%{monitor: monitor} = state) when monitor.status == :paused,
+    do: state
+
+  defp schedule_check(state) do
     Process.send_after(self(), :ping_endpoint, 2000)
+    state
   end
 
   defp via_tuple(monitor_id) do
     {:via, Registry, {@registry, monitor_id}}
   end
 
-  defp handle_response(%HTTPoison.Response{status_code: 200} = _response, monitor) do
-    Monitoring.update_monitor(monitor, %{status: :active})
+  defp ping_endpoint(%{monitor: %Monitor{status: status}} = _state) when status == :paused,
+    do: :ping_paused
+
+  defp ping_endpoint(monitor), do: HTTPoison.get!(monitor.configuration.url_to_monitor)
+
+  defp handle_response(:ping_paused, state), do: state
+
+  defp handle_response(%HTTPoison.Response{status_code: 200} = _response, state)
+       when state.in_incident_mode == false do
+    state
   end
 
-  defp handle_response(%HTTPoison.Response{status_code: _status_code} = _response, monitor) do
-    Monitoring.update_monitor(monitor, %{status: :inactive})
+  defp handle_response(%HTTPoison.Response{status_code: 200} = _response, state)
+       when state.in_incident_mode == true do
+    handle_incident(state)
   end
 
-  defp ping_endpoint(%Monitor{status: status} = monitor) when status == :paused do
-    {:ok, monitor}
+  defp handle_response(%HTTPoison.Response{status_code: _status_code} = _response, state)
+       when state.in_incident_mode == false do
+    {:ok, monitor} = Monitoring.update_monitor(state.monitor, %{status: :inactive})
+    {:ok, incident} = Incidents.create_incident(monitor)
+
+    %{state | monitor: monitor, incident: incident, in_incident_mode: true}
   end
 
-  defp ping_endpoint(monitor) do
-    HTTPoison.get!(monitor.configuration.url_to_monitor)
-    |> handle_response(monitor)
+  defp handle_response(%HTTPoison.Response{status_code: _status_code} = _response, state)
+       when state.in_incident_mode == true,
+       do: state
+
+  defp handle_incident(state) when state.number_of_success_retry == 3 do
+    {:ok, _incident} = Incidents.auto_resolve(state.incident)
+    {:ok, monitor} = Monitoring.update_monitor(state.monitor, %{status: :active})
+
+    %{
+      state
+      | monitor: monitor,
+        incident: nil,
+        number_of_success_retry: 0,
+        in_incident_mode: false
+    }
+  end
+
+  defp handle_incident(state) when state.number_of_success_retry < 3 do
+    %{state | number_of_success_retry: state.number_of_success_retry + 1}
   end
 
   defp call_endpoint_checker(monitor, action) do
@@ -100,4 +134,25 @@ defmodule Pulsarius.EndpointChecker do
         {:error, :unable_to_locate_endpoint_checker}
     end
   end
+
+  defp build_initial_state(%Monitor{active_incident: nil} = monitor) do
+    %{
+      monitor: monitor,
+      in_incident_mode: false,
+      incident: nil,
+      number_of_success_retry: 0
+    }
+  end
+
+  defp build_initial_state(monitor) do
+    %{
+      monitor: monitor,
+      in_incident_mode: true,
+      incident: monitor.active_incident,
+      number_of_success_retry: 0
+    }
+  end
+
+  defp reset_state(state),
+    do: %{state | incident: nil, number_of_success_retry: 0, in_incident_mode: false}
 end

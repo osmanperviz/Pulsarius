@@ -2,12 +2,11 @@
   <div class="col">
     <h1 class="mt-5 mb-4">
       <%= @monitor.name %> Monitor
-
-        <%= if @monitor.status==:active do %>
-          <span class="badge rounded-pill text-bg-success ms-3">Active</span>
-          <% else %>
-            <span class="badge rounded-pill text-bg-warning ms-3">Paused</span>
-            <% end %>
+      <%= if @monitor.status==:active do %>
+        <span class="badge rounded-pill text-bg-success ms-3">Active</span>
+      <% else %>
+        <span class="badge rounded-pill text-bg-warning ms-3">Paused</span>
+      <% end %>
     </h1>
   </div>
 </div>
@@ -15,9 +14,9 @@
   <div class="col-lg-2 mt-3">
     <%= if @monitor.status==:active do %>
       <div class="btn btn-sm btn-outline-light" phx-click="pause-monitoring">Pause monitor</div>
-      <% else %>
-        <div class="btn btn-sm btn-warning" phx-click="unpause-monitoring">Activate Monitor</div>
-        <% end %>
+    <% else %>
+      <div class="btn btn-sm btn-warning" phx-click="unpause-monitoring">Activate Monitor</div>
+    <% end %>
   </div>
   <div class="col-lg-6 mt-3">
     <table>
@@ -25,11 +24,11 @@
         <td>Frequency Check:</td>
         <td class="ps-2">
           <%= @monitor.configuration.frequency_check_in_seconds %>
-            <%= if @monitor.configuration.frequency_check_in_seconds=="1" do %>
-              second
-              <% else %>
-                seconds
-                <% end %>
+          <%= if @monitor.configuration.frequency_check_in_seconds == "1" do %>
+            minute
+          <% else %>
+            minutes
+          <% end %>
         </td>
       </tr>
       <tr>
@@ -43,9 +42,9 @@
         <td class="ps-2">
           <%= if @monitor.configuration.email_notification do %>
             <span class="badge text-bg-success">On</span>
-            <% else %>
-              <span class="badge text-bg-danger">Off</span>
-              <% end %>
+          <% else %>
+            <span class="badge text-bg-danger">Off</span>
+          <% end %>
         </td>
       </tr>
       <tr>
@@ -53,14 +52,16 @@
         <td class="ps-2">
           <%= if @monitor.configuration.sms_notification do %>
             <span class="badge text-bg-success">On</span>
-            <% else %>
-              <span class="badge text-bg-danger">Off</span>
-              <% end %>
+          <% else %>
+            <span class="badge text-bg-danger">Off</span>
+          <% end %>
         </td>
       </tr>
     </table>
-    <%= live_patch("Change Configuration", to: Routes.monitor_show_path(@socket, :edit, @monitor),
-      class: "btn btn-sm btn-outline-light mt-5" ) %>
+    <%= live_patch("Change Configuration",
+      to: Routes.monitor_show_path(@socket, :edit, @monitor),
+      class: "btn btn-sm btn-outline-light mt-5"
+    ) %>
   </div>
   <div class="col-lg mt-3">
     <h3>Recent Events</h3>
