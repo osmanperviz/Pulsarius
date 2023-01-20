@@ -1,5 +1,5 @@
 defmodule Pulsarius.Notifications do
-   alias   Pulsarius.Notifications.Email
+  alias Pulsarius.Notifications.Email
 
   defprotocol Notification do
     @moduledoc """
