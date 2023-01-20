@@ -11,7 +11,7 @@ defmodule Pulsarius.EndpointChecker do
   require Logger
 
   @registry :endpoint_checker
-  @topic "INCIDENT_CREATED"
+  @topic "incidents"
 
   def start_link(monitor) do
     GenServer.start_link(
@@ -111,8 +111,10 @@ defmodule Pulsarius.EndpointChecker do
        do: state
 
   defp handle_incident(state) when state.number_of_success_retry == 3 do
-    {:ok, _incident} = Incidents.auto_resolve(state.incident)
+    {:ok, incident} = Incidents.auto_resolve(state.incident)
     {:ok, monitor} = Monitoring.update_monitor(state.monitor, %{status: :active})
+
+    Pulsarius.broadcast(@topic, {:incident_auto_resolved, incident})
 
     %{
       state

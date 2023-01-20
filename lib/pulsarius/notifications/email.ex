@@ -8,9 +8,14 @@ defmodule Pulsarius.Notifications.Email do
 
   defstruct [:type, :args]
 
-  @spec incident_created(Profile.t(), Mailer.recipient()) :: :ok
+  @spec incident_created(Incident.t(), Mailer.recipient()) :: :ok
   def incident_created(incident, recipient) do
     %__MODULE__{type: :incident_created, args: [incident, recipient]}
+  end
+
+  @spec incident_created(Incident.t(), Mailer.recipient()) :: :ok
+  def incident_auto_resolved(incident, recipient) do
+    %__MODULE__{type: :incident_auto_resolved, args: [incident, recipient]}
   end
 
   defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Email do
