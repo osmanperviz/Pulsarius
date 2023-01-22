@@ -24,7 +24,6 @@ defmodule Pulsarius.Monitoring.Monitor do
       default: :initializing
 
     has_one :configuration, Configuration, on_replace: :delete
-
     has_one :active_incident, Incident, where: [status: :active]
 
     timestamps()
@@ -46,3 +45,7 @@ defmodule Pulsarius.Monitoring.Monitor do
       preload: [:configuration, :active_incident]
   end
 end
+
+
+# https://hooks.slack.com/services/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
+# https://review-app.gigalixirapp.com/health-check

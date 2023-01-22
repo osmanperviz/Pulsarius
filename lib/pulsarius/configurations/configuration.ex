@@ -19,6 +19,8 @@ defmodule Pulsarius.Configurations.Configuration do
     field :url_to_monitor, :string
     field :email_notification, :boolean, default: false
     field :sms_notification, :boolean, default: false
+    field :slack_notification, :boolean, default: false
+    field :slack_notification_webhook_url, :string
 
     belongs_to :monitor, Monitor,
       foreign_key: :monitor_id,
@@ -34,7 +36,9 @@ defmodule Pulsarius.Configurations.Configuration do
       :url_to_monitor,
       :frequency_check_in_seconds,
       :sms_notification,
-      :email_notification
+      :email_notification,
+      :slack_notification,
+      :slack_notification_webhook_url
     ])
     |> validate_required([:url_to_monitor, :frequency_check_in_seconds])
   end
