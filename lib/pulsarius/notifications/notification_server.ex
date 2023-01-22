@@ -1,8 +1,7 @@
 defmodule Pulsarius.Notifications.NotificationServer do
-    use GenServer
+  use GenServer
 
   alias Pulsarius.Notifications
-
 
   def start_link(monitor) do
     GenServer.start_link(__MODULE__, %{}, name: :notification_server)
@@ -20,7 +19,7 @@ defmodule Pulsarius.Notifications.NotificationServer do
     {:noreply, socket}
   end
 
-   def handle_info({:incident_auto_resolved, incident}, socket) do
+  def handle_info({:incident_auto_resolved, incident}, socket) do
     Notifications.incident_auto_resolved(incident, %{})
 
     {:noreply, socket}
