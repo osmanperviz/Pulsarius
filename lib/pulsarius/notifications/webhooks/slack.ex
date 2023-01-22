@@ -12,6 +12,11 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     %__MODULE__{type: :incident_created, args: [incident, webhook_url]}
   end
 
+  @spec incident_created(Incident.t(), String.t()) :: :ok
+  def incident_auto_resolved(incident, webhook_url) do
+    %__MODULE__{type: :incident_auto_resolved, args: [incident, webhook_url]}
+  end
+
   defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Webhooks.Slack do
     alias Pulsarius.Notifications.Webhooks
 

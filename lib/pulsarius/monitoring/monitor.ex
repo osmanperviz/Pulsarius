@@ -46,6 +46,5 @@ defmodule Pulsarius.Monitoring.Monitor do
   end
 end
 
-
 # https://hooks.slack.com/services/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
 # https://review-app.gigalixirapp.com/health-check
