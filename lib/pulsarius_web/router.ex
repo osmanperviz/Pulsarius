@@ -18,6 +18,8 @@ defmodule PulsariusWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    get "/monitor/:id/integrations/slack", IntegrationController, :index
   end
 
   # Other scopes may use custom stacks.

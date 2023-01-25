@@ -17,6 +17,7 @@
     <% else %>
       <div class="btn btn-sm btn-warning" phx-click="unpause-monitoring">Activate Monitor</div>
     <% end %>
+    <.add_slack_integration monitor={@monitor} />
   </div>
   <div class="col-lg-6 mt-3">
     <table>

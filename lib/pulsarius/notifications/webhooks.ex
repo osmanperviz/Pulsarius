@@ -29,7 +29,7 @@ defmodule Pulsarius.Notifications.Webhooks do
     HTTPoison.post(
       webhook_url,
       body,
-      [{"Content-Type", "application/json"}]
+      [{"Content-Type", "application/x-www-form-urlencoded"}]
     )
   end
 
@@ -40,3 +40,11 @@ defmodule Pulsarius.Notifications.Webhooks do
     Jason.encode!(%{text: message, type: "mrkdwn"})
   end
 end
+
+# body = URI.encode_query(%{
+#   "code" => "4659483875559.4709218216352.cf1a4cd50b4c61b433c7307ffe553be3763f8a465655fddf7f531b373d1276af",
+#   "client_id" => "4659483875559.4686702025457",
+#   "client_secret" => "d4b34882b201055a88253f44980b7e1c"
+# })
+
+#  HTTPoison.post("https://slack.com/api/oauth.v2.access", body, [{"Content-Type", "application/x-www-form-urlencoded"}])  

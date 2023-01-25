@@ -2,6 +2,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
   use PulsariusWeb, :live_view
 
   alias Pulsarius.Monitoring
+  import PulsariusWeb.MonitorLive.AddSlackIntegrationComponent
 
   @impl true
   def mount(_params, _session, socket) do

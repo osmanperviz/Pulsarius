@@ -12,7 +12,7 @@ defmodule Pulsarius.Notifications.Sms do
 
   defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Sms do
     # @spec send(%{type: String.t(), args: list}) :: :ok
-    def send(%{type: type, args: args}) do
+    def send(%{type: _type, args: _args}) do
       # implementation
     end
   end

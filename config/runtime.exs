@@ -63,6 +63,10 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  config :pulsarius, :slack_integration,
+    client_id: "4659483875559.4686702025457",
+    client_secret: "d4b34882b201055a88253f44980b7e1c"
+
   # ## Configuring the mailer
   #
   # In production you need to configure the mailer to use a different adapter.
