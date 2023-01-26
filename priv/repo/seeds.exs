@@ -19,11 +19,11 @@ if Mix.env() == :dev do
       %{
         "email" => "test@test.test",
         "first_name" => "test",
-        "last_name" => "test"
+        "last_name" => "test",
+        "status" => "registered"
       }
     ]
   }
 
-  a = Accounts.create_account(params)
-  dbg(a)
+  Accounts.create_account(params)
 end

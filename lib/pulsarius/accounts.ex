@@ -6,7 +6,7 @@ defmodule Pulsarius.Accounts do
   import Ecto.Query, warn: false
   alias Pulsarius.Repo
 
-  alias Pulsarius.Accounts.{User, Account}
+  alias Pulsarius.Accounts.{User, Account, UserInvitation}
 
   @doc """
   Returns the list of users.
@@ -52,6 +52,25 @@ defmodule Pulsarius.Accounts do
   def create_user(account, attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:account, account)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Creates a user with pending state, without first name and second name.
+
+  ## Examples
+
+      iex> create_pending_user(%{field: value})
+      {:ok, %User{}}
+
+      iex> create_pending_user(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_pending_user(account, attrs \\ %{}) do
+    %User{}
+    |> User.invitation_changeset(attrs)
     |> Ecto.Changeset.put_assoc(:account, account)
     |> Repo.insert()
   end
@@ -118,6 +137,33 @@ defmodule Pulsarius.Accounts do
   def create_account(attrs \\ %{}) do
     %Account{}
     |> Account.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Creates a user invitation record.
+
+  ## Examples
+
+      iex> invite_user(account, params)
+      {:ok, %UserInvitation{}}
+
+      iex> invite_user(account, params)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  @spec invite_user(Account.t(), map()) :: {:ok, UserInvitation.t()} | {:error, any()}
+  def invite_user(account, user_invitation_params) do
+    with {:ok, user_invitation} <- do_invite_user(account, user_invitation_params),
+         {:ok, _user} <- create_pending_user(account, user_invitation_params) do
+      {:ok, user_invitation}
+    end
+  end
+
+  defp do_invite_user(account, user_invitation_params) do
+    %UserInvitation{}
+    |> UserInvitation.changeset(user_invitation_params)
+    |> Ecto.Changeset.put_assoc(:account, account)
     |> Repo.insert()
   end
 end
