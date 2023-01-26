@@ -41,7 +41,7 @@ defmodule PulsariusWeb.UserLive.FormComponent do
   end
 
   defp save_user(socket, :new, user_params) do
-    case Accounts.create_user(user_params) do
+    case Accounts.create_user(socket.assigns.account, user_params) do
       {:ok, _user} ->
         {:noreply,
          socket

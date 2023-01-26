@@ -6,7 +6,7 @@ defmodule Pulsarius.Accounts do
   import Ecto.Query, warn: false
   alias Pulsarius.Repo
 
-  alias Pulsarius.Accounts.User
+  alias Pulsarius.Accounts.{User, Account}
 
   @doc """
   Returns the list of users.
@@ -49,9 +49,10 @@ defmodule Pulsarius.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user(attrs \\ %{}) do
+  def create_user(account, attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:account, account)
     |> Repo.insert()
   end
 
@@ -100,5 +101,23 @@ defmodule Pulsarius.Accounts do
   """
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
+  end
+
+  @doc """
+  Creates a account.
+
+  ## Examples
+
+      iex> create_account(%{field: value})
+      {:ok, %Account{}}
+
+      iex> create_account(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_account(attrs \\ %{}) do
+    %Account{}
+    |> Account.changeset(attrs)
+    |> Repo.insert()
   end
 end

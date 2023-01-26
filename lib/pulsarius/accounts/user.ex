@@ -2,6 +2,8 @@ defmodule Pulsarius.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Pulsarius.Accounts.Account
+
   @type t :: %__MODULE__{
           email: String.t(),
           first_name: String.t(),
@@ -14,6 +16,10 @@ defmodule Pulsarius.Accounts.User do
     field :email, :string
     field :first_name, :string
     field :last_name, :string
+
+    belongs_to :account, Account,
+      foreign_key: :account_id,
+      type: :binary_id
 
     timestamps()
   end
