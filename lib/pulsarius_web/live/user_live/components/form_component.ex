@@ -15,6 +15,14 @@ defmodule PulsariusWeb.UserLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"user" => user_params}, socket) do
+    # TODO: refacture this!
+    user_params =
+      if socket.assigns.user.status == :pending do
+        Map.merge(user_params, %{"status" => "registered"})
+      else
+        user_params
+      end
+
     changeset =
       socket.assigns.user
       |> Accounts.change_user(user_params)

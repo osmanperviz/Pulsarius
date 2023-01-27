@@ -1,6 +1,7 @@
 defmodule Pulsarius.Accounts.UserInvitation do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   alias Pulsarius.Accounts.{Account, User}
 
@@ -29,5 +30,11 @@ defmodule Pulsarius.Accounts.UserInvitation do
     user_invitation
     |> cast(attrs, [:email, :token])
     |> validate_required([:email, :token])
+  end
+
+  @spec by_token(Ecto.Queryable.t(), String.t()) :: Ecto.Query.t()
+  def by_token(queryable \\ __MODULE__, token) do
+    from ui in queryable,
+      where: ui.token == ^token
   end
 end

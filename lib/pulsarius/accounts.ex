@@ -181,6 +181,25 @@ defmodule Pulsarius.Accounts do
     end
   end
 
+@doc """
+  Fetch invited user from invitation token
+
+  ## Examples
+
+      iex> fetch_user_from_invitation(account, params)
+      %UserInvitation{}
+
+      iex> invite_user(account, params)
+      nil
+
+  """
+  @spec fetch_user_from_invitation(String.t()) :: UserInvitation.t() | nil
+  def fetch_user_from_invitation(token) do
+    UserInvitation.by_token(token)
+    |> preload([:pending_user])
+    |> Repo.one()
+  end
+
   defp do_create_pending_user(multi, account, user_invitation_params) do
     multi
     |> Multi.run(:create_pending_user, fn _, _ ->

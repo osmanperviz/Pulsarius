@@ -30,7 +30,7 @@ defmodule Pulsarius.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:first_name, :last_name, :email, :status])
-    |> validate_required([:first_name, :last_name, :email])
+    |> validate_required([:first_name, :last_name, :email, :status])
   end
 
   def invitation_changeset(user, attrs) do
