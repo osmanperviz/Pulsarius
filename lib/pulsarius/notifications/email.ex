@@ -18,6 +18,11 @@ defmodule Pulsarius.Notifications.Email do
     %__MODULE__{type: :incident_auto_resolved, args: [incident, recipient]}
   end
 
+  @spec incident_created(Incident.t(), Mailer.recipient()) :: :ok
+  def user_invitation_created(invitation, recipient) do
+    %__MODULE__{type: :user_invitation_created, args: [invitation, recipient]}
+  end
+
   defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Email do
     alias Pulsarius.Mailer
 

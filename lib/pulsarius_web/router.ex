@@ -20,6 +20,7 @@ defmodule PulsariusWeb.Router do
     get "/", PageController, :index
 
     get "/monitor/:id/integrations/slack", IntegrationController, :index
+    get "/users/invite/:token", UserInvitationController, :accept
   end
 
   # Other scopes may use custom stacks.

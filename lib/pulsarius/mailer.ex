@@ -16,6 +16,13 @@ defmodule Pulsarius.Mailer do
     |> render_body("incident_auto_resolved.html")
   end
 
+  # @spec profile_added(Profile.t(), recipient()) :: Swoosh.Email.t()
+  def user_invitation_created(invitation, _recipient) do
+    base_email()
+    |> subject("Osman invited you!")
+    |> render_body("user_invitation_created.html", invitation: invitation)
+  end
+
   defp base_email do
     new()
     |> from({"Pulsarius", "info@pulsarius.com"})
