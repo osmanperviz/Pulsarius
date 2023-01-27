@@ -20,6 +20,7 @@ defmodule PulsariusWeb.Router do
     get "/", PageController, :index
 
     get "/monitor/:id/integrations/slack", IntegrationController, :index
+    get "/users/invite/:token", UserInvitationController, :accept
   end
 
   # Other scopes may use custom stacks.
@@ -42,17 +43,19 @@ defmodule PulsariusWeb.Router do
 
       live_dashboard "/dashboard", metrics: PulsariusWeb.Telemetry
 
-      live "/monitors", PulsariusWeb.MonitorLive.Index, :index
-      live "/monitors/new", PulsariusWeb.MonitorLive.Index, :new
-      live "/monitors/:id/edit", PulsariusWeb.MonitorLive.Index, :edit
-      live "/monitors/:id", PulsariusWeb.MonitorLive.Show, :show
-      live "/monitors/:id/show/edit", PulsariusWeb.MonitorLive.Show, :edit
+      live_session :users, on_mount: [PulsariusWeb.AuthAssigns] do
+        live "/monitors", PulsariusWeb.MonitorLive.Index, :index
+        live "/monitors/new", PulsariusWeb.MonitorLive.Index, :new
+        live "/monitors/:id/edit", PulsariusWeb.MonitorLive.Index, :edit
+        live "/monitors/:id", PulsariusWeb.MonitorLive.Show, :show
+        live "/monitors/:id/show/edit", PulsariusWeb.MonitorLive.Show, :edit
 
-      live "/users", PulsariusWeb.UserLive.Index, :index
-      live "/users/new", PulsariusWeb.UserLive.Index, :new
-      live "/users/:id/edit", PulsariusWeb.UserLive.Index, :edit
-      live "/users/:id", PulsariusWeb.UserLive.Show, :show
-      live "/users/:id/show/edit", PulsariusWeb.UserLive.Show, :edit
+        live "/users", PulsariusWeb.UserLive.Index, :index
+        live "/users/new", PulsariusWeb.UserLive.Index, :new
+        live "/users/:id/edit", PulsariusWeb.UserLive.Index, :edit
+        live "/users/:id", PulsariusWeb.UserLive.Show, :show
+        live "/users/:id/show/edit", PulsariusWeb.UserLive.Show, :edit
+      end
     end
   end
 

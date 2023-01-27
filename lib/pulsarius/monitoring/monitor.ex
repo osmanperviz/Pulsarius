@@ -8,6 +8,7 @@ defmodule Pulsarius.Monitoring.Monitor do
 
   alias Pulsarius.Configurations.Configuration
   alias Pulsarius.Incidents.Incident
+  alias Pulsarius.Accounts.Account
 
   @type t :: %__MODULE__{
           name: String.t(),
@@ -25,6 +26,10 @@ defmodule Pulsarius.Monitoring.Monitor do
 
     has_one :configuration, Configuration, on_replace: :delete
     has_one :active_incident, Incident, where: [status: :active]
+
+    belongs_to :account, Account,
+      foreign_key: :account_id,
+      type: :binary_id
 
     timestamps()
   end

@@ -3,6 +3,7 @@ defmodule PulsariusWeb.LiveHelpers do
   import Phoenix.LiveView.Helpers
 
   alias Phoenix.LiveView.JS
+  import Phoenix.Component
 
   @doc """
   Renders a live component inside a modal.

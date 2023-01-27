@@ -36,6 +36,12 @@ defmodule Pulsarius.Notifications do
     # |> Enum.each(&Notification.send/1)
   end
 
+  @spec user_invitation_created(UserInvitation.t()) :: :ok
+  def user_invitation_created(invitation) do
+    Email.user_invitation_created(invitation, invitation.email)
+    |> Notification.send()
+  end
+
   defp build_notifications(type, incident) do
     # TODO: move this to separate MODULE
     []

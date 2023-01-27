@@ -6,7 +6,7 @@ defmodule PulsariusWeb.UserLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :users, list_users())}
+    {:ok, assign(socket, :users, list_users(socket.assigns.account.id))}
   end
 
   @impl true
@@ -37,10 +37,10 @@ defmodule PulsariusWeb.UserLive.Index do
     user = Accounts.get_user!(id)
     {:ok, _} = Accounts.delete_user(user)
 
-    {:noreply, assign(socket, :users, list_users())}
+    {:noreply, assign(socket, :users, list_users(socket.assigns.account.id))}
   end
 
-  defp list_users do
-    Accounts.list_users()
+  defp list_users(account_id) do
+    Accounts.list_users(account_id)
   end
 end

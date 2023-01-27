@@ -91,6 +91,7 @@ defmodule PulsariusWeb do
 
       # Import LiveView and .heex helpers (live_render, live_patch, <.form>, etc)
       import Phoenix.LiveView.Helpers
+      import Phoenix.Component
       import PulsariusWeb.LiveHelpers
 
       # Import basic rendering functionality (render, render_layout, etc)
@@ -99,6 +100,8 @@ defmodule PulsariusWeb do
       import PulsariusWeb.ErrorHelpers
       import PulsariusWeb.Gettext
       alias PulsariusWeb.Router.Helpers, as: Routes
+
+      require Logger
     end
   end
 

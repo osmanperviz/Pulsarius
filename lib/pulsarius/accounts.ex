@@ -5,11 +5,12 @@ defmodule Pulsarius.Accounts do
 
   import Ecto.Query, warn: false
   alias Pulsarius.Repo
+  alias Ecto.Multi
 
-  alias Pulsarius.Accounts.User
+  alias Pulsarius.Accounts.{User, Account, UserInvitation}
 
   @doc """
-  Returns the list of users.
+  Returns the list of all users.
 
   ## Examples
 
@@ -17,8 +18,21 @@ defmodule Pulsarius.Accounts do
       [%User{}, ...]
 
   """
-  def list_users do
+  def list_users() do
     Repo.all(User)
+  end
+
+  @doc """
+  Returns the list of users for given account.
+
+  ## Examples
+
+      iex> list_users(acount_id)
+      [%User{}, ...]
+
+  """
+  def list_users(account_id) do
+    User |> where(account_id: ^account_id) |> Repo.all()
   end
 
   @doc """
@@ -49,9 +63,29 @@ defmodule Pulsarius.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user(attrs \\ %{}) do
+  def create_user(account, attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:account, account)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Creates a user with pending state, without first name and second name.
+
+  ## Examples
+
+      iex> create_pending_user(%{field: value})
+      {:ok, %User{}}
+
+      iex> create_pending_user(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_pending_user(account, attrs \\ %{}) do
+    %User{}
+    |> User.invitation_changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:account, account)
     |> Repo.insert()
   end
 
@@ -100,5 +134,87 @@ defmodule Pulsarius.Accounts do
   """
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
+  end
+
+  @doc """
+  Creates a account.
+
+  ## Examples
+
+      iex> create_account(%{field: value})
+      {:ok, %Account{}}
+
+      iex> create_account(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_account(attrs \\ %{}) do
+    %Account{}
+    |> Account.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Creates a user invitation record and pending user in DB.
+
+  ## Examples
+
+      iex> invite_user(account, params)
+      {:ok, %UserInvitation{}}
+
+      iex> invite_user(account, params)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  @spec invite_user(Account.t(), map()) :: {:ok, UserInvitation.t()} | {:error, any()}
+  def invite_user(account, user_invitation_params) do
+    Multi.new()
+    |> do_create_pending_user(account, user_invitation_params)
+    |> do_invite_user(account, user_invitation_params)
+    |> Repo.transaction()
+    |> case do
+      {:ok, result} ->
+        {:ok, result.create_user_invitation}
+
+      error ->
+        error
+    end
+  end
+
+@doc """
+  Fetch invited user from invitation token
+
+  ## Examples
+
+      iex> fetch_user_from_invitation(account, params)
+      %UserInvitation{}
+
+      iex> invite_user(account, params)
+      nil
+
+  """
+  @spec fetch_user_from_invitation(String.t()) :: UserInvitation.t() | nil
+  def fetch_user_from_invitation(token) do
+    UserInvitation.by_token(token)
+    |> preload([:pending_user])
+    |> Repo.one()
+  end
+
+  defp do_create_pending_user(multi, account, user_invitation_params) do
+    multi
+    |> Multi.run(:create_pending_user, fn _, _ ->
+      create_pending_user(account, user_invitation_params)
+    end)
+  end
+
+  defp do_invite_user(multi, account, params) do
+    multi
+    |> Multi.run(:create_user_invitation, fn _, %{create_pending_user: user} ->
+      %UserInvitation{}
+      |> UserInvitation.changeset(params)
+      |> Ecto.Changeset.put_assoc(:account, account)
+      |> Ecto.Changeset.put_assoc(:pending_user, user)
+      |> Repo.insert()
+    end)
   end
 end

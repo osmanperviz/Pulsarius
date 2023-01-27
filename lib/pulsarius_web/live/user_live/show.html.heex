@@ -1,11 +1,10 @@
 <h1>Show User</h1>
 
 <%= if @live_action in [:edit] do %>
-  <.modal return_to={Routes.user_show_path(@socket, :show, @user)}>
+  <.modal return_to={Routes.user_show_path(@socket, :show, @user)} title="Finish Registration">
     <.live_component
       module={PulsariusWeb.UserLive.FormComponent}
       id={@user.id}
-      title={@page_title}
       action={@live_action}
       user={@user}
       return_to={Routes.user_show_path(@socket, :show, @user)}
@@ -33,5 +32,4 @@
 <span>
   <%= live_patch("Edit", to: Routes.user_show_path(@socket, :edit, @user), class: "button") %>
 </span>
-|
-<span><%= live_redirect("Back", to: Routes.user_index_path(@socket, :index)) %></span>
+|<span><%= live_redirect("Back", to: Routes.user_index_path(@socket, :index)) %></span>

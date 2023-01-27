@@ -14,7 +14,7 @@ defmodule PulsariusWeb.IntegrationController do
       "slack_notification_webhook_url" => data["incoming_webhook"]["url"]
     }
 
-    {:ok, configuration} =
+    {:ok, _configuration} =
       monitor.configuration
       |> Configurations.update_configuration(params)
 
