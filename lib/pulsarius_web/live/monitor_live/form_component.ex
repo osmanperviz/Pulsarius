@@ -46,7 +46,7 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   end
 
   defp save_monitor(socket, :new, monitor_params) do
-    case Monitoring.create_monitor(monitor_params) do
+    case Monitoring.create_monitor(socket.assigns.account, monitor_params) do
       {:ok, monitor} ->
         monitor = Pulsarius.Repo.preload(monitor, [:active_incident])
         Pulsarius.EndpointDynamicSupervisor.start_monitoring(monitor)

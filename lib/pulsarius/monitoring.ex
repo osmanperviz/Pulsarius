@@ -49,9 +49,10 @@ defmodule Pulsarius.Monitoring do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_monitor(attrs \\ %{}) do
+  def create_monitor(account, attrs \\ %{}) do
     %Monitor{}
     |> Monitor.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:account, account)
     |> Repo.insert()
   end
 

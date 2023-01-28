@@ -17,19 +17,19 @@ defmodule Pulsarius.Notifications.NotificationServer do
   end
 
   def handle_info({:incident_created, incident}, socket) do
-    Notifications.incident_created(incident, %{})
+    Task.start(fn -> Notifications.incident_created(incident) end)
 
     {:noreply, socket}
   end
 
   def handle_info({:incident_auto_resolved, incident}, socket) do
-    Notifications.incident_auto_resolved(incident, %{})
+    Task.start(fn -> Notifications.incident_auto_resolved(incident) end)
 
     {:noreply, socket}
   end
 
   def handle_info({:user_invitation_created, invitation}, socket) do
-    Notifications.user_invitation_created(invitation)
+    Task.start(fn -> Notifications.user_invitation_created(invitation) end)
 
     {:noreply, socket}
   end

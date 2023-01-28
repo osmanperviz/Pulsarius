@@ -3,8 +3,9 @@ defmodule Pulsarius.Mailer do
   use Phoenix.Swoosh, view: PulsariusWeb.EmailsView, layout: {PulsariusWeb.EmailsView, :layout}
 
   # @spec profile_added(Profile.t(), recipient()) :: Swoosh.Email.t()
-  def incident_created(_incident, _recipient) do
+  def incident_created(_incident, recipient) do
     base_email()
+    |> to(recipient)
     |> subject("Incident occured!")
     |> render_body("incident_created.html")
   end
