@@ -43,6 +43,8 @@ defmodule PulsariusWeb.Router do
 
       live_dashboard "/dashboard", metrics: PulsariusWeb.Telemetry
 
+      live "/users/:id/invitation", PulsariusWeb.UserLive.Show, :invitation
+
       live_session :users, on_mount: [PulsariusWeb.AuthAssigns] do
         live "/monitors", PulsariusWeb.MonitorLive.Index, :index
         live "/monitors/new", PulsariusWeb.MonitorLive.Index, :new

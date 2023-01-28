@@ -181,7 +181,7 @@ defmodule Pulsarius.Accounts do
     end
   end
 
-@doc """
+  @doc """
   Fetch invited user from invitation token
 
   ## Examples

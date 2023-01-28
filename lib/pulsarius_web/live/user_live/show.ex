@@ -8,14 +8,25 @@ defmodule PulsariusWeb.UserLive.Show do
     {:ok, socket}
   end
 
-  @impl true
-  def handle_params(%{"id" => id}, _, socket) do
-    {:noreply,
-     socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:user, Accounts.get_user!(id))}
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp page_title(:show), do: "Show User"
-  defp page_title(:edit), do: "Edit User"
+  defp apply_action(socket, :invitation, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Finish Registration")
+    |> assign(:user, Accounts.get_user!(id))
+  end
+
+  defp apply_action(socket, :show, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Show User")
+    |> assign(:user, Accounts.get_user!(id))
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit User")
+    |> assign(:user, Accounts.get_user!(id))
+  end
 end

@@ -9,7 +9,7 @@ defmodule PulsariusWeb.UserInvitationController do
 
     if pending_state?(pending_user) do
       conn
-      |> redirect(to: Routes.user_show_path(conn, :edit, pending_user))
+      |> redirect(to: Routes.user_show_path(conn, :invitation, pending_user))
     else
       conn
       |> put_layout(false)
