@@ -1,9 +1,11 @@
 defmodule Pulsarius.Billing.Plans do
-@moduledoc """
-The Plan model will be responsible for representing and handling business rules for the subscription options we will offer.
-"""
+  @moduledoc """
+  The Plan model will be responsible for representing and handling business rules for the subscription options we will offer.
+  """
   use Ecto.Schema
   import Ecto.Changeset
+
+  @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "plans" do
     field :charging_interval, :integer

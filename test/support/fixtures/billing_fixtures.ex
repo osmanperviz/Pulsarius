@@ -21,4 +21,19 @@ defmodule Pulsarius.BillingFixtures do
 
     plans
   end
+
+  @doc """
+  Generate a subscriptions.
+  """
+  def subscriptions_fixture(attrs \\ %{}) do
+    {:ok, subscriptions} =
+      attrs
+      |> Enum.into(%{
+        active: true,
+        stripe_id: "some stripe_id"
+      })
+      |> Pulsarius.Billing.create_subscriptions()
+
+    subscriptions
+  end
 end
