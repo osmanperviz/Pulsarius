@@ -57,6 +57,9 @@ defmodule PulsariusWeb.Router do
         live "/users/:id/edit", PulsariusWeb.UserLive.Index, :edit
         live "/users/:id", PulsariusWeb.UserLive.Show, :show
         live "/users/:id/show/edit", PulsariusWeb.UserLive.Show, :edit
+
+        live "/billing/pricing", PulsariusWeb.CheckoutLive.Pricing, :pricing
+        live "/billing/checkout", PulsariusWeb.CheckoutLive.Index, :index
       end
     end
   end

@@ -3,7 +3,7 @@ defmodule Pulsarius.Repo.Migrations.CreatePlans do
 
   def change do
     create table(:plans, primary_key: false) do
-      add :id, :uuid, primary_key: true 
+      add :id, :uuid, primary_key: true
       add :name, :string
       add :description, :text
       add :charging_interval, :integer

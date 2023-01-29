@@ -144,9 +144,11 @@ defmodule Pulsarius.Billing do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_subscriptions(attrs \\ %{}) do
+  def create_subscriptions(account, plan, attrs \\ %{}) do
     %Subscriptions{}
     |> Subscriptions.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:account, account)
+    |> Ecto.Changeset.put_assoc(:plan, plan)
     |> Repo.insert()
   end
 

@@ -4,6 +4,7 @@ defmodule Pulsarius.Accounts.Account do
 
   alias Pulsarius.Accounts.User
   alias Pulsarius.Monitoring.Monitor
+  alias Pulsarius.Billing.Subscriptions
 
   @type t :: %__MODULE__{
           type: String.t()
@@ -12,10 +13,12 @@ defmodule Pulsarius.Accounts.Account do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "accounts" do
-    field :type, Ecto.Enum, values: [:freelancer, :small, :bussines], default: :freelancer
+    field :type, Ecto.Enum, values: [:freelancer, :small_team, :bussines], default: :freelancer
 
     has_many :users, User, on_replace: :delete
     has_many :monitors, Monitor, on_replace: :delete
+
+    has_one :subscription, Subscriptions, on_replace: :delete
 
     timestamps()
   end
