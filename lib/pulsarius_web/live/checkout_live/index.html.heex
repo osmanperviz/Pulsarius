@@ -1,1 +1,21 @@
-<h1>INDEX</h1>
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+      <h2>Checkout form</h2>
+      <p class="lead">
+        Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.
+      </p>
+    </div>
+
+    <.form :let={f} for={:billing} id="user-form" phx-submit="save">
+      <div class="row g-5">
+        <div class="col-md-6 col-lg-5 order-md-last">
+          <.payment_form current_user={@current_user} plan={@plan} form={f} />
+        </div>
+        <div class="col-md-6 col-lg-7">
+          <.billing_info_form current_user={@current_user} plan={@plan} form={f}  />
+        </div>
+      </div>
+    </.form>
+  </main>
+</div>

@@ -1,6 +1,8 @@
 defmodule PulsariusWeb.CheckoutLive.Index do
   use PulsariusWeb, :live_view
 
+  import PulsariusWeb.CheckoutLive.BillingComponents
+
   @impl true
   def mount(_params, _session, socket) do
     {:ok, socket}
@@ -23,9 +25,5 @@ defmodule PulsariusWeb.CheckoutLive.Index do
     socket
     |> assign(:page_title, "Checkout Page")
     |> assign(:plan, nil)
-  end
-
-  defp list_users(account_id) do
-    Accounts.list_users(account_id)
   end
 end

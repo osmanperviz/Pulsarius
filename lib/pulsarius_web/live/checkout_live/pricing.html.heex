@@ -12,7 +12,12 @@
     <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
       <%= for plan <- @plans do %>
         <div class="col">
-          <.price_box plan={plan} socket={@socket} current_plan={@current_plan}  button_title={button_title(@current_plan.id, plan.id)}/>
+          <.price_box
+            plan={plan}
+            socket={@socket}
+            current_plan={@current_plan}
+            button_title={button_title(@current_plan.id, plan.id)}
+          />
         </div>
       <% end %>>
     </div>

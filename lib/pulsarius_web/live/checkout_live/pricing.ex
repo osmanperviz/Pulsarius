@@ -19,7 +19,7 @@ defmodule PulsariusWeb.CheckoutLive.Pricing do
     {:ok}
   end
 
-    def button_title(current_plan_id, plan_id) do
-        if current_plan_id == plan_id, do: "Your Plan", else: "Select Plan"
-    end
+  def button_title(current_plan_id, plan_id) do
+    if current_plan_id == plan_id, do: "Your Plan", else: "Select Plan"
+  end
 end
