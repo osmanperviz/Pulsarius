@@ -1,3 +1,4 @@
+import topbar from "../vendor/topbar";
 /*
  *  Hooks.StripeHook
  */
@@ -8,8 +9,6 @@ export const StripeHook = {
      * 1) Get publishable_key from form
      */
     const stripe = Stripe(this.el.dataset.publicKey);
-
-    // const stripe = Stripe('pk_test_PExnBBWOVfYS4dz43A4SuLL9');
     
     /*
      * 2) Set options for Stripe.js
@@ -51,7 +50,7 @@ export const StripeHook = {
       buttonText = document.getElementById('button-text');
       buttonText.textContent = "Processing...";
 
-      // topbar.show();
+       topbar.show();
       const { setup_error } = await stripe.confirmSetup({
         // Wait for stripe confirmation
         elements,
@@ -74,7 +73,7 @@ export const StripeHook = {
          * This point will only be reached if there is an immediate error when
          * confirming the payment.
          */
-        // topbar.hide();
+         topbar.hide();
         buttonText.textContent = "Payyyyy";
         messageContainer.textContent = error.message; // Set error message
       } else {
@@ -102,7 +101,7 @@ export const StripeHook = {
               }
 
               case "processing": {
-                // topbar.hide();
+                 topbar.hide();
                 messageContainer.innerText =
                   "Processing payment details. We'll update you when processing is complete.";
                 buttonText.textContent = "Pay";
@@ -110,7 +109,7 @@ export const StripeHook = {
               }
 
               case "requires_payment_method": {
-                // topbar.hide();
+                 topbar.hide();
                 messageContainer.innerText =
                   "Failed to process payment details. Please try another payment method.";
                 buttonText.textContent = "Pay";
