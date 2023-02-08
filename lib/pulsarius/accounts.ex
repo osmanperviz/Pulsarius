@@ -137,6 +137,22 @@ defmodule Pulsarius.Accounts do
   end
 
   @doc """
+  Fetch account by stripe_id.
+
+  ## Examples
+
+      iex> fetch_account_by_stripe_id!(123)
+      %Account{}
+
+      iex> fetch_account_by_stripe_id!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def fetch_account_by_stripe_id!(stripe_id) do
+    Repo.get_by(Account, stripe_id: stripe_id)
+  end
+
+  @doc """
   Creates a account.
 
   ## Examples
@@ -152,6 +168,24 @@ defmodule Pulsarius.Accounts do
     %Account{}
     |> Account.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Assign stripe id to  Account.
+
+  ## Examples
+
+      iex> assign_stripe_id(account, %{field: new_value})
+      {:ok, %Account{}}
+
+      iex> assign_stripe_id(account, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def assign_stripe_id(%Account{} = account, stripe_id) do
+    account
+    |> Account.changeset(%{stripe_id: stripe_id})
+    |> Repo.update()
   end
 
   @doc """

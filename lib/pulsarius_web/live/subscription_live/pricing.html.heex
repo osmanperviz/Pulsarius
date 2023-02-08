@@ -1,0 +1,25 @@
+<div class="container py-3">
+  <header>
+    <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+      <h1 class="display-4 fw-normal">Pricing</h1>
+      <p class="fs-5 text-muted">
+        Quickly build an effective pricing table for your potential customers with this Bootstrap example. It’s built with default Bootstrap components and utilities with little customization.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+      <%= for plan <- @plans do %>
+        <div class="col">
+          <.price_box
+            plan={plan}
+            socket={@socket}
+            current_plan={@current_plan}
+            button_title={button_title(@current_plan.id, plan.id)}
+          />
+        </div>
+      <% end %>
+    </div>
+  </main>
+</div>

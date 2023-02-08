@@ -35,6 +35,9 @@ defmodule PulsariusWeb.Endpoint do
     param_key: "request_logger",
     cookie_key: "request_logger"
 
+  # extract stripe needed data from HTTP headers and assign to conn
+  plug PulsariusWeb.Plugs.StripePayload
+
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 

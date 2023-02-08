@@ -14,6 +14,11 @@ defmodule PulsariusWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/webhooks", PulsariusWeb do
+    pipe_through :api
+    post "/stripe", StripeWebhookController, :create
+  end
+
   scope "/", PulsariusWeb do
     pipe_through :browser
 
@@ -57,6 +62,10 @@ defmodule PulsariusWeb.Router do
         live "/users/:id/edit", PulsariusWeb.UserLive.Index, :edit
         live "/users/:id", PulsariusWeb.UserLive.Show, :show
         live "/users/:id/show/edit", PulsariusWeb.UserLive.Show, :edit
+
+        live "/billing/pricing", PulsariusWeb.SubscriptionLive.Pricing, :pricing
+        live "/billing/subscription", PulsariusWeb.SubscriptionLive.New, :new
+        live "/billing/change_subscription", PulsariusWeb.SubscriptionLive.Edit, :edit
       end
     end
   end

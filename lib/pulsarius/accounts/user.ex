@@ -38,4 +38,8 @@ defmodule Pulsarius.Accounts.User do
     |> cast(attrs, [:first_name, :last_name, :email, :status])
     |> validate_required([:email])
   end
+
+  def full_name(%__MODULE__{first_name: first_name, last_name: last_name}) do
+    "#{first_name} #{last_name}"
+  end
 end
