@@ -1,0 +1,66 @@
+<div class="container">
+  <main>
+    <div class="py-5 text-center">
+      <h2>Change Subscription</h2>
+      <p class="lead">
+        Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.
+      </p>
+    </div>
+
+    <%!-- <.form :let={f} for={:billing} id="user-form" phx-submit="save">
+      <div class="row g-5">
+        <div class="col-md-6 col-lg-5 order-md-last">
+          <.payment_form current_user={@current_user} plan={@plan} form={f} />
+        </div>
+        <div class="col-md-6 col-lg-7">
+          <.billing_info_form current_user={@current_user} plan={@plan} form={f} />
+        </div>
+      </div>
+    </.form> --%>
+
+    <.form :let={f} for={@changeset} id="user-form" phx-submit="save">
+      <div class="row g-5">
+        <div class="col-md-6 col-lg-5 order-md-last"></div>
+        <div class="col-md-6 col-lg-7">
+          <%= label(f, :name_on_card, class: "form-label") do %>
+            Your Name (same as your credit card)
+          <% end %>
+          <%= text_input(f, :name_on_card, class: "form-control") %>
+          <small class="text-muted">Full name as displayed on card</small>
+          <%= error_tag(f, :name_on_card) %>
+
+          <%= unless @intent do %>
+            <hr class="my-4" />
+            <button class="w-100 btn btn-primary btn-lg" type="submit">Go to Pay</button>
+          <% end %>
+          <%!-- <.billing_info_form current_user={@current_user} plan={@plan} form={f} /> --%>
+        </div>
+      </div>
+    </.form>
+
+    <div class="col-md-6 col-lg-7">
+      <%= if @intent do %>
+        <form
+          action="#"
+          method="post"
+          data-secret={@intent.client_secret}
+          phx-hook="Stripe"
+          id="payment-form"
+        >
+          <div class="form-row mb-4">
+            <label for="card-element" class="form-label">
+              Credit or debit card
+            </label>
+            <div id="card-element" class="form-control">
+              <!-- A Stripe Element will be inserted here. -->
+            </div>
+            <!-- Used to display form errors. -->
+            <div id="card-errors" class="tag-label" role="alert"></div>
+          </div>
+
+          <button class="btn btn-primary w-full">Submit Payment</button>
+        </form>
+      <% end %>
+    </div>
+  </main>
+</div>

@@ -5,6 +5,7 @@ defmodule Pulsarius.Repo.Migrations.AddAccountEntity do
     create table(:accounts, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :type, :string
+      add :stripe_id, :string
 
       timestamps()
     end
