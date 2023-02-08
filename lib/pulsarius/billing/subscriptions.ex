@@ -11,8 +11,10 @@ defmodule Pulsarius.Billing.Subscriptions do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "subscriptions" do
-    field :active, :boolean, default: false
-    field :stripe_id, :string
+    field(:cancel_at, :naive_datetime)
+    field(:current_period_end_at, :naive_datetime)
+    field(:status, :string)
+    field(:stripe_id, :string)
 
     belongs_to :plan, Plans,
       foreign_key: :plan_id,
@@ -28,7 +30,7 @@ defmodule Pulsarius.Billing.Subscriptions do
   @doc false
   def changeset(subscriptions, attrs) do
     subscriptions
-    |> cast(attrs, [:active, :stripe_id])
-    |> validate_required([:active, :stripe_id])
+    |> cast(attrs, [:cancel_at, :current_period_end_at, :stripe_id, :status])
+    |> validate_required([:stripe_id, :current_period_end_at, :status])
   end
 end

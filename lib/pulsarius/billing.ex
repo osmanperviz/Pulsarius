@@ -29,6 +29,23 @@ defmodule Pulsarius.Billing do
 
   ## Examples
 
+      iex> fetch_plan_by_stripe_id!(123)
+      %Plans{}
+
+      iex> fetch_plan_by_stripe_id!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def fetch_plan_by_stripe_id!(stripe_id),
+    do: Repo.get_by!(Plans, stripe_price_id: stripe_id)
+
+  @doc """
+  Gets a single plans by plan_stripe_id.
+
+  Raises `Ecto.NoResultsError` if the Plans does not exist.
+
+  ## Examples
+
       iex> get_plans!(123)
       %Plans{}
 

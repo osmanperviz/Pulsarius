@@ -13,6 +13,7 @@ defmodule Pulsarius.Billing.Plans do
     field :name, :string
     field :price_in_cents, :integer
     field :stripe_price_id, :string
+    field :type, Ecto.Enum, values: [:freelancer, :small_team, :bussines]
 
     timestamps()
   end

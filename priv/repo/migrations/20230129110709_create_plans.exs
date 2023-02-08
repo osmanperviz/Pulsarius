@@ -9,6 +9,7 @@ defmodule Pulsarius.Repo.Migrations.CreatePlans do
       add :charging_interval, :integer
       add :price_in_cents, :integer
       add :stripe_price_id, :string
+      add :type, :string
 
       timestamps()
     end

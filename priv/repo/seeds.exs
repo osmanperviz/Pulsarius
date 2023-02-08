@@ -32,15 +32,17 @@ if Mix.env() == :dev do
     description: "Free Plan",
     name: "Freelancer",
     price_in_cents: 10,
-    stripe_price_id: "some stripe_price_id"
+    stripe_price_id: "some stripe_price_id",
+    type: :freelancer
   }
 
   small_team_plan = %{
     charging_interval: 12,
-    description: "Smal Team",
-    name: "Smaal Team",
+    description: "Small Team",
+    name: "Small Team",
     price_in_cents: 1000,
-    stripe_price_id: "some stripe_price_id"
+    stripe_price_id: "price_1MW0ZxGzlqiGxcQvOecmXEDM",
+    type: :small_team
   }
 
   bussiness_plan = %{
@@ -48,17 +50,11 @@ if Mix.env() == :dev do
     description: "Bussiness Plan",
     name: "Bussiness",
     price_in_cents: 10000,
-    stripe_price_id: "some stripe_price_id"
+    stripe_price_id: "price_1MVJnGGzlqiGxcQvvte35iVf",
+    type: :bussines
   }
 
   {:ok, plan} = Pulsarius.Billing.create_plans(free_plan)
-
   Pulsarius.Billing.create_plans(small_team_plan)
   Pulsarius.Billing.create_plans(bussiness_plan)
-
-  {:ok, _sub} =
-    Pulsarius.Billing.create_subscriptions(account, plan, %{
-      active: true,
-      stripe_id: "some stripe_id"
-    })
 end

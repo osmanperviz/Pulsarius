@@ -23,7 +23,12 @@ defmodule Pulsarius.Application do
       {Task, fn -> Pulsarius.EndpointDynamicSupervisor.auto_start_monitoring() end},
       # Start a worker by calling: Pulsarius.Worker.start_link(arg)
       # {Pulsarius.Worker, arg}
-      Pulsarius.Notifications.NotificationServer
+
+      # process responsible for handeling notifications
+      Pulsarius.Notifications.NotificationServer,
+
+      # process stripe webhook notifications
+      Pulsarius.Billing.ProcessWebhook
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

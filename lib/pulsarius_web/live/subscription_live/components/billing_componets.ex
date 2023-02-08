@@ -1,9 +1,9 @@
-defmodule PulsariusWeb.CheckoutLive.BillingComponents do
+defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
   use PulsariusWeb, :component
 
   def price_box(assigns) do
     ~H"""
-    <div class="card mb-4 rounded-3 shadow-sm">
+    <div class="card mb-4 rounded-3 shadow-sm text-bg-light">
       <div class="card-header py-3">
         <h4 class="my-0 fw-normal"><%= @plan.name %></h4>
       </div>
@@ -18,7 +18,11 @@ defmodule PulsariusWeb.CheckoutLive.BillingComponents do
           <li>Help center access</li>
         </ul>
         <.link
-          href={Routes.checkout_index_path(@socket, :index, %{plan_id: @plan.id})}
+          href={
+            if @current_plan.name == "Freelancer",
+              do: Routes.subscription_new_path(@socket, :new, %{plan_id: @plan.id}),
+              else: Routes.subscription_edit_path(@socket, :edit, %{plan_id: @plan.id})
+          }
           class={"w-100 btn btn-lg btn-outline-primary #{if @current_plan.id == @plan.id, do: "disabled"}"}
         >
           <%= @button_title %>
@@ -125,8 +129,6 @@ defmodule PulsariusWeb.CheckoutLive.BillingComponents do
             <%= error_tag(@form, :city) %>
           </div>
         </div>
-
-        <hr class="my-4" />
 
         <hr class="my-4" />
 
