@@ -103,35 +103,3 @@ defmodule PulsariusWeb.SubscriptionLive.New do
     end
   end
 end
-
-# %{          
-#   "amount" => 1000,
-#   "amount_details" => %{"tip" => %{}},
-#   "automatic_payment_methods" => nil,
-#   "canceled_at" => nil,
-#   "cancellation_reason" => nil,
-#   "capture_method" => "automatic",
-#   "client_secret" => "pi_3MX6ovGzlqiGxcQv1EjsS4PC_secret_yFZZdL9TokGa1GfolQE6eMI0l",
-#   "confirmation_method" => "automatic",
-#   "created" => 1675359817,
-#   "currency" => "usd",
-#   "description" => nil,
-#   "id" => "pi_3MX6ovGzlqiGxcQv1EjsS4PC",
-#   "last_payment_error" => nil,
-#   "livemode" => false,
-#   "next_action" => nil,
-#   "object" => "payment_intent",
-#   "payment_method" => "pm_1MX6paGzlqiGxcQv34JdBS42",
-#   "payment_method_types" => ["card"],
-#   "processing" => nil,
-#   "receipt_email" => nil,
-#   "setup_future_usage" => nil,
-#   "shipping" => nil,
-#   "source" => nil,
-#   "status" => "succeeded"
-# }
-
-# Stripe.Subscription.create(%{
-#   customer: "cus_NIkMB7OaUuMVJQ",
-#   items: [%{price: "price_1MW0ZxGzlqiGxcQvOecmXEDM"}]
-# })

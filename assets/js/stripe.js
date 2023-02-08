@@ -1,7 +1,7 @@
 /*
  *  Hooks.StripeHook
  */
-export const Stripe = {
+export const StripeHook = {
   mounted() {
     /*
      * Stripe implementation starts here.
