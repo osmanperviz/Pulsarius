@@ -26,7 +26,7 @@ import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
-import { Stripe } from "./Stripe";
+import { Stripe } from "./stripe";
 
 let Hooks = {};
 Hooks.Stripe = Stripe;
