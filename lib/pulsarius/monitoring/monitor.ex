@@ -31,6 +31,8 @@ defmodule Pulsarius.Monitoring.Monitor do
       foreign_key: :account_id,
       type: :binary_id
 
+    has_many :users, through: [:account, :users]
+
     timestamps()
   end
 

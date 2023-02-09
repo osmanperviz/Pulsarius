@@ -1,29 +1,5 @@
 defmodule Pulsarius.Notifications.Webhooks do
-  alias Pulsarius.Notifications.Webhooks.SlackClient
-
-  @spec incident_created(Incident.t(), String.t()) :: %{
-          webhook_url: String.t(),
-          body: String.t()
-        }
-  def incident_created(incident, webhook_url) do
-    body =
-      incident
-      |> render_body("incident_created.html")
-
-    %{webhook_url: webhook_url, body: body}
-  end
-
-  @spec incident_auto_resolved(Incident.t(), String.t()) :: %{
-          webhook_url: String.t(),
-          body: String.t()
-        }
-  def incident_auto_resolved(incident, webhook_url) do
-    body =
-      incident
-      |> render_body("incident_auto_resolved.html")
-
-    %{webhook_url: webhook_url, body: body}
-  end
+  alias Pulsarius.Notifications.Webhooks.Slack
 
   def deliver(%{webhook_url: webhook_url, body: body}) do
     HTTPoison.post(
@@ -33,7 +9,22 @@ defmodule Pulsarius.Notifications.Webhooks do
     )
   end
 
-  defp render_body(incident, template) do
+  def notifications_for(type, incident) do
+    slack_integration_enabled? = incident.monitor.configuration.slack_notification
+
+    cond do
+      slack_integration_enabled? ->
+        webhook_url = incident.monitor.configuration.slack_notification_webhook_url
+        [apply(Slack, type, [incident, webhook_url])]
+
+      # ms_teams_integration_enabled? -> 
+      # [apply(MsTeams, type, args)]
+      true ->
+        []
+    end
+  end
+
+  def render_body(incident, template) do
     message =
       Phoenix.View.render_to_string(PulsariusWeb.WebhookView, template, incident: incident)
 
