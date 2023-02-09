@@ -1,5 +1,5 @@
 defmodule Pulsarius.Notifications do
-  alias Pulsarius.Notifications.{NotificationBuilder, Email}
+  alias Pulsarius.Notifications.{Webhooks, Email}
 
   defprotocol Notification do
     @moduledoc """
@@ -12,19 +12,25 @@ defmodule Pulsarius.Notifications do
 
   @spec incident_created(Incident.t()) :: :ok
   def incident_created(incident) do
-    NotificationBuilder.build_for(:incident_created, incident)
+    webhook_notifications = Webhooks.notifications_for(:incident_created, incident)
+    email_notifications = Email.notifications_for(:incident_created, incident)
+
+    (webhook_notifications ++ email_notifications)
     |> Enum.map(&Notification.send/1)
   end
 
   @spec incident_auto_resolved(Incident.t()) :: :ok
   def incident_auto_resolved(incident) do
-    NotificationBuilder.build_for(:incident_auto_resolved, incident)
+    webhook_notifications = Webhooks.notifications_for(:incident_auto_resolved, incident)
+    email_notifications = Email.notifications_for(:incident_auto_resolved, incident)
+
+    (webhook_notifications ++ email_notifications)
     |> Enum.map(&Notification.send/1)
   end
 
   @spec user_invitation_created(UserInvitation.t()) :: :ok
   def user_invitation_created(invitation) do
-    Email.user_invitation_created(invitation, invitation.email)
+    Email.notifications_for(:user_invitation_created, invitation)
     |> Notification.send()
   end
 end

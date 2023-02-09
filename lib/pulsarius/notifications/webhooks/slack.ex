@@ -1,28 +1,36 @@
 defmodule Pulsarius.Notifications.Webhooks.Slack do
   @moduledoc """
-    Implementing Notification protocol, responsible for sending different types of Slack notifications.
+    Implementing Notification protocol, responsible for sending and composing different types of Slack notifications.
   """
 
-  @type t :: %__MODULE__{type: atom, args: list}
+  alias Pulsarius.Notifications.Webhooks
 
-  defstruct [:type, :args]
+  @type t :: %__MODULE__{type: atom, webhook_url: String.t(), body: String.t()}
+  @type incident :: Incident.t()
+  @type webhook_url :: String.t()
 
-  @spec incident_created(Incident.t(), String.t()) :: :ok
+  defstruct [:type, :webhook_url, :body]
+
+  @spec incident_created(incident, webhook_url) :: Slack.t()
   def incident_created(incident, webhook_url) do
-    %__MODULE__{type: :incident_created, args: [incident, webhook_url]}
+    body = Webhooks.render_body(incident, "incident_created.html")
+
+    %__MODULE__{type: :incident_created, webhook_url: webhook_url, body: body}
   end
 
-  @spec incident_created(Incident.t(), String.t()) :: :ok
+  @spec incident_auto_resolved(incident, webhook_url) :: Slack.t()
   def incident_auto_resolved(incident, webhook_url) do
-    %__MODULE__{type: :incident_auto_resolved, args: [incident, webhook_url]}
+    body = Webhooks.render_body(incident, "incident_auto_resolved.html")
+
+    %__MODULE__{type: :incident_auto_resolved, webhook_url: webhook_url, body: body}
   end
 
   defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Webhooks.Slack do
     alias Pulsarius.Notifications.Webhooks
 
-    @spec send(%{type: String.t(), args: list}) :: :ok
-    def send(%{type: type, args: args}) do
-      Webhooks.deliver(apply(Webhooks, type, args))
+    @spec send(%{args: list, body: String.t()}) :: :ok
+    def send(%{webhook_url: _webhook_url, body: _body} = slack_notification) do
+      Webhooks.deliver(slack_notification)
     end
   end
 end
