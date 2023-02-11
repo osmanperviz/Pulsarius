@@ -1,10 +1,10 @@
 <h1>Listing Monitoring</h1>
 
-<%= if @live_action in [:new, :edit] do %>
+<%= if @live_action in [:edit] do %>
   <.modal return_to={Routes.monitor_index_path(@socket, :index)} title={@page_title}>
     <.live_component
       module={PulsariusWeb.MonitorLive.FormComponent}
-      id={@monitor.id || :new}
+      id={@monitor.id}
       action={@live_action}
       monitor={@monitor}
       account={@account}
@@ -47,4 +47,4 @@
   </tbody>
 </table>
 
-<span><%= live_patch("New Monitor", to: Routes.monitor_index_path(@socket, :new)) %></span>
+<span><%= live_patch("New Monitor", to: Routes.monitor_new_path(@socket, :new)) %></span>

@@ -52,7 +52,7 @@ defmodule PulsariusWeb.Router do
 
       live_session :users, on_mount: [PulsariusWeb.AuthAssigns] do
         live "/monitors", PulsariusWeb.MonitorLive.Index, :index
-        live "/monitors/new", PulsariusWeb.MonitorLive.Index, :new
+        live "/monitors/new", PulsariusWeb.MonitorLive.New, :new
         live "/monitors/:id/edit", PulsariusWeb.MonitorLive.Index, :edit
         live "/monitors/:id", PulsariusWeb.MonitorLive.Show, :show
         live "/monitors/:id/show/edit", PulsariusWeb.MonitorLive.Show, :edit

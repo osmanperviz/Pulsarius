@@ -2,8 +2,6 @@ defmodule PulsariusWeb.MonitorLive.Index do
   use PulsariusWeb, :live_view
 
   alias Pulsarius.Monitoring
-  alias Pulsarius.Monitoring.Monitor
-  alias Pulsarius.Configurations.Configuration
 
   @impl true
   def mount(_params, _session, socket) do
@@ -19,12 +17,6 @@ defmodule PulsariusWeb.MonitorLive.Index do
     socket
     |> assign(:page_title, "Edit Monitor")
     |> assign(:monitor, Monitoring.get_monitor!(id))
-  end
-
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Monitor")
-    |> assign(:monitor, %Monitor{configuration: %Configuration{}})
   end
 
   defp apply_action(socket, :index, _params) do
