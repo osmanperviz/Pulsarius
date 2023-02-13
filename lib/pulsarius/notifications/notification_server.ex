@@ -8,7 +8,7 @@ defmodule Pulsarius.Notifications.NotificationServer do
   end
 
   def init(state) do
-    topics_to_subscribe = ["incidents", "invitations"]
+    topics_to_subscribe = ["incidents", "invitations", "monitor"]
 
     topics_to_subscribe
     |> Enum.map(&Pulsarius.subscribe/1)
@@ -24,6 +24,18 @@ defmodule Pulsarius.Notifications.NotificationServer do
 
   def handle_info({:incident_auto_resolved, incident}, socket) do
     Task.start(fn -> Notifications.incident_auto_resolved(incident) end)
+
+    {:noreply, socket}
+  end
+
+  def handle_info({:monitor_paused, monitor}, socket) do
+    Task.start(fn -> Notifications.monitor_paused(monitor) end)
+
+    {:noreply, socket}
+  end
+
+  def handle_info({:monitor_unpaused, monitor}, socket) do
+    Task.start(fn -> Notifications.monitor_unpaused(monitor) end)
 
     {:noreply, socket}
   end

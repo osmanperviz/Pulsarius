@@ -2,7 +2,7 @@
 .btn-secondary,
 .btn-secondary:hover,
 .btn-secondary:focus {
-  color: #333;
+  color: rgb(190, 66, 66);
   text-shadow: none; /* Prevent inheritance from `body` */
 }
 
@@ -16,8 +16,8 @@
  */
 
 body {
-  /* text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5); */
-  /* box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5); */
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5); 
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
 
 .cover-container {
@@ -46,4 +46,51 @@ body {
 .nav-masthead .active {
   color: #fff;
   border-bottom-color: #fff;
+}
+
+
+/* Bootstrap overides */
+
+/* .text-bg-dark {
+  background-color: #fff;
+} */
+
+.main-container {
+  max-width: 1200px;
+}
+
+.abc {
+  color: #939db8;
+  font-size: 15px;
+  padding: 3px;
+}
+
+.box {
+  background-color: #293040;
+}
+
+.bg-dark {
+  /* background-color: #222838; */
+}
+
+.main-wrapper {
+  flex-flow: row wrap;
+}
+
+.box-wrapper {
+    display: flex;
+    flex-basis: 100%;
+}
+
+.box-item {
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    flex: 1 1 100%;
+    overflow: hidden;
+}
+
+.right {
+   margin-right: 25px;
 }

@@ -1,5 +1,7 @@
 defmodule Pulsarius.Notifications.Webhooks do
   alias Pulsarius.Notifications.Webhooks.Slack
+  alias Pulsarius.Incidents.Incident
+  alias Pulsarius.Monitoring.Monitor
 
   def deliver(%{webhook_url: webhook_url, body: body}) do
     HTTPoison.post(
@@ -9,13 +11,10 @@ defmodule Pulsarius.Notifications.Webhooks do
     )
   end
 
-  def notifications_for(type, incident) do
-    slack_integration_enabled? = incident.monitor.configuration.slack_notification
-
+  def notifications_for(type, params) do
     cond do
-      slack_integration_enabled? ->
-        webhook_url = incident.monitor.configuration.slack_notification_webhook_url
-        [apply(Slack, type, [incident, webhook_url])]
+      slack_integration_enabled?(params) ->
+        [apply(Slack, type, [params, get_webhook_url(params)])]
 
       # ms_teams_integration_enabled? -> 
       # [apply(MsTeams, type, args)]
@@ -29,6 +28,23 @@ defmodule Pulsarius.Notifications.Webhooks do
       Phoenix.View.render_to_string(PulsariusWeb.WebhookView, template, incident: incident)
 
     Jason.encode!(%{text: message, type: "mrkdwn"})
+  end
+
+# TODO: REFACTURE THIS!
+  defp slack_integration_enabled?(%Incident{} = incident) do
+    incident.monitor.configuration.slack_notification
+  end
+
+  defp slack_integration_enabled?(%Monitor{} = monitor) do
+    monitor.configuration.slack_notification
+  end
+
+  defp get_webhook_url(%Incident{} = incident) do
+    incident.monitor.configuration.slack_notification_webhook_url
+  end
+
+  defp get_webhook_url(%Monitor{} = monitor) do
+    monitor.configuration.slack_notification_webhook_url
   end
 end
 

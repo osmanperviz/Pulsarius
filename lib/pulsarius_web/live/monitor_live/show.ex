@@ -3,6 +3,9 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
   alias Pulsarius.Monitoring
   import PulsariusWeb.MonitorLive.AddSlackIntegrationComponent
+  import PulsariusWeb.MonitorLive.MonitoringComponenets
+
+  @topic "monitor"
 
   @impl true
   def mount(_params, _session, socket) do
@@ -21,6 +24,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
     {:ok, monitor} = Monitoring.update_monitor(assigns.monitor, %{status: "paused"})
 
     :ok = Pulsarius.EndpointChecker.update_state(monitor)
+    Pulsarius.broadcast(@topic, {:monitor_paused, monitor})
 
     {:noreply, assign(socket, :monitor, monitor)}
   end
@@ -29,6 +33,8 @@ defmodule PulsariusWeb.MonitorLive.Show do
     {:ok, monitor} = Monitoring.update_monitor(assigns.monitor, %{status: "active"})
 
     :ok = Pulsarius.EndpointChecker.update_state(monitor)
+
+    Pulsarius.broadcast(@topic, {:monitor_unpaused, monitor})
 
     {:noreply, assign(socket, :monitor, monitor)}
   end

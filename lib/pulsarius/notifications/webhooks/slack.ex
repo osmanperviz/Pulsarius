@@ -8,6 +8,7 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
   @type t :: %__MODULE__{type: atom, webhook_url: String.t(), body: String.t()}
   @type incident :: Incident.t()
   @type webhook_url :: String.t()
+  @type monitor :: Monitor.t()
 
   defstruct [:type, :webhook_url, :body]
 
@@ -23,6 +24,20 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     body = Webhooks.render_body(incident, "incident_auto_resolved.html")
 
     %__MODULE__{type: :incident_auto_resolved, webhook_url: webhook_url, body: body}
+  end
+
+  @spec monitor_paused(monitor, webhook_url) :: Slack.t()
+  def monitor_paused(monitor, webhook_url) do
+    body = Webhooks.render_body(monitor, "monitor_paused.html")
+
+    %__MODULE__{type: :monitor_paused, webhook_url: webhook_url, body: body}
+  end
+
+    @spec monitor_unpaused(monitor, webhook_url) :: Slack.t()
+  def monitor_unpaused(monitor, webhook_url) do
+    body = Webhooks.render_body(monitor, "monitor_unpaused.html")
+
+    %__MODULE__{type: :monitor_paused, webhook_url: webhook_url, body: body}
   end
 
   defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Webhooks.Slack do

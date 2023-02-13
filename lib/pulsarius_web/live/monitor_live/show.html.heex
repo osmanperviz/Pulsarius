@@ -1,4 +1,4 @@
-<div class="row">
+<%!-- <div class="row">
   <div class="col">
     <h1 class="mt-5 mb-4">
       <%= @monitor.name %> Monitor
@@ -75,4 +75,27 @@
       <p>Service did not respond properly.</p>
     </div>
   </div>
+</div> --%>
+
+<div class="container">
+  <.header monitor={@monitor} />
+
+  <div class="d-flex main-wrapper mt-3">
+    <div class="box-wrapper">
+      <.box_item title="Currently up for" value="1 month 7 days 2 hours" />
+      <.box_item title="Last checked at" value="1 minute ago" />
+      <.box_item title="Incidents" value="0" />
+
+      <%!-- <div class="box-item">
+        <div class="card box pb-2 pt-2 w-100">
+          <div class="card-body">
+            <h6><span class="abc">Incidents</span></h6>
+            <h6>0</h6>
+          </div>
+        </div>
+      </div> --%>
+    </div>
+  </div>
+  <.chart />
+  <.table />
 </div>
