@@ -55,7 +55,6 @@ defmodule PulsariusWeb.Router do
         live "/monitors/new", PulsariusWeb.MonitorLive.New, :new
         live "/monitors/:id/edit", PulsariusWeb.MonitorLive.Edit, :edit
         live "/monitors/:id", PulsariusWeb.MonitorLive.Show, :show
-        live "/monitors/:id/show/edit", PulsariusWeb.MonitorLive.Show, :edit
 
         live "/users", PulsariusWeb.UserLive.Index, :index
         live "/users/new", PulsariusWeb.UserLive.Index, :new
