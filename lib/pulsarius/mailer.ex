@@ -19,6 +19,9 @@ defmodule Pulsarius.Mailer do
   def get_subject(%Email{type: :user_invitation_created, args: %{invitation: invitation}}),
     do: "Osman invited you!"
 
+  def get_subject(%Email{type: :send_test_alert, args: %{user: user}}),
+    do: "Test alert!"
+
   def get_template(%Email{type: type}), do: "#{type}.html"
 
   def get_template_assigns(%Email{type: type, args: args}),

@@ -49,4 +49,10 @@ defmodule Pulsarius.Notifications do
     Email.notifications_for(:user_invitation_created, invitation)
     |> Notification.send()
   end
+
+   @spec send_test_alert(User.t()) :: :ok
+  def send_test_alert(user) do
+    Email.notifications_for(:send_test_alert, user)
+    |> Notification.send()
+  end
 end

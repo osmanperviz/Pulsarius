@@ -40,6 +40,12 @@ defmodule Pulsarius.Notifications.NotificationServer do
     {:noreply, socket}
   end
 
+  def handle_info({:send_test_alert, user}, socket) do
+    Task.start(fn -> Notifications.send_test_alert(user) end)
+
+    {:noreply, socket}
+  end
+
   def handle_info({:user_invitation_created, invitation}, socket) do
     Task.start(fn -> Notifications.user_invitation_created(invitation) end)
 

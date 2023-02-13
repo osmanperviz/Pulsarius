@@ -3,7 +3,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
   alias Pulsarius.Monitoring
   import PulsariusWeb.MonitorLive.AddSlackIntegrationComponent
-  import PulsariusWeb.MonitorLive.MonitoringComponenets
+  import PulsariusWeb.MonitorLive.MonitoringComponents
 
   @topic "monitor"
 
@@ -37,6 +37,12 @@ defmodule PulsariusWeb.MonitorLive.Show do
     Pulsarius.broadcast(@topic, {:monitor_unpaused, monitor})
 
     {:noreply, assign(socket, :monitor, monitor)}
+  end
+
+  def handle_event("send-test-alert", _params, %{assigns: assigns} = socket) do
+    Pulsarius.broadcast(@topic, {:send_test_alert, assigns.current_user})
+    socket = put_flash(socket, :info, "We sent you a test alert. Don't worry, your colleagues were not notified.")
+    {:noreply, socket}
   end
 
   defp page_title(:show), do: "Show Monitor"

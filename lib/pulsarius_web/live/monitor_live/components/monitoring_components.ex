@@ -1,4 +1,4 @@
-defmodule PulsariusWeb.MonitorLive.MonitoringComponenets do
+defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   use PulsariusWeb, :component
 
   def header(assigns) do
@@ -10,7 +10,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponenets do
         <p class=""><%= monitor_status(@monitor) %>  ·  Checked every 2 minutes</p>
       </div>
       <div class="col-lg-12 mt-5">
-        <button type="button" class="btn  bg-transparent abc mr-4">
+        <button type="button" class="btn  bg-transparent abc mr-4" phx-click="send-test-alert">
           <span class="bi-exclamation-triangle bi-lg"></span>&nbsp;Send test alert
         </button>
         <button type="button" class="btn bg-transparent abc mr-4">

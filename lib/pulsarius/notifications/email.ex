@@ -27,6 +27,15 @@ defmodule Pulsarius.Notifications.Email do
     }
   end
 
+  @spec send_test_alert(User.t()) :: Email.t()
+  def send_test_alert(user) do
+    %@self{
+      type: :send_test_alert,
+      args: %{user: user},
+      recipient: user.email
+    }
+  end
+
   def notifications_for(type, args) do
     apply(@self, type, [args])
   end
