@@ -18,7 +18,7 @@
             <%= live_redirect("Show", to: Routes.monitor_show_path(@socket, :show, monitor)) %>
           </span>
           <span>
-            <%= live_patch("Edit", to: Routes.monitor_edit_path(@socket, :edit, monitor)) %>
+            <%= link("Edit", to: Routes.monitor_edit_path(@socket, :edit, monitor)) %>
           </span>
           <span>
             <%= link("Delete",
@@ -34,4 +34,4 @@
   </tbody>
 </table>
 
-<span><%= live_patch("New Monitor", to: Routes.monitor_new_path(@socket, :new)) %></span>
+<span><%= link("New Monitor", to: Routes.monitor_new_path(@socket, :new)) %></span>
