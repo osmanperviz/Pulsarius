@@ -1,14 +1,17 @@
 defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   use PulsariusWeb, :component
 
-  attr :monitor, Monitor.t(), required: true
+  attr :monitor, Pulsarius.Monitoring.Monitor, required: true
+
   def header(assigns) do
     ~H"""
     <div>
-      <.link href={Routes.monitor_index_path(@socket, :index)} class="btn bg-transparent abc"><span class="bi-chevron-left"></span> Monitor</.link>
+      <.link href={Routes.monitor_index_path(@socket, :index)} class="btn bg-transparent abc">
+        <span class="bi-chevron-left"></span> Monitor
+      </.link>
       <div class="col-lg-12 header">
         <h3 class="mt-4"><%= @monitor.name %></h3>
-        <p class=""><%= monitor_status(@monitor) %>  ·  Checked every 2 minutes</p>
+        <p class=""><%= monitor_status(@monitor) %> ·  Checked every 2 minutes</p>
       </div>
       <div class="col-lg-12 mt-5">
         <button type="button" class="btn  bg-transparent abc mr-4" phx-click="send-test-alert">
@@ -17,10 +20,20 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
         <button type="button" class="btn bg-transparent abc mr-4">
           <span class="bi-shield-exclamation"></span> Incidents
         </button>
-        <button type="button" class="btn bg-transparent abc mr-4"  phx-click={if @monitor.status == :active, do:  "pause-monitoring", else: "unpause-monitoring"}>
-          <span class="bi bi-pause-circle "></span>&nbsp;<%= pause_button_title(@monitor)%>
+        <button
+          type="button"
+          class="btn bg-transparent abc mr-4"
+          phx-click={
+            if @monitor.status == :active, do: "pause-monitoring", else: "unpause-monitoring"
+          }
+        >
+          <span class="bi bi-pause-circle "></span>&nbsp;<%= pause_button_title(@monitor) %>
         </button>
-        <a role="button" class="btn bg-transparent abc mr-4" href={Routes.monitor_edit_path(@socket, :edit, @monitor)}>
+        <a
+          role="button"
+          class="btn bg-transparent abc mr-4"
+          href={Routes.monitor_edit_path(@socket, :edit, @monitor)}
+        >
           <span class="bi-gear"></span>&nbsp;Configure
         </a>
       </div>
@@ -31,6 +44,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   attr :last_item, :boolean, default: false
   attr :title, :string, required: true
   attr :value, :string, required: true
+
   def box_item(assigns) do
     ~H"""
     <div class={box_item_css(@last_item)}>
@@ -48,8 +62,8 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     ~H"""
     <div class="col-lg-12">
       <div class="card box pb-5 pt-2 mt-3">
-        <div class="card-body" style="max-height: 300px">
-          <canvas id="myChart"></canvas>
+        <div class="card-body" style="max-height: 500px">
+          <canvas id="myChart" phx-hook="Chart"></canvas>
           <script src="https://cdn.jsdelivr.net/npm/chart.js">
           </script>
         </div>
@@ -99,19 +113,16 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     """
   end
 
-  defp pause_button_title(monitor) when monitor.status == :active, do:
-    "Pause this monitor"
+  defp pause_button_title(monitor) when monitor.status == :active, do: "Pause this monitor"
 
-  defp pause_button_title(monitor), do:
-    "Unpause this monitor"
+  defp pause_button_title(monitor), do: "Unpause this monitor"
 
-  defp monitor_status(monitor) when monitor.status == :active, 
+  defp monitor_status(monitor) when monitor.status == :active,
     do: "Up"
 
-  defp monitor_status(monitor) when monitor.status == :paused, 
+  defp monitor_status(monitor) when monitor.status == :paused,
     do: "Paused"
 
   defp box_item_css(false), do: "box-item right"
   defp box_item_css(true), do: "box-item"
-
 end

@@ -33,7 +33,7 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     %__MODULE__{type: :monitor_paused, webhook_url: webhook_url, body: body}
   end
 
-    @spec monitor_unpaused(monitor, webhook_url) :: Slack.t()
+  @spec monitor_unpaused(monitor, webhook_url) :: Slack.t()
   def monitor_unpaused(monitor, webhook_url) do
     body = Webhooks.render_body(monitor, "monitor_unpaused.html")
 

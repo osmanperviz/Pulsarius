@@ -30,7 +30,7 @@ defmodule Pulsarius.Notifications.Webhooks do
     Jason.encode!(%{text: message, type: "mrkdwn"})
   end
 
-# TODO: REFACTURE THIS!
+  # TODO: REFACTURE THIS!
   defp slack_integration_enabled?(%Incident{} = incident) do
     incident.monitor.configuration.slack_notification
   end

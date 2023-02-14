@@ -41,7 +41,14 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
   def handle_event("send-test-alert", _params, %{assigns: assigns} = socket) do
     Pulsarius.broadcast(@topic, {:send_test_alert, assigns.current_user})
-    socket = put_flash(socket, :info, "We sent you a test alert. Don't worry, your colleagues were not notified.")
+
+    socket =
+      put_flash(
+        socket,
+        :info,
+        "We sent you a test alert. Don't worry, your colleagues were not notified."
+      )
+
     {:noreply, socket}
   end
 end

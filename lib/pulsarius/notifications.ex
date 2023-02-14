@@ -36,7 +36,7 @@ defmodule Pulsarius.Notifications do
     |> Enum.map(&Notification.send/1)
   end
 
-    @spec monitor_unpaused(Monitor.t()) :: :ok
+  @spec monitor_unpaused(Monitor.t()) :: :ok
   def monitor_unpaused(monitor) do
     webhook_notifications = Webhooks.notifications_for(:monitor_unpaused, monitor)
 
@@ -50,7 +50,7 @@ defmodule Pulsarius.Notifications do
     |> Notification.send()
   end
 
-   @spec send_test_alert(User.t()) :: :ok
+  @spec send_test_alert(User.t()) :: :ok
   def send_test_alert(user) do
     Email.notifications_for(:send_test_alert, user)
     |> Notification.send()
