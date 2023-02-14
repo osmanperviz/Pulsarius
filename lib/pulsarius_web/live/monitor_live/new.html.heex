@@ -1,0 +1,33 @@
+<div>
+  <.form :let={f} for={@changeset} id="monitor-form" phx-validate="validate" phx-submit="save">
+    <div>
+      <%= text_input(f, :name, placeholder: "Pronounceable monitor name", class: "form-control") %>
+      <%= inputs_for f, :configuration, fn c -> %>
+        <%= select(c, :frequency_check_in_seconds, ["1 minutes": 1, "5 minutes": 5],
+          "phx-throttle": "300",
+          class: "form-control mt-3"
+        ) %>
+        <%= text_input(c, :url_to_monitor,
+          placeholder: "Application URL",
+          class: "form-control mt-3"
+        ) %>
+        <div class="form-check form-check-inline form-switch mt-3">
+          <%= label(c, :sms_notification, "Send sms") %>
+          <%= checkbox(c, :sms_notification, class: "form-check-input") %>
+        </div>
+        <div class="form-check form-check-inline form-switch mt-3">
+          <%= label(c, :email_notification, "Send e-mail") %>
+          <%= checkbox(c, :email_notification, class: "form-check-input") %>
+        </div>
+      <% end %>
+      <div class="form-group mt-3">
+        <%= submit("Save",
+          phx_disable_with: "Saving...",
+          class: "btn btn-primary btn-lg btn-block"
+        ) %>
+      </div>
+    </div>
+  </.form>
+</div>
+
+<span><%= live_patch("Monitors", to: Routes.monitor_index_path(@socket, :index)) %></span>

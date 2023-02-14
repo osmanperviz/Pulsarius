@@ -4,7 +4,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   def header(assigns) do
     ~H"""
     <div>
-      <.link href="#" class="text-decoration-none abc"><i class="bi-chevron-left"></i> Monitor</.link>
+      <.link href={Routes.monitor_index_path(@socket, :index)} class="btn bg-transparent abc"><span class="bi-chevron-left"></span> Monitor</.link>
       <div class="col-lg-12 header">
         <h3 class="mt-4"><%= @monitor.name %></h3>
         <p class=""><%= monitor_status(@monitor) %>  ·  Checked every 2 minutes</p>
@@ -19,9 +19,9 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
         <button type="button" class="btn bg-transparent abc mr-4"  phx-click={if @monitor.status == :active, do:  "pause-monitoring", else: "unpause-monitoring"}>
           <span class="bi bi-pause-circle "></span>&nbsp;<%= pause_button_title(@monitor)%>
         </button>
-        <button type="button" class="btn bg-transparent abc mr-4">
+        <a role="button" class="btn bg-transparent abc mr-4" href={Routes.monitor_edit_path(@socket, :edit, @monitor)}>
           <span class="bi-gear"></span>&nbsp;Configure
-        </button>
+        </a>
       </div>
     </div>
     """
