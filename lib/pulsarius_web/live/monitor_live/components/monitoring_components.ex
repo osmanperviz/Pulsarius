@@ -1,6 +1,7 @@
 defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   use PulsariusWeb, :component
 
+  attr :monitor, Monitor.t(), required: true
   def header(assigns) do
     ~H"""
     <div>
@@ -27,9 +28,12 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     """
   end
 
+  attr :last_item, :boolean, default: false
+  attr :title, :string, required: true
+  attr :value, :string, required: true
   def box_item(assigns) do
     ~H"""
-    <div class="box-item right">
+    <div class={box_item_css(@last_item)}>
       <div class="card box pb-2 pt-2 w-100">
         <div class="card-body">
           <h6><span class="abc"><%= @title %></span></h6>
@@ -106,5 +110,8 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
 
   defp monitor_status(monitor) when monitor.status == :paused, 
     do: "Paused"
+
+  defp box_item_css(false), do: "box-item right"
+  defp box_item_css(true), do: "box-item"
 
 end
