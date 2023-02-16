@@ -2,6 +2,7 @@ defmodule PulsariusWeb.MonitorLive.Edit do
   use PulsariusWeb, :live_view
 
   alias Pulsarius.Monitoring
+  alias Pulsarius.Configurations.Configuration
 
   @impl true
   def mount(params, _session, socket) do
@@ -18,9 +19,6 @@ defmodule PulsariusWeb.MonitorLive.Edit do
 
   @impl true
   def handle_event("save", %{"monitor" => monitor_params}, socket) do
-    # TODO: convert frequency_check from minutes to milliseconds or
-    # deliver that already from server to dropdow than no need to convertion
-
     case Monitoring.update_monitor(socket.assigns.monitor, monitor_params) do
       {:ok, monitor} ->
         # update related running monitor process

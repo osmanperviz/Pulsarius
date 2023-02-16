@@ -6,7 +6,7 @@ defmodule Pulsarius.Monitoring do
   import Ecto.Query, warn: false
   alias Pulsarius.Repo
 
-  alias Pulsarius.Monitoring.Monitor
+  alias Pulsarius.Monitoring.{Monitor, StatusResponse}
 
   @doc """
   Returns the list of monitoring.
@@ -101,5 +101,36 @@ defmodule Pulsarius.Monitoring do
   """
   def change_monitor(%Monitor{} = monitor, attrs \\ %{}) do
     Monitor.changeset(monitor, attrs)
+  end
+
+  @doc """
+  Returns the list of status responses for given monitor_id.
+
+  ## Examples
+
+      iex> list_status_responses(monitor_id)
+      [%StatusResponse{}, ...]
+
+  """
+  def list_status_responses(monitor_id),
+    do: StatusResponse |> where(monitor_id: ^monitor_id) |> Repo.all()
+
+  @doc """
+   Creates a status response.
+
+  ## Examples
+
+      iex> create_status_response(monitor, %{field: value})
+      {:ok, %StatusResponse{}}
+
+      iex> create_status_response(monitor, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_status_response(monitor, attrs \\ %{}) do
+    %StatusResponse{}
+    |> StatusResponse.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:monitoring, monitor)
+    |> Repo.insert()
   end
 end

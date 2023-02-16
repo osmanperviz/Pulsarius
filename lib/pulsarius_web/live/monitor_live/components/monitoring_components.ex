@@ -11,7 +11,11 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
       </.link>
       <div class="col-lg-12 header">
         <h3 class="mt-4"><%= @monitor.name %></h3>
-        <p class=""><%= monitor_status(@monitor) %> ·  Checked every 2 minutes</p>
+        <p class="">
+          <%= monitor_status(@monitor) %> ·  Checked every <%= display_frequency_check_in_seconds(
+            @monitor.configuration.frequency_check_in_seconds
+          ) %> minutes
+        </p>
       </div>
       <div class="col-lg-12 mt-5">
         <button type="button" class="btn  bg-transparent abc mr-4" phx-click="send-test-alert">
@@ -123,6 +127,12 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   defp monitor_status(monitor) when monitor.status == :paused,
     do: "Paused"
 
+  defp monitor_status(_monitor), do: "Down"
+
   defp box_item_css(false), do: "box-item right"
   defp box_item_css(true), do: "box-item"
+
+  def display_frequency_check_in_seconds(frequency) do
+    (String.to_integer(frequency) / 60) |> round()
+  end
 end

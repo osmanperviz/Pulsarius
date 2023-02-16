@@ -52,7 +52,8 @@ defmodule Pulsarius.MixProject do
       {:httpoison, "~> 1.8"},
       {:phoenix_swoosh, "~> 1.0"},
       {:ueberauth_passwordless, github: "STUDITEMPS/ueberauth_passwordless", branch: "master"},
-      {:stripity_stripe, "~> 2.0"}
+      {:stripity_stripe, "~> 2.0"},
+      {:x509, "~> 0.8.5"}
     ]
   end
 
@@ -72,3 +73,12 @@ defmodule Pulsarius.MixProject do
     ]
   end
 end
+
+# uri = URI.parse(url)
+# with {:ok, sock} <- :ssl.connect(uri.host, 443, []),
+#      {:ok, der} <- :ssl.peercert(sock),
+#      :ssl.close(sock),
+#      {:ok, cert} <- X509.Certificate.from_der(der),
+#      {:Validity, not_before, not_after} <- X509.Certificate.validity(cert) do
+#   {:ok, X509.DateTime.to_datetime(not_before), X509.DateTime.to_datetime(not_after)}
+# end
