@@ -27,9 +27,10 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
         <button type="button" class="btn  bg-transparent abc mr-4" phx-click="send-test-alert">
           <span class="bi-exclamation-triangle bi-lg"></span>&nbsp;Send test alert
         </button>
-        <button type="button" class="btn bg-transparent abc mr-4">
+        <a href={Routes.incidents_index_path(@socket, :index, @monitor.id)} role="button" class="btn bg-transparent abc mr-4">
           <span class="bi-shield-exclamation"></span> Incidents
-        </button>
+        </a>
+        
         <button
           type="button"
           class="btn bg-transparent abc mr-4"
