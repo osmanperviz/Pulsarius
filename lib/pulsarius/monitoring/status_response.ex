@@ -1,6 +1,6 @@
 defmodule Pulsarius.Monitoring.StatusResponse do
   @moduledoc """
-  Represent an sucess request -> response cycle that is made by EndpointChecker.
+  Represent an success request -> response cycle that is made by EndpointChecker.
   """
   use Ecto.Schema
   import Ecto.Changeset

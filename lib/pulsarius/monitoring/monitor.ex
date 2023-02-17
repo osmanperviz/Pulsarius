@@ -19,6 +19,7 @@ defmodule Pulsarius.Monitoring.Monitor do
 
   schema "monitoring" do
     field :name, :string
+    field :ssl_expiry_date, :naive_datetime
 
     field :status, Ecto.Enum,
       values: [:initializing, :active, :inactive, :paused],
@@ -39,7 +40,7 @@ defmodule Pulsarius.Monitoring.Monitor do
   @doc false
   def changeset(monitor, attrs) do
     monitor
-    |> cast(attrs, [:name, :status])
+    |> cast(attrs, [:name, :status, :ssl_expiry_date])
     |> validate_required([:name])
     |> cast_assoc(:configuration)
   end

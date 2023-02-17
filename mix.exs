@@ -73,12 +73,3 @@ defmodule Pulsarius.MixProject do
     ]
   end
 end
-
-# uri = URI.parse(url)
-# with {:ok, sock} <- :ssl.connect(uri.host, 443, []),
-#      {:ok, der} <- :ssl.peercert(sock),
-#      :ssl.close(sock),
-#      {:ok, cert} <- X509.Certificate.from_der(der),
-#      {:Validity, not_before, not_after} <- X509.Certificate.validity(cert) do
-#   {:ok, X509.DateTime.to_datetime(not_before), X509.DateTime.to_datetime(not_after)}
-# end

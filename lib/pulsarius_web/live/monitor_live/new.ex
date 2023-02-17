@@ -19,6 +19,8 @@ defmodule PulsariusWeb.MonitorLive.New do
       {:ok, monitor} ->
         monitor = Pulsarius.Repo.preload(monitor, [:active_incident])
 
+        Task.start(fn -> Monitoring.set_ssl_expiry(monitor) end)
+
         Pulsarius.EndpointDynamicSupervisor.start_monitoring(monitor)
 
         {:noreply,
