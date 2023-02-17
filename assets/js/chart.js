@@ -1,26 +1,30 @@
 
 export const ChartHook = {
     mounted() {
-        var ctx = this.el.getContext('2d');
+        const ctx = this.el.getContext('2d');
 
-        new Chart(ctx, {
+        const chart = new Chart(ctx, {
             // The type of chart we want to create
             type: 'line',
             // The data for our dataset
             data: {
-                labels: ['04:00pm', '07:00pm', '10:00pm', '01:00am', '04:00am', '07:00pm', '10:00am', '01:00pm'],
                 datasets: [{
-                    label: 'My First dataset',
+                    label: 'Response times',
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
-                    data:  ['100', '250', '100', '500', '220', '150', '1500', "600"]
+                    data: []
                 }]
             },
-            // Configuration options go here
             options: {
                 responsive: true,
-            maintainAspectRatio: false
+                maintainAspectRatio: false
             }
         });
+
+        this.handleEvent("response_time", ({ response_time }) => {
+            console.log(response_time)
+            chart.data.datasets[0].data = response_time
+            chart.update()
+        })
     }
 }

@@ -16,7 +16,8 @@ defmodule PulsariusWeb.MonitorLive.Show do
   def handle_params(%{"id" => id}, _, socket) do
     {:noreply,
      socket
-     |> assign(:monitor, Monitoring.get_monitor!(id))}
+     |> assign(:monitor, Monitoring.get_monitor!(id))
+     |> push_event("response_time", %{response_time: prepare_response_time_data_for_chart(id)})}
   end
 
   @impl true
@@ -50,5 +51,17 @@ defmodule PulsariusWeb.MonitorLive.Show do
       )
 
     {:noreply, socket}
+  end
+
+  defp prepare_response_time_data_for_chart(monitor_id) do
+    status_responses = Monitoring.list_status_responses(monitor_id)
+
+    status_responses
+    |> Enum.map(fn status_response ->
+      %{
+        x: NaiveDateTime.to_time(status_response.occured_at),
+        y: status_response.response_time_in_ms
+      }
+    end)
   end
 end

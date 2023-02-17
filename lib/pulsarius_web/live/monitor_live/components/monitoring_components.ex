@@ -67,7 +67,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     <div class="col-lg-12">
       <div class="card box pb-5 pt-2 mt-3">
         <div class="card-body" style="max-height: 500px">
-          <canvas id="myChart" phx-hook="Chart"></canvas>
+          <canvas id="myChart" phx-hook="Chart" phx-update="ignore"></canvas>
           <script src="https://cdn.jsdelivr.net/npm/chart.js">
           </script>
         </div>
