@@ -9,7 +9,7 @@ export const ChartHook = {
             // The data for our dataset
             data: {
                 datasets: [{
-                    label: 'Response times',
+                    label: 'Response times in milliseconds',
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
                     data: []

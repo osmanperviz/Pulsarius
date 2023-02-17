@@ -9,13 +9,19 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
       <.link href={Routes.monitor_index_path(@socket, :index)} class="btn bg-transparent abc">
         <span class="bi-chevron-left"></span> Monitor
       </.link>
-      <div class="col-lg-12 header">
-        <h3 class="mt-4"><%= @monitor.name %></h3>
-        <p class="">
-          <%= monitor_status(@monitor) %> ·  Checked every <%= display_frequency_check_in_seconds(
-            @monitor.configuration.frequency_check_in_seconds
-          ) %> minutes
-        </p>
+      <div class="col-lg-12 d-flex">
+        <div class="pulse"></div>
+        <div>
+          <h5 class="mt-4"><%= @monitor.name %></h5>
+          <p>
+            <%= monitor_status(@monitor) %>
+            <span class="abc">
+              ·  Checked every <%= display_frequency_check_in_seconds(
+                @monitor.configuration.frequency_check_in_seconds
+              ) %> minutes
+            </span>
+          </p>
+        </div>
       </div>
       <div class="col-lg-12 mt-5">
         <button type="button" class="btn  bg-transparent abc mr-4" phx-click="send-test-alert">
@@ -80,7 +86,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     ~H"""
     <div class="col-lg-12">
       <div class="card box pb-5 pt-2 mt-3">
-        <div class="card-body p-0">
+        <div class="card-body">
           <table class="table table-borderless table-hover p-0 ">
             <thead style="ml-1">
               <tr>
