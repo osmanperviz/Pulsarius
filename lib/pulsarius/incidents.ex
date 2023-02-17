@@ -18,7 +18,7 @@ defmodule Pulsarius.Incidents do
 
   """
   def list_incidents(monitor_id) do
-     Incident |> where(monitor_id: ^monitor_id) |> Repo.all()
+    Incident |> where(monitor_id: ^monitor_id) |> order_by(asc: :inserted_at) |> Repo.all()
   end
 
   @doc """

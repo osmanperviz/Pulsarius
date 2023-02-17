@@ -5,7 +5,7 @@ defmodule PulsariusWeb.IncidentsLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-  {:ok, socket}
+    {:ok, socket}
     # {:ok, assign(socket, :monitoring, Incidents.list_monitoring())}
   end
 end
