@@ -9,16 +9,16 @@ defmodule Pulsarius.Incidents do
   alias Pulsarius.Incidents.Incident
 
   @doc """
-  Returns the list of incidents.
+  Returns the list of incidents for given monitoring.
 
   ## Examples
 
-      iex> list_incidents()
+      iex> list_incidents(monitor_id)
       [%Incident{}, ...]
 
   """
-  def list_incidents do
-    Repo.all(Incident)
+  def list_incidents(monitor_id) do
+     Incident |> where(monitor_id: ^monitor_id) |> Repo.all()
   end
 
   @doc """
