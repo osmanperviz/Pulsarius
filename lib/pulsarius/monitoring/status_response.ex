@@ -27,4 +27,26 @@ defmodule Pulsarius.Monitoring.StatusResponse do
     |> cast(attrs, [:occured_at, :response_time_in_ms])
     |> validate_required([:occured_at, :response_time_in_ms])
   end
+
+  def for_monitoring(monitor_id) do
+    from(
+      sr in __MODULE__,
+      where: sr.monitor_id == ^monitor_id
+    )
+  end
+
+  def for_date_range(query, from, to) do
+    from(
+      sr in query,
+      where: sr.occured_at >= ^from,
+      where: sr.occured_at <= ^to
+    )
+  end
+
+  # def order_by(query, :asc) do
+  #   from(
+  #     sr in query,
+  #     order_by(asc: :inserted_at)
+  #   )
+  # end
 end

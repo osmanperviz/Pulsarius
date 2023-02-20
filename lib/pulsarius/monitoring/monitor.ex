@@ -52,6 +52,13 @@ defmodule Pulsarius.Monitoring.Monitor do
       where: m.status in [:initializing, :active, :inactive, :paused],
       preload: [:configuration, :active_incident]
   end
+
+  def for_monitoring(monitor_id) do
+    from(
+      m in __MODULE__,
+      where: m.monitor_id == ^monitor_id
+    )
+  end
 end
 
 # https://hooks.slack.com/services/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

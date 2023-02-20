@@ -77,8 +77,35 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     ~H"""
     <div class="col-lg-12">
       <div class="card box pb-5 pt-2 mt-3">
-        <div class="card-body" style="max-height: 500px">
-          <canvas id="myChart" phx-hook="Chart" phx-update="ignore"></canvas>
+        <div class="card-body flex-column d-flex" style="max-height: 500px">
+          <div class="btn-group btn-group-sm align-self-end">
+            <button
+              type="button"
+              phx-click="change-date-range"
+              phx-value-period={:day}
+              class={"btn btn-outline-secondary #{active_period("day", @selected_period)}"}
+            >
+              Day
+            </button>
+            <button
+              type="button"
+              phx-click="change-date-range"
+              phx-value-period={:week}
+              class={"btn btn-outline-secondary #{active_period("week", @selected_period)}"}
+            >
+              Week
+            </button>
+            <button
+              type="button"
+              phx-click="change-date-range"
+              phx-value-period={:month}
+              class={"btn btn-outline-secondary #{active_period("month", @selected_period)}"}
+            >
+              Month
+            </button>
+          </div>
+          <canvas id="myChart" phx-hook="Chart" phx-update="ignore" style="min-height: 300px">
+          </canvas>
           <script src="https://cdn.jsdelivr.net/npm/chart.js">
           </script>
         </div>
@@ -145,5 +172,9 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
 
   def display_frequency_check_in_seconds(frequency) do
     (String.to_integer(frequency) / 60) |> round()
+  end
+
+  defp active_period(period, selected_period) do
+    if period == selected_period, do: "active", else: ""
   end
 end

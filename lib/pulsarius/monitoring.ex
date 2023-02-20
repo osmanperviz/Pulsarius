@@ -131,10 +131,10 @@ defmodule Pulsarius.Monitoring do
       [%StatusResponse{}, ...]
 
   """
-  def list_status_responses(monitor_id) do
-    StatusResponse
-    |> where(monitor_id: ^monitor_id)
-    |> order_by(asc: :inserted_at)
+  def list_status_responses(monitor_id, from, to) do
+    StatusResponse.for_monitoring(monitor_id)
+    |> StatusResponse.for_date_range(from, to)
+    # |> StatusResponse.order_by(:asc)
     |> Repo.all()
   end
 
