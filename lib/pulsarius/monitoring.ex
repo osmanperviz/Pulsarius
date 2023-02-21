@@ -123,18 +123,18 @@ defmodule Pulsarius.Monitoring do
   end
 
   @doc """
-  Returns the list of status responses for given monitor_id.
+  Returns the list of status responses for given monitor_id and given time range.
 
   ## Examples
 
-      iex> list_status_responses(monitor_id)
+      iex> list_status_responses(monitor_id, from, to)
       [%StatusResponse{}, ...]
 
   """
   def list_status_responses(monitor_id, from, to) do
     StatusResponse.for_monitoring(monitor_id)
     |> StatusResponse.for_date_range(from, to)
-    # |> StatusResponse.order_by(:asc)
+    |> StatusResponse.order_by_asc()
     |> Repo.all()
   end
 

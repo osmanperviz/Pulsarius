@@ -43,10 +43,10 @@ defmodule Pulsarius.Monitoring.StatusResponse do
     )
   end
 
-  # def order_by(query, :asc) do
-  #   from(
-  #     sr in query,
-  #     order_by(asc: :inserted_at)
-  #   )
-  # end
+  def order_by_asc(query) do
+    from(
+      sr in query,
+      order_by: [asc: :inserted_at]
+    )
+  end
 end

@@ -67,6 +67,15 @@ body {
   padding: 3px;
 }
 
+.table-text {
+  font-size: 15px;
+  color: white;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  color: #fff;
+}
+
 .box {
   background-color: #293040;
 }

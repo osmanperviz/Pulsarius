@@ -127,25 +127,84 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
                 <th class="abc">Downtime</th>
                 <th class="abc">Incidents</th>
                 <th class="abc">Longest incident</th>
-                <th class="abc">Avg. incident</th>
               </tr>
             </thead>
             <tbody class="ml-1">
               <tr>
-                <td class="text-white">Today</td>
-                <td class="text-white">100.0000%</td>
-                <td class="text-white">none</td>
-                <td class="text-white">5</td>
-                <td class="text-white">none</td>
-                <td class="text-white">none</td>
+                <td class="table-text">Today</td>
+                <td class="table-text">
+                  <%= @avalability_statistics.todays_statistics.total_avalability_in_percentage %>%
+                </td>
+                <td class="table-text">
+                  <%= display_humanized_duration(
+                    @avalability_statistics.todays_statistics.total_down_time_in_minutes
+                  ) %>
+                </td>
+                <td class="table-text">
+                  <%= @avalability_statistics.todays_statistics.number_of_incidents %>
+                </td>
+                <td class="table-text">
+                  <%= display_humanized_duration(
+                    @avalability_statistics.todays_statistics.longest_incident_duration_in_minutes
+                  ) %>
+                </td>
               </tr>
               <tr>
-                <td class="text-white">Last Week</td>
-                <td class="text-white">100.0000%</td>
-                <td class="text-white">none</td>
-                <td class="text-white">5</td>
-                <td class="text-white">none</td>
-                <td class="text-white">none</td>
+                <td class="table-text">Last 7 days</td>
+                <td class="table-text">
+                  <%= @avalability_statistics.weekly_statistics.total_avalability_in_percentage %>%
+                </td>
+                <td class="table-text">
+                  <%= display_humanized_duration(
+                    @avalability_statistics.weekly_statistics.total_down_time_in_minutes
+                  ) %>
+                </td>
+                <td class="table-text">
+                  <%= @avalability_statistics.weekly_statistics.number_of_incidents %>
+                </td>
+                <td class="table-text">
+                  <%= display_humanized_duration(
+                    @avalability_statistics.weekly_statistics.longest_incident_duration_in_minutes
+                  ) %>
+                </td>
+              </tr>
+              <tr>
+                <td class="table-text">Last 30 days</td>
+                <td class="table-text">
+                  <%= @avalability_statistics.monthly_statistics.total_avalability_in_percentage %>%
+                </td>
+                <td class="table-text">
+                  <%= display_humanized_duration(
+                    @avalability_statistics.monthly_statistics.total_down_time_in_minutes
+                  ) %>
+                </td>
+                <td class="table-text">
+                  <%= @avalability_statistics.monthly_statistics.number_of_incidents %>
+                </td>
+                <td class="table-text">
+                  <%= display_humanized_duration(
+                    @avalability_statistics.monthly_statistics.longest_incident_duration_in_minutes
+                  ) %>
+                </td>
+              </tr>
+              <tr>
+                <td class="table-text">Last 365 days</td>
+                <td class="table-text">
+                  <%= @avalability_statistics.annual_statistics.total_avalability_in_percentage %>%
+                </td>
+                <td class="table-text">
+                  <%= display_humanized_duration(
+                    @avalability_statistics.annual_statistics.total_down_time_in_minutes
+                  ) %>
+                </td>
+                <td class="table-text">
+                  <%= @avalability_statistics.annual_statistics.number_of_incidents %>
+                </td>
+                <td class="table-text">
+                  <%= display_humanized_duration(
+                    @avalability_statistics.annual_statistics.longest_incident_duration_in_minutes
+                  ) %>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -176,5 +235,14 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
 
   defp active_period(period, selected_period) do
     if period == selected_period, do: "active", else: ""
+  end
+
+  defp display_humanized_duration(duration_in_minutes) do
+    duration_in_seconds = duration_in_minutes * 60
+
+    Timex.format_duration(
+      %Timex.Duration{seconds: duration_in_seconds, megaseconds: 0, microseconds: 0},
+      :humanized
+    )
   end
 end

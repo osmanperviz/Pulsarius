@@ -4,6 +4,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
   alias Pulsarius.Monitoring
   alias Pulsarius.Incidents
+  alias Pulsarius.Monitoring.AvalabilityStatistics
 
   import PulsariusWeb.MonitorLive.AddSlackIntegrationComponent
   import PulsariusWeb.MonitorLive.MonitoringComponents
@@ -17,14 +18,16 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    number_of_incidents = Incidents.list_incidents(id) |> Enum.count()
+    incidents = Incidents.list_incidents(id)
     period = dates_for_period("day")
+    avalability_statistics = AvalabilityStatistics.calculate(incidents)
 
     {:noreply,
      socket
      |> assign(:monitor, Monitoring.get_monitor!(id))
-     |> assign(:number_of_incidents, number_of_incidents)
+     |> assign(:number_of_incidents, Enum.count(incidents))
      |> assign(:selected_period, "day")
+     |> assign(:avalability_statistics, avalability_statistics)
      |> push_event("response_time", %{
        response_time: response_time_for_chart(id, period.from, period.to)
      })}
