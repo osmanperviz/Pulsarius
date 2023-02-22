@@ -118,4 +118,9 @@ defmodule Pulsarius.Incidents do
   def auto_resolve(%Incident{} = incident) do
     update_incident(incident, %{status: :resolved, resolved_at: NaiveDateTime.utc_now()})
   end
+
+  def get_most_recent_incident!(monitor_id) do
+    Incident |> where(monitor_id: ^monitor_id) |> last(:inserted_at) |> Repo.one()
+  end
+
 end

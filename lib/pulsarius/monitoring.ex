@@ -123,6 +123,19 @@ defmodule Pulsarius.Monitoring do
   end
 
   @doc """
+   Get a last status response.
+
+  ## Examples
+
+      iex> get_last_status_response!(monitor-id)
+      %StatusResponse{}
+
+  """
+  def get_most_recent_status_response!(monitor_id) do
+    StatusResponse |> where(monitor_id: ^monitor_id) |> last(:inserted_at) |> Repo.one()
+  end
+
+  @doc """
   Returns the list of status responses for given monitor_id and given time range.
 
   ## Examples

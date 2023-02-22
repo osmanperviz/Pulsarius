@@ -23,7 +23,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
           </p>
         </div>
       </div>
-      <div class="col-lg-12 mt-5">
+      <div class="col-lg-12 mt-3">
         <button type="button" class="btn  bg-transparent abc mr-4" phx-click="send-test-alert">
           <span class="bi-exclamation-triangle bi-lg"></span>&nbsp;Send test alert
         </button>
@@ -73,6 +73,8 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     """
   end
 
+  attr :selected_period, :string, required: true
+
   def chart(assigns) do
     ~H"""
     <div class="col-lg-12">
@@ -118,7 +120,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     ~H"""
     <div class="col-lg-12">
       <div class="card box pb-5 pt-2 mt-3">
-        <div class="card-body">
+        <div class="card-body table-responsive">
           <table class="table table-borderless table-hover p-0 ">
             <thead style="ml-1">
               <tr>
@@ -237,12 +239,11 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     if period == selected_period, do: "active", else: ""
   end
 
-  defp display_humanized_duration(duration_in_minutes) do
-    duration_in_seconds = duration_in_minutes * 60
+  defp display_humanized_duration(0) do
+    "-"
+  end
 
-    Timex.format_duration(
-      %Timex.Duration{seconds: duration_in_seconds, megaseconds: 0, microseconds: 0},
-      :humanized
-    )
+  defp display_humanized_duration(duration_in_minutes) do
+    Timex.format_duration(Timex.Duration.from_minutes(duration_in_minutes), :humanized)
   end
 end

@@ -1,10 +1,10 @@
 defmodule PulsariusWeb.MonitorLive.Show do
   use PulsariusWeb, :live_view
-  use Timex
 
   alias Pulsarius.Monitoring
   alias Pulsarius.Incidents
   alias Pulsarius.Monitoring.AvalabilityStatistics
+  alias PulsariusWeb.MonitorLive.{TotalAvailabilityWidget, CheckedAtWidget}
 
   import PulsariusWeb.MonitorLive.AddSlackIntegrationComponent
   import PulsariusWeb.MonitorLive.MonitoringComponents

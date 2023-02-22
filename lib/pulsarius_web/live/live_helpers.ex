@@ -5,54 +5,21 @@ defmodule PulsariusWeb.LiveHelpers do
   alias Phoenix.LiveView.JS
   import Phoenix.Component
 
-  @doc """
-  Renders a live component inside a modal.
+  alias Timex.{Interval, Duration, Format.Duration.Formatter}
 
-  The rendered modal receives a `:return_to` option to properly update
-  the URL when the modal is closed.
+  def humanized_duration_in_seconds(from, until \\ Timex.now()) do
+    Interval.new(from: from, until: until)
+    |> Interval.duration(:seconds)
+    |> Duration.from_seconds()
+    |> Formatter.format(:humanized)
+  end
 
-  ## Examples
-
-      <.modal return_to={Routes.monitor_index_path(@socket, :index)}>
-        <.live_component
-          module={PulsariusWeb.MonitorLive.FormComponent}
-          id={@monitor.id || :new}
-          title={@page_title}
-          action={@live_action}
-          return_to={Routes.monitor_index_path(@socket, :index)}
-          monitor: @monitor
-        />
-      </.modal>
-  """
-
-  # def modal(assigns) do
-  #   assigns = assign_new(assigns, :return_to, fn -> nil end)
-
-  #   ~H"""
-  #   <div id="modal" class="phx-modal fade-in" phx-remove={hide_modal()}>
-  #     <div
-  #       id="modal-content"
-  #       class="phx-modal-content fade-in-scale"
-  #       phx-click-away={JS.dispatch("click", to: "#close")}
-  #       phx-window-keydown={JS.dispatch("click", to: "#close")}
-  #       phx-key="escape"
-  #     >
-  #       <%= if @return_to do %>
-  #         <%= live_patch "✖",
-  #           to: @return_to,
-  #           id: "close",
-  #           class: "phx-modal-close",
-  #           phx_click: hide_modal()
-  #         %>
-  #       <% else %>
-  #         <a id="close" href="#" class="phx-modal-close" phx-click={hide_modal()}>✖</a>
-  #       <% end %>
-
-  #       <%= render_slot(@inner_block) %>
-  #     </div>
-  #   </div>
-  #   """
-  # end
+  def humanized_duration_in_minutes(from, until \\ Timex.now()) do
+    Interval.new(from: from, until: until)
+    |> Interval.duration(:minutes)
+    |> Duration.from_minutes()
+    |> Formatter.format(:humanized)
+  end
 
   def modal(assigns) do
     assigns = assign_new(assigns, :return_to, fn -> nil end)

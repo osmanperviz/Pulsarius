@@ -80,12 +80,10 @@ body {
   background-color: #293040;
 }
 
-.bg-dark {
-  /* background-color: #222838; */
-}
-
 .main-wrapper {
+  display: flex;
   flex-flow: row wrap;
+  margin-top: 10px;
 }
 
 .box-wrapper {
@@ -134,5 +132,4 @@ body {
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(255, 177, 66, 0);
   }
-}
 }

@@ -1,9 +1,15 @@
 <div class="container">
   <.header socket={@socket} monitor={@monitor} />
-  <div class="d-flex main-wrapper mt-3">
+  <div class="main-wrapper">
     <div class="box-wrapper">
-      <.box_item title="Currently up for" value="1 month 7 days 2 hours" />
-      <.box_item title="Last checked at" value="1 minute ago" />
+      <%= live_render(@socket, PulsariusWeb.MonitorLive.TotalAvailabilityWidget,
+        id: 1,
+        session: %{"monitor" => @monitor}
+      ) %>
+      <%= live_render(@socket, PulsariusWeb.MonitorLive.CheckedAtWidget,
+        id: 2,
+        session: %{"monitor" => @monitor}
+      ) %>
       <.box_item title="Incidents" value={@number_of_incidents} last_item={true} />
     </div>
   </div>

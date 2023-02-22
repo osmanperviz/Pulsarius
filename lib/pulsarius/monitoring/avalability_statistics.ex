@@ -97,7 +97,9 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
   defp calculate_longest_incident_duration(incidents) do
     incidents
     |> Enum.reduce(0, fn incident, acc ->
-      duration_in_minutes = Timex.diff(incident.resolved_at, incident.occured_at, :minutes)
+      duration_in_minutes =
+        Timex.diff(incident.resolved_at || incident.inserted_at, incident.occured_at, :minutes)
+
       if duration_in_minutes > acc, do: duration_in_minutes, else: acc
     end)
   end
@@ -124,7 +126,9 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
 
   defp calculate_unavailability_in_minutes(incidents) do
     Enum.reduce(incidents, 0, fn incident, acc ->
-      duration = Timex.diff(incident.resolved_at, incident.occured_at, :minutes)
+      duration =
+        Timex.diff(incident.resolved_at || incident.inserted_at, incident.occured_at, :minutes)
+
       acc = acc + duration
       acc
     end)

@@ -73,8 +73,9 @@ defmodule Pulsarius.EndpointChecker do
     do: state
 
   defp schedule_check(state) do
-    # frequency_check_in_ms = convert_to_ms(state.monitor.configuration.frequency_check_in_minutes)
-    Process.send_after(self(), :ping_endpoint, 2000)
+    frequency_check_in_ms = convert_to_ms(state.monitor.configuration.frequency_check_in_seconds)
+    Process.send_after(self(), :ping_endpoint, frequency_check_in_ms)
+    # Process.send_after(self(), :ping_endpoint, 2000)
 
     state
   end
@@ -184,6 +185,6 @@ defmodule Pulsarius.EndpointChecker do
   end
 
   defp convert_to_ms(frequency_check_in_seconds) do
-    frequency_check_in_seconds * 1000
+    String.to_integer(frequency_check_in_seconds) * 1000
   end
 end
