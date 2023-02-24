@@ -1,30 +1,29 @@
 defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
-  use Phoenix.LiveView,
-    container: {:div, class: "box-item right"}
-  
-  import PulsariusWeb.LiveHelpers
+  use PulsariusWeb, :live_component
 
-  alias Pulsarius.Monitoring
-  alias Pulsarius.Incidents
+  use Timex
 
-  def mount(:not_mounted_at_router, %{"monitor" => monitor}, socket) do
-    monitor = Monitoring.get_monitor!(monitor.id) |> Pulsarius.Repo.preload(:active_incident)
-    most_recent_incident = Incidents.get_most_recent_incident!(monitor.id)
+  @minute_in_miliseconds 60000
 
+  @impl true
+  def mount(socket) do
+    {:ok, socket}
+  end
+
+  @impl true
+  def update(assigns, socket) do
     start_timer()
-
     {:ok,
      socket
-     |> assign(:monitor, monitor)
-     |> assign(:active_incident, monitor.active_incident)
-     |> assign(:title, title(monitor))
-     |> assign(:last_incident, most_recent_incident)
-     |> assign(:humanized_time, time(socket.assigns))}
+     |> assign(assigns)
+     |> assign(:title, title(assigns.monitor))
+     |> assign(:humanized_time, time(assigns))
+     |> assign(:ticker_scheduled, true)}
   end
 
   def render(assigns) do
     ~H"""
-    <div class="w-100">
+    <div class="box-item right">
       <div class="card box pb-2 pt-2  w-100">
         <div class="card-body">
           <h6><span class="abc"><%= @title %></span></h6>
@@ -34,13 +33,6 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
     </div>
     """
   end
-
-  def handle_info(:tick, %{assigns: assigns} = socket) do
-    humanized_time = time(assigns)
-
-    {:noreply, assign(socket, :humanized_time, humanized_time)}
-  end
-
 
   defp title(monitor) do
     cond do
@@ -55,10 +47,9 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
   defp time(%{last_incident: last_incident, monitor: monitor} = _assigns)
        when monitor.status == :active do
     from_time =
-      if last_incident,
+      if last_incident && last_incident.resolved_at != nil,
         do: last_incident.resolved_at,
         else: monitor.inserted_at
-
     from_time
     |> humanized_duration_in_seconds()
   end
@@ -77,6 +68,7 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
   defp time(_assigns), do: ""
 
   defp start_timer() do
-    :timer.send_interval(1000, self(), :tick)
+   Process.send_after(self(), :update_availability_time, 10000)
+    # :timer.send_interval(1000, self(), :update_availability_time)
   end
 end

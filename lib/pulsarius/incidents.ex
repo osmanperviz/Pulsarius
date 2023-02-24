@@ -122,5 +122,4 @@ defmodule Pulsarius.Incidents do
   def get_most_recent_incident!(monitor_id) do
     Incident |> where(monitor_id: ^monitor_id) |> last(:inserted_at) |> Repo.one()
   end
-
 end

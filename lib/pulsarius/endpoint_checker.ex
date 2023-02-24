@@ -31,7 +31,7 @@ defmodule Pulsarius.EndpointChecker do
 
   def init(state) do
     state
-    |> schedule_check()
+    |> schedule_first_check()
     |> then(&{:ok, &1})
   end
 
@@ -50,9 +50,10 @@ defmodule Pulsarius.EndpointChecker do
   ## Callbacks
 
   def handle_call({:update_state, updated_monitor}, _params, state) do
-    schedule_check(updated_monitor)
+    state = %{state | monitor: updated_monitor}
+    schedule_check(state)
 
-    {:reply, :ok, %{state | monitor: updated_monitor}}
+    {:reply, :ok, state}
   end
 
   def handle_info(:ping_endpoint, state) when state.monitor == :paused do
@@ -74,8 +75,8 @@ defmodule Pulsarius.EndpointChecker do
 
   defp schedule_check(state) do
     frequency_check_in_ms = convert_to_ms(state.monitor.configuration.frequency_check_in_seconds)
-    Process.send_after(self(), :ping_endpoint, frequency_check_in_ms)
-    # Process.send_after(self(), :ping_endpoint, 2000)
+    # Process.send_after(self(), :ping_endpoint, frequency_check_in_ms)
+     Process.send_after(self(), :ping_endpoint, 4000)
 
     state
   end
@@ -115,6 +116,7 @@ defmodule Pulsarius.EndpointChecker do
     {:ok, incident} = Incidents.create_incident(monitor)
 
     Pulsarius.broadcast(@topic, {:incident_created, incident})
+    # Pulsarius.broadcast("incidents", {:incident_created, %{monitor_id: "1cc2cc31-e0e3-4e9e-a013-b2144ce43b2c"}})
 
     %{
       state
@@ -134,6 +136,7 @@ defmodule Pulsarius.EndpointChecker do
     {:ok, monitor} = Monitoring.update_monitor(state.monitor, %{status: :active})
 
     Pulsarius.broadcast(@topic, {:incident_auto_resolved, incident})
+    # Pulsarius.broadcast("incidents", {:incident_auto_resolved, %{monitor_id: "1cc2cc31-e0e3-4e9e-a013-b2144ce43b2c"}})
 
     %{
       state
@@ -186,5 +189,10 @@ defmodule Pulsarius.EndpointChecker do
 
   defp convert_to_ms(frequency_check_in_seconds) do
     String.to_integer(frequency_check_in_seconds) * 1000
+  end
+
+  defp schedule_first_check(state) do
+    Process.send_after(self(), :ping_endpoint, 500)
+    state
   end
 end

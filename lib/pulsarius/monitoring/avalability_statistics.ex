@@ -163,5 +163,3 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
 
   defp today(), do: Timex.now() |> Timex.beginning_of_day()
 end
-
-# Timex.format_duration(%Timex.Duration{seconds: 600, megaseconds: 0, microseconds: 0}, :humanized) 

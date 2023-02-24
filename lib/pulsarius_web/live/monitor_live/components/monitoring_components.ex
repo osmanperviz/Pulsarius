@@ -14,7 +14,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
         <div>
           <h5 class="mt-4"><%= @monitor.name %></h5>
           <p>
-            <%= monitor_status(@monitor) %>
+             <span><%= monitor_status(@monitor) %></span>
             <span class="abc">
               ·  Checked every <%= display_frequency_check_in_seconds(
                 @monitor.configuration.frequency_check_in_seconds
@@ -216,17 +216,22 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     """
   end
 
-  defp pause_button_title(monitor) when monitor.status == :active, do: "Pause this monitor"
+  defp pause_button_title(monitor) when monitor.status == :paused, do: "Unpause this monitor"
+  defp pause_button_title(monitor), do: "Pause this monitor"
 
-  defp pause_button_title(monitor), do: "Unpause this monitor"
-
-  defp monitor_status(monitor) when monitor.status == :active,
-    do: "Up"
-
-  defp monitor_status(monitor) when monitor.status == :paused,
-    do: "Paused"
-
-  defp monitor_status(_monitor), do: "Down"
+  def monitor_status(monitor) do
+  # IO.inspect(assigns)
+    cond do
+      monitor.status == :active -> 
+      IO.inspect(monitor.status, label: "Up header =========>")
+      "Up"
+      monitor.status == :paused -> "Paused"
+      monitor.status == :inactive -> 
+      IO.inspect(monitor.status, label: "Down header =========>")
+      "Down"
+      true -> "Unknown"
+    end
+  end
 
   defp box_item_css(false), do: "box-item right"
   defp box_item_css(true), do: "box-item"

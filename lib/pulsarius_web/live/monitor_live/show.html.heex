@@ -1,15 +1,20 @@
 <div class="container">
-  <.header socket={@socket} monitor={@monitor} />
-  <div class="main-wrapper">
+  <.header socket={@socket} monitor={@monitor} id={@monitor.id}/>
+  <div class="d-flex main-wrapper mt-3">
     <div class="box-wrapper">
-      <%= live_render(@socket, PulsariusWeb.MonitorLive.TotalAvailabilityWidget,
-        id: 1,
-        session: %{"monitor" => @monitor}
-      ) %>
-      <%= live_render(@socket, PulsariusWeb.MonitorLive.CheckedAtWidget,
-        id: 2,
-        session: %{"monitor" => @monitor}
-      ) %>
+      <.live_component
+        module={PulsariusWeb.MonitorLive.TotalAvailabilityWidget}
+        monitor={@monitor}
+        last_incident={@last_incident}
+        active_incident={@active_incident}
+        id={@monitor.id}
+      />
+      <.live_component
+        module={PulsariusWeb.MonitorLive.CheckedAtWidget}
+        id={@monitor.id}
+        last_status_response={@most_recent_status_response}
+        monitor={@monitor}
+      />
       <.box_item title="Incidents" value={@number_of_incidents} last_item={true} />
     </div>
   </div>

@@ -1,32 +1,29 @@
 defmodule PulsariusWeb.MonitorLive.CheckedAtWidget do
-  use Phoenix.LiveView,
-    container: {:div, class: "box-item right"}
+  use PulsariusWeb, :live_component
 
-  import PulsariusWeb.LiveHelpers
-
-  alias Pulsarius.Monitoring
+   @impl true
+  def mount(socket) do
+    # start_timer()
+    {:ok, socket}
+  end
 
   @impl true
-  def mount(:not_mounted_at_router, %{"monitor" => monitor}, socket) do
-    most_recent_status_response = Monitoring.get_most_recent_status_response!(monitor.id)
-    humanized_time = time(most_recent_status_response, monitor)
-
+  def update(assigns, socket) do
     start_timer()
-
+  
     {:ok,
      socket
-     |> assign(:monitor, monitor)
+     |> assign(assigns)
      |> assign(:title, "Last checked at")
-     |> assign(:most_recent_status_response, most_recent_status_response)
-     |> assign(:humanized_time, humanized_time)}
+     |> assign(:humanized_time, time(assigns))}
   end
 
   def render(assigns) do
     ~H"""
-    <div class="w-100">
+    <div class="box-item right">
       <div class="card box pb-2 pt-2  w-100">
         <div class="card-body">
-          <h6><span class="abc"><%= assigns.title %></span></h6>
+          <h6><span class="abc"><%= @title %></span></h6>
           <h6><%= @humanized_time %> ago</h6>
         </div>
       </div>
@@ -34,21 +31,16 @@ defmodule PulsariusWeb.MonitorLive.CheckedAtWidget do
     """
   end
 
-  def handle_info(:tick, %{assigns: assigns} = socket) do
-    humanized_time = time(assigns.most_recent_status_response, assigns.monitor)
-
-    {:noreply, assign(socket, :humanized_time, humanized_time)}
-  end
-
-  defp time(last_status_response, monitor)
+  defp time(%{last_status_response: last_status_response, monitor: monitor} = _assigns)
        when monitor.status == :active do
     last_status_response.occured_at
     |> humanized_duration_in_seconds
   end
 
-  defp time(_last_status_response, _monitor), do: ""
+  defp time(_assings), do: ""
 
   defp start_timer() do
-    :timer.send_interval(1000, self(), :tick)
+    # :timer.send_interval(1000, self(), :tick)
+     Process.send_after(self(), :tick, 1000)
   end
 end
