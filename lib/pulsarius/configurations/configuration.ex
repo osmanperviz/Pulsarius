@@ -42,4 +42,14 @@ defmodule Pulsarius.Configurations.Configuration do
     ])
     |> validate_required([:url_to_monitor, :frequency_check_in_seconds])
   end
+
+  def frequency_check_in_seconds_values do
+    [
+      "1 minute": 60,
+      "2 minutes": 120,
+      "3 minutes": 180,
+      "4 minutes": 240,
+      "5 minutes": 300
+    ]
+  end
 end

@@ -6,7 +6,7 @@ defmodule Pulsarius.Monitoring do
   import Ecto.Query, warn: false
   alias Pulsarius.Repo
 
-  alias Pulsarius.Monitoring.Monitor
+  alias Pulsarius.Monitoring.{Monitor, StatusResponse}
 
   @doc """
   Returns the list of monitoring.
@@ -101,5 +101,84 @@ defmodule Pulsarius.Monitoring do
   """
   def change_monitor(%Monitor{} = monitor, attrs \\ %{}) do
     Monitor.changeset(monitor, attrs)
+  end
+
+  @doc """
+    Detecting SSL details/expiry for an given URL and updates Monitor entity
+
+  ## Examples
+
+      iex> set_ssl_expiry(monitor)
+      {:ok, %Monitor{}}
+
+      iex> set_ssl_expiry(monitor)
+      {:error, %Ecto.Changeset{}}
+
+  """
+
+  def set_ssl_expiry(monitor) do
+    {:ok, _valid_from, valid_until} = check_ssl_expiry(monitor.configuration.url_to_monitor)
+
+    update_monitor(monitor, %{ssl_expiry_date: valid_until})
+  end
+
+  @doc """
+   Get a last status response.
+
+  ## Examples
+
+      iex> get_last_status_response!(monitor-id)
+      %StatusResponse{}
+
+  """
+  def get_most_recent_status_response!(monitor_id) do
+    StatusResponse |> where(monitor_id: ^monitor_id) |> last(:inserted_at) |> Repo.one()
+  end
+
+  @doc """
+  Returns the list of status responses for given monitor_id and given time range.
+
+  ## Examples
+
+      iex> list_status_responses(monitor_id, from, to)
+      [%StatusResponse{}, ...]
+
+  """
+  def list_status_responses(monitor_id, from, to) do
+    StatusResponse.for_monitoring(monitor_id)
+    |> StatusResponse.for_date_range(from, to)
+    |> StatusResponse.order_by_asc()
+    |> Repo.all()
+  end
+
+  @doc """
+   Creates a status response.
+
+  ## Examples
+
+      iex> create_status_response(monitor, %{field: value})
+      {:ok, %StatusResponse{}}
+
+      iex> create_status_response(monitor, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_status_response(monitor, attrs \\ %{}) do
+    %StatusResponse{}
+    |> StatusResponse.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:monitoring, monitor)
+    |> Repo.insert()
+  end
+
+  defp check_ssl_expiry(url) do
+    uri = URI.parse(url)
+
+    with {:ok, sock} <- :ssl.connect('#{uri.host}', 443, []),
+         {:ok, der} <- :ssl.peercert(sock),
+         :ssl.close(sock),
+         {:ok, cert} <- X509.Certificate.from_der(der),
+         {:Validity, valida_from, valid_until} <- X509.Certificate.validity(cert) do
+      {:ok, X509.DateTime.to_datetime(valida_from), X509.DateTime.to_datetime(valid_until)}
+    end
   end
 end

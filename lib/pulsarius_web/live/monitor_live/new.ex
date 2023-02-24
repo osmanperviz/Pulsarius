@@ -15,14 +15,13 @@ defmodule PulsariusWeb.MonitorLive.New do
 
   @impl true
   def handle_event("save", %{"monitor" => monitor_params}, socket) do
-    # TODO: convert frequency_check from minutes to milliseconds or
-    # deliver that already from server to dropdow than no need to convertion
-
     case Monitoring.create_monitor(socket.assigns.account, monitor_params) do
       {:ok, monitor} ->
         monitor = Pulsarius.Repo.preload(monitor, [:active_incident])
+
+        Task.start(fn -> Monitoring.set_ssl_expiry(monitor) end)
+
         Pulsarius.EndpointDynamicSupervisor.start_monitoring(monitor)
-        dbg(monitor)
 
         {:noreply,
          socket

@@ -3,7 +3,10 @@
     <div>
       <%= text_input(f, :name, placeholder: "Pronounceable monitor name", class: "form-control") %>
       <%= inputs_for f, :configuration, fn c -> %>
-        <%= select(c, :frequency_check_in_seconds, ["1 minutes": 1, "5 minutes": 5],
+        <%= select(
+          c,
+          :frequency_check_in_seconds,
+          Configuration.frequency_check_in_seconds_values(),
           "phx-throttle": "300",
           class: "form-control mt-3"
         ) %>

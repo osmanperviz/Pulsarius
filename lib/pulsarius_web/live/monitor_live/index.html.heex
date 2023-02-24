@@ -15,7 +15,7 @@
         <td><%= monitor.status %></td>
         <td>
           <span>
-            <%= live_redirect("Show", to: Routes.monitor_show_path(@socket, :show, monitor)) %>
+            <%= link("Show", to: Routes.monitor_show_path(@socket, :show, monitor)) %>
           </span>
           <span>
             <%= link("Edit", to: Routes.monitor_edit_path(@socket, :edit, monitor)) %>

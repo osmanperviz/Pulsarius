@@ -1,78 +1,23 @@
-<div class="row">
-  <div class="col">
-    <h1 class="mt-5 mb-4">
-      <%= @monitor.name %> Monitor
-      <%= if @monitor.status==:active do %>
-        <span class="badge rounded-pill text-bg-success ms-3">Active</span>
-      <% else %>
-        <span class="badge rounded-pill text-bg-warning ms-3">Paused</span>
-      <% end %>
-    </h1>
-  </div>
-</div>
-<div class="row">
-  <div class="col-lg-2 mt-3">
-    <%= if @monitor.status==:active do %>
-      <div class="btn btn-sm btn-outline-light" phx-click="pause-monitoring">Pause monitor</div>
-    <% else %>
-      <div class="btn btn-sm btn-warning" phx-click="unpause-monitoring">Activate Monitor</div>
-    <% end %>
-    <.add_slack_integration monitor={@monitor} />
-  </div>
-  <div class="col-lg-6 mt-3">
-    <table>
-      <tr>
-        <td>Frequency Check:</td>
-        <td class="ps-2">
-          <%= @monitor.configuration.frequency_check_in_seconds %>
-          <%= if @monitor.configuration.frequency_check_in_seconds == "1" do %>
-            minute
-          <% else %>
-            minutes
-          <% end %>
-        </td>
-      </tr>
-      <tr>
-        <td>URL:</td>
-        <td class="ps-2">
-          <%= @monitor.configuration.url_to_monitor %>
-        </td>
-      </tr>
-      <tr>
-        <td>Email Notification:</td>
-        <td class="ps-2">
-          <%= if @monitor.configuration.email_notification do %>
-            <span class="badge text-bg-success">On</span>
-          <% else %>
-            <span class="badge text-bg-danger">Off</span>
-          <% end %>
-        </td>
-      </tr>
-      <tr>
-        <td>SMS Notification:</td>
-        <td class="ps-2">
-          <%= if @monitor.configuration.sms_notification do %>
-            <span class="badge text-bg-success">On</span>
-          <% else %>
-            <span class="badge text-bg-danger">Off</span>
-          <% end %>
-        </td>
-      </tr>
-    </table>
-    <%= link("Change Configuration",
-      to: Routes.monitor_edit_path(@socket, :edit, @monitor),
-      class: "btn btn-sm btn-outline-light mt-5"
-    ) %>
-  </div>
-  <div class="col-lg mt-3">
-    <h3>Recent Events</h3>
-    <div class="alert alert-success" role="alert">
-      <h5 class="alert-heading">Healthy again!</h5>
-      <p>Service is back to normal.</p>
-    </div>
-    <div class="alert alert-danger" role="alert">
-      <h5 class="alert-heading">Service Unhealthy!</h5>
-      <p>Service did not respond properly.</p>
+<div class="container">
+  <.header socket={@socket} monitor={@monitor} id={@monitor.id}/>
+  <div class="d-flex main-wrapper mt-3">
+    <div class="box-wrapper">
+      <.live_component
+        module={PulsariusWeb.MonitorLive.TotalAvailabilityWidget}
+        monitor={@monitor}
+        last_incident={@last_incident}
+        active_incident={@active_incident}
+        id={@monitor.id}
+      />
+      <.live_component
+        module={PulsariusWeb.MonitorLive.CheckedAtWidget}
+        id={@monitor.id}
+        last_status_response={@most_recent_status_response}
+        monitor={@monitor}
+      />
+      <.box_item title="Incidents" value={@number_of_incidents} last_item={true} />
     </div>
   </div>
+  <.chart selected_period={@selected_period} />
+  <.table avalability_statistics={@avalability_statistics} />
 </div>

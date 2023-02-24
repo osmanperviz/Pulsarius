@@ -9,16 +9,16 @@ defmodule Pulsarius.Incidents do
   alias Pulsarius.Incidents.Incident
 
   @doc """
-  Returns the list of incidents.
+  Returns the list of incidents for given monitoring.
 
   ## Examples
 
-      iex> list_incidents()
+      iex> list_incidents(monitor_id)
       [%Incident{}, ...]
 
   """
-  def list_incidents do
-    Repo.all(Incident)
+  def list_incidents(monitor_id) do
+    Incident |> where(monitor_id: ^monitor_id) |> order_by(asc: :inserted_at) |> Repo.all()
   end
 
   @doc """
@@ -117,5 +117,9 @@ defmodule Pulsarius.Incidents do
   """
   def auto_resolve(%Incident{} = incident) do
     update_incident(incident, %{status: :resolved, resolved_at: NaiveDateTime.utc_now()})
+  end
+
+  def get_most_recent_incident!(monitor_id) do
+    Incident |> where(monitor_id: ^monitor_id) |> last(:inserted_at) |> Repo.one()
   end
 end

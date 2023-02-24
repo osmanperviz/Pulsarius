@@ -31,8 +31,7 @@ defmodule Pulsarius.EndpointChecker do
 
   def init(state) do
     state
-    |> schedule_check()
-    |> then(&schedule_check(&1))
+    |> schedule_first_check()
     |> then(&{:ok, &1})
   end
 
@@ -51,9 +50,10 @@ defmodule Pulsarius.EndpointChecker do
   ## Callbacks
 
   def handle_call({:update_state, updated_monitor}, _params, state) do
-    schedule_check(updated_monitor)
+    state = %{state | monitor: updated_monitor}
+    schedule_check(state)
 
-    {:reply, :ok, %{state | monitor: updated_monitor}}
+    {:reply, :ok, state}
   end
 
   def handle_info(:ping_endpoint, state) when state.monitor == :paused do
@@ -61,6 +61,9 @@ defmodule Pulsarius.EndpointChecker do
   end
 
   def handle_info(:ping_endpoint, state) do
+    # start measuring response time
+    state = %{state | start_measuring_response_time: System.monotonic_time(:millisecond)}
+
     ping_endpoint(state.monitor)
     |> handle_response(state)
     |> then(&schedule_check(&1))
@@ -71,7 +74,10 @@ defmodule Pulsarius.EndpointChecker do
     do: state
 
   defp schedule_check(state) do
-    Process.send_after(self(), :ping_endpoint, 2000)
+    frequency_check_in_ms = convert_to_ms(state.monitor.configuration.frequency_check_in_seconds)
+    # Process.send_after(self(), :ping_endpoint, frequency_check_in_ms)
+     Process.send_after(self(), :ping_endpoint, 4000)
+
     state
   end
 
@@ -82,13 +88,21 @@ defmodule Pulsarius.EndpointChecker do
   defp ping_endpoint(%{monitor: %Monitor{status: status}} = _state) when status == :paused,
     do: :ping_paused
 
-  defp ping_endpoint(monitor), do: HTTPoison.get!(monitor.configuration.url_to_monitor)
+  defp ping_endpoint(monitor),
+    do: HTTPoison.get!(monitor.configuration.url_to_monitor)
 
   defp handle_response(:ping_paused, state), do: state
 
-  defp handle_response(%HTTPoison.Response{status_code: 200} = _response, state)
+  defp handle_response(%HTTPoison.Response{status_code: 200} = response, state)
        when state.in_incident_mode == false do
-    state
+    params = %{
+      occured_at: DateTime.utc_now(),
+      response_time_in_ms: measure_response_time(state.start_measuring_response_time)
+    }
+
+    Task.start(fn -> Monitoring.create_status_response(state.monitor, params) end)
+
+    %{state | start_measuring_response_time: nil}
   end
 
   defp handle_response(%HTTPoison.Response{status_code: 200} = _response, state)
@@ -102,8 +116,15 @@ defmodule Pulsarius.EndpointChecker do
     {:ok, incident} = Incidents.create_incident(monitor)
 
     Pulsarius.broadcast(@topic, {:incident_created, incident})
+    # Pulsarius.broadcast("incidents", {:incident_created, %{monitor_id: "1cc2cc31-e0e3-4e9e-a013-b2144ce43b2c"}})
 
-    %{state | monitor: monitor, incident: incident, in_incident_mode: true}
+    %{
+      state
+      | monitor: monitor,
+        incident: incident,
+        in_incident_mode: true,
+        start_measuring_response_time: nil
+    }
   end
 
   defp handle_response(%HTTPoison.Response{status_code: _status_code} = _response, state)
@@ -115,13 +136,15 @@ defmodule Pulsarius.EndpointChecker do
     {:ok, monitor} = Monitoring.update_monitor(state.monitor, %{status: :active})
 
     Pulsarius.broadcast(@topic, {:incident_auto_resolved, incident})
+    # Pulsarius.broadcast("incidents", {:incident_auto_resolved, %{monitor_id: "1cc2cc31-e0e3-4e9e-a013-b2144ce43b2c"}})
 
     %{
       state
       | monitor: monitor,
         incident: nil,
         number_of_success_retry: 0,
-        in_incident_mode: false
+        in_incident_mode: false,
+        start_measuring_response_time: nil
     }
   end
 
@@ -145,7 +168,8 @@ defmodule Pulsarius.EndpointChecker do
       monitor: monitor,
       in_incident_mode: false,
       incident: nil,
-      number_of_success_retry: 0
+      number_of_success_retry: 0,
+      start_measuring_response_time: nil
     }
   end
 
@@ -154,7 +178,21 @@ defmodule Pulsarius.EndpointChecker do
       monitor: monitor,
       in_incident_mode: true,
       incident: monitor.active_incident,
-      number_of_success_retry: 0
+      number_of_success_retry: 0,
+      start_measuring_response_time: nil
     }
+  end
+
+  defp measure_response_time(start_time) do
+    System.monotonic_time(:millisecond) - start_time
+  end
+
+  defp convert_to_ms(frequency_check_in_seconds) do
+    String.to_integer(frequency_check_in_seconds) * 1000
+  end
+
+  defp schedule_first_check(state) do
+    Process.send_after(self(), :ping_endpoint, 500)
+    state
   end
 end
