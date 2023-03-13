@@ -19,7 +19,8 @@ defmodule PulsariusWeb.MonitorLive.Edit do
 
   @impl true
   def handle_event("save", %{"monitor" => monitor_params}, socket) do
-  IO.inspect(monitor_params)
+    IO.inspect(monitor_params)
+
     case Monitoring.update_monitor(socket.assigns.monitor, monitor_params) do
       {:ok, monitor} ->
         # update related running monitor process

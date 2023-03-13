@@ -59,6 +59,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
       id: assigns.monitor.id,
       last_status_response: assigns.most_recent_status_response
     )
+
     {:noreply, socket}
   end
 

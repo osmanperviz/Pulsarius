@@ -18,7 +18,7 @@ defmodule Pulsarius.Monitoring do
 
   """
   def list_monitoring do
-    Repo.all(Monitor)
+    Monitor |> order_by(asc: :inserted_at) |> Repo.all()
   end
 
   @doc """

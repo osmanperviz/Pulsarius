@@ -1,10 +1,6 @@
 defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
   use PulsariusWeb, :live_component
 
-  use Timex
-
-  @minute_in_miliseconds 60000
-
   @impl true
   def mount(socket) do
     {:ok, socket}
@@ -13,6 +9,7 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
   @impl true
   def update(assigns, socket) do
     start_timer()
+
     {:ok,
      socket
      |> assign(assigns)
@@ -23,7 +20,7 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
 
   def render(assigns) do
     ~H"""
-    <div class="box-item right">
+    <div class="box-item flex-grow-100">
       <div class="card box pb-2 pt-2  w-100">
         <div class="card-body">
           <h6><span class="abc"><%= @title %></span></h6>
@@ -50,6 +47,7 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
       if last_incident && last_incident.resolved_at != nil,
         do: last_incident.resolved_at,
         else: monitor.inserted_at
+
     from_time
     |> humanized_duration_in_seconds()
   end
@@ -68,7 +66,7 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
   defp time(_assigns), do: ""
 
   defp start_timer() do
-   Process.send_after(self(), :update_availability_time, 10000)
+    Process.send_after(self(), :update_availability_time, 10000)
     # :timer.send_interval(1000, self(), :update_availability_time)
   end
 end

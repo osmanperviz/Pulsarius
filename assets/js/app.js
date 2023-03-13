@@ -28,10 +28,13 @@ import topbar from "../vendor/topbar"
 
 import { StripeHook } from "./stripe";
 import { ChartHook } from "./chart";
+import { DatailsChartHook } from "./detailsChart"
 
 let Hooks = {
     Stripe: StripeHook,
-    Chart: ChartHook
+    Chart: ChartHook,
+    DatailsChart: DatailsChartHook
+    
 };
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")

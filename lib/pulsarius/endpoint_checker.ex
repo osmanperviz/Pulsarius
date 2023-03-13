@@ -76,7 +76,7 @@ defmodule Pulsarius.EndpointChecker do
   defp schedule_check(state) do
     frequency_check_in_ms = convert_to_ms(state.monitor.configuration.frequency_check_in_seconds)
     # Process.send_after(self(), :ping_endpoint, frequency_check_in_ms)
-     Process.send_after(self(), :ping_endpoint, 4000)
+    Process.send_after(self(), :ping_endpoint, 4000)
 
     state
   end
@@ -116,6 +116,7 @@ defmodule Pulsarius.EndpointChecker do
     {:ok, incident} = Incidents.create_incident(monitor)
 
     Pulsarius.broadcast(@topic, {:incident_created, incident})
+
     # Pulsarius.broadcast("incidents", {:incident_created, %{monitor_id: "1cc2cc31-e0e3-4e9e-a013-b2144ce43b2c"}})
 
     %{
@@ -136,6 +137,7 @@ defmodule Pulsarius.EndpointChecker do
     {:ok, monitor} = Monitoring.update_monitor(state.monitor, %{status: :active})
 
     Pulsarius.broadcast(@topic, {:incident_auto_resolved, incident})
+
     # Pulsarius.broadcast("incidents", {:incident_auto_resolved, %{monitor_id: "1cc2cc31-e0e3-4e9e-a013-b2144ce43b2c"}})
 
     %{

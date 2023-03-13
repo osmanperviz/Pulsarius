@@ -1,20 +1,28 @@
 defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   use PulsariusWeb, :component
 
+  attr :monitor, :string, required: true
+
+  def greetings(assigns) do
+    ~H"""
+    <h3><%= random_greeting(@name) %></h3>
+    """
+  end
+
   attr :monitor, Pulsarius.Monitoring.Monitor, required: true
 
   def header(assigns) do
     ~H"""
-    <div>
-      <.link href={Routes.monitor_index_path(@socket, :index)} class="btn bg-transparent abc">
-        <span class="bi-chevron-left"></span> Monitor
+    <div class="mt-2">
+      <.link href={Routes.monitor_index_path(@socket, :index)} class="btn bg-transparent abc p-0">
+        <span class="bi-chevron-left"></span> Monitors
       </.link>
-      <div class="col-lg-12 d-flex">
-        <div class="pulse"></div>
-        <div>
-          <h5 class="mt-4"><%= @monitor.name %></h5>
+      <div class="col-lg-12 d-flex m-0 p-0">
+        <div class="pulse mt-5"></div>
+        <div class="m-4">
+          <h5 class="mt-2"><%= @monitor.name %></h5>
           <p>
-             <span><%= monitor_status(@monitor) %></span>
+            <span><%= monitor_status(@monitor) %></span>
             <span class="abc">
               ·  Checked every <%= display_frequency_check_in_seconds(
                 @monitor.configuration.frequency_check_in_seconds
@@ -23,7 +31,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
           </p>
         </div>
       </div>
-      <div class="col-lg-12 mt-3">
+      <div class="col-lg-12">
         <button type="button" class="btn  bg-transparent abc mr-4" phx-click="send-test-alert">
           <span class="bi-exclamation-triangle bi-lg"></span>&nbsp;Send test alert
         </button>
@@ -78,7 +86,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   def chart(assigns) do
     ~H"""
     <div class="col-lg-12">
-      <div class="card box pb-5 pt-2 mt-3">
+      <div class="card box pb-1 pt-2 mt-3">
         <div class="card-body flex-column d-flex" style="max-height: 500px">
           <div class="btn-group btn-group-sm align-self-end">
             <button
@@ -106,8 +114,9 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
               Month
             </button>
           </div>
-          <canvas id="myChart" phx-hook="Chart" phx-update="ignore" style="min-height: 300px">
+          <canvas id="myChart" phx-hook="DatailsChart" phx-update="ignore" style="min-height: 300px">
           </canvas>
+          <%!-- <div id={"123"} phx-hook="Chart" ></div>  --%>
           <script src="https://cdn.jsdelivr.net/npm/chart.js">
           </script>
         </div>
@@ -220,21 +229,23 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   defp pause_button_title(monitor), do: "Pause this monitor"
 
   def monitor_status(monitor) do
-  # IO.inspect(assigns)
     cond do
-      monitor.status == :active -> 
-      IO.inspect(monitor.status, label: "Up header =========>")
-      "Up"
-      monitor.status == :paused -> "Paused"
-      monitor.status == :inactive -> 
-      IO.inspect(monitor.status, label: "Down header =========>")
-      "Down"
-      true -> "Unknown"
+      monitor.status == :active ->
+        "Up"
+
+      monitor.status == :paused ->
+        "Paused"
+
+      monitor.status == :inactive ->
+        "Down"
+
+      true ->
+        "Unknown"
     end
   end
 
-  defp box_item_css(false), do: "box-item right"
-  defp box_item_css(true), do: "box-item"
+  defp box_item_css(false), do: "box-item flex-grow-100"
+  defp box_item_css(true), do: "box-item flex-grow-100"
 
   def display_frequency_check_in_seconds(frequency) do
     (String.to_integer(frequency) / 60) |> round()
@@ -250,5 +261,20 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
 
   defp display_humanized_duration(duration_in_minutes) do
     Timex.format_duration(Timex.Duration.from_minutes(duration_in_minutes), :humanized)
+  end
+
+  def random_greeting(name) do
+    greetings = [
+      {:question, "How has your day been so far,"},
+      {:question, "How is it going,"},
+      {:statment, "Greetings,"},
+      {:question, "How are you today,"},
+      {:statment, "Have a great day,"}
+    ]
+
+    {type, greeting} = Enum.random(greetings)
+
+    mark = if type == :question, do: "?", else: "!"
+    "#{greeting} #{name}#{mark}"
   end
 end
