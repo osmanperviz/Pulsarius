@@ -8,144 +8,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
         <div class="card box w-100">
           <.header />
           <div class="card-body d-flex">
-            <section class="header">
-              <div class="">
-                <div class="row">
-                  <div class="col-md-3">
-                    <!-- Tabs nav -->
-                    <div
-                      class="nav flex-column nav-pills nav-pills-custom"
-                      id="v-pills-tab"
-                      role="tablist"
-                      aria-orientation="vertical"
-                    >
-                      <a
-                        class="nav-link mb-3 p-3 shadow active"
-                        id="v-pills-home-tab"
-                        data-toggle="pill"
-                        href="#v-pills-home"
-                        role="tab"
-                        aria-controls="v-pills-home"
-                        aria-selected="true"
-                      >
-                        <span class="font-weight-bold small text-uppercase">
-                          <.icon />&nbsp;  Create Monitoring
-                        </span>
-                      </a>
-
-                      <a
-                        class="nav-link mb-3 p-3 shadow"
-                        id="v-pills-profile-tab"
-                        data-toggle="pill"
-                        href="#v-pills-profile"
-                        role="tab"
-                        aria-controls="v-pills-profile"
-                        aria-selected="false"
-                      >
-                        <i class="bi bi-calendar2-event"></i>
-                        <span class="font-weight-bold small text-uppercase">
-                          &nbsp; Invite colleagues
-                        </span>
-                      </a>
-
-                      <a
-                        class="nav-link mb-3 p-3 shadow"
-                        id="v-pills-messages-tab"
-                        data-toggle="pill"
-                        href="#v-pills-messages"
-                        role="tab"
-                        aria-controls="v-pills-messages"
-                        aria-selected="false"
-                      >
-                        <i class="bi bi-gear-wide-connected"></i>
-                        <span class="font-weight-bold small text-uppercase">&nbsp; Integrations</span>
-                      </a>
-
-                      <a
-                        class="nav-link mb-3 p-3 shadow"
-                        id="v-pills-settings-tab"
-                        data-toggle="pill"
-                        href="#v-pills-settings"
-                        role="tab"
-                        aria-controls="v-pills-settings"
-                        aria-selected="false"
-                      >
-                        <i class="bi bi-bell"></i>
-                        <span class="font-weight-bold small text-uppercase">
-                          &nbsp; Notifications
-                        </span>
-                      </a>
-
-                      <a
-                        class="nav-link mb-3 p-3 shadow"
-                        id="v-pills-status-page-tab"
-                        data-toggle="pill"
-                        href="#v-pills-settings"
-                        role="tab"
-                        aria-controls="v-pills-settings"
-                        aria-selected="false"
-                      >
-                        <i class="bi bi-card-image mr-4"></i>
-                        <span class="font-weight-bold small text-uppercase">&nbsp; Status Page</span>
-                      </a>
-                    </div>
-                  </div>
-
-                  <div class="col-md-9">
-                    <!-- Tabs content -->
-                    <div class="tab-content" id="v-pills-tabContent">
-                      <div
-                        class="tab-pane fade shadow rounded show active p-5"
-                        id="v-pills-home"
-                        role="tabpanel"
-                        aria-labelledby="v-pills-home-tab"
-                      >
-                        <h4 class="font-italic mb-4">Personal information</h4>
-                        <p class="font-italic text-muted mb-2">
-                          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-                      </div>
-
-                      <div
-                        class="tab-pane fade shadow rounded bg-white p-5"
-                        id="v-pills-profile"
-                        role="tabpanel"
-                        aria-labelledby="v-pills-profile-tab"
-                      >
-                        <h4 class="font-italic mb-4">Bookings</h4>
-                        <p class="font-italic text-muted mb-2">
-                          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-                      </div>
-
-                      <div
-                        class="tab-pane fade shadow rounded bg-white p-5"
-                        id="v-pills-messages"
-                        role="tabpanel"
-                        aria-labelledby="v-pills-messages-tab"
-                      >
-                        <h4 class="font-italic mb-4">Reviews</h4>
-                        <p class="font-italic text-muted mb-2">
-                          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-                      </div>
-
-                      <div
-                        class="tab-pane fade shadow rounded bg-white p-5"
-                        id="v-pills-settings"
-                        role="tabpanel"
-                        aria-labelledby="v-pills-settings-tab"
-                      >
-                        <h4 class="font-italic mb-4">Confirm booking</h4>
-                        <p class="font-italic text-muted mb-2">
-                          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
+            <.onboarding_wizard />
           </div>
         </div>
       </div>
@@ -181,74 +44,165 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
     """
   end
 
-  defp tabs(assigns) do
+  defp onboarding_wizard(assigns) do
     ~H"""
-    <ul
-      style="min-width: 200px;"
-      class="nav nav-tabs nav-pills border-0 flex-row flex-md-column me-5 mb-3 mb-md-0 fs-6"
-    >
-      <li class="nav-item w-md-200px me-0 pt-1 pb-1 bcd">
-        <a class="nav-link active" data-bs-toggle="tab" href="#kt_vtab_pane_1">
-          <.icon />&nbsp;  Create Monitoring
-        </a>
-      </li>
-      <li class="nav-item w-md-200px me-0 pt-1 bcd">
-        <a class="nav-link" data-bs-toggle="tab" href="#kt_vtab_pane_2">
-          <i class="bi bi-calendar2-event"></i>&nbsp; Invite colleagues
-        </a>
-      </li>
-      <li class="nav-item w-md-200px pb-1 bcd">
-        <a class="nav-link" data-bs-toggle="tab" href="#kt_vtab_pane_3">
-          <i class="bi bi-plug-fill"></i>&nbsp; Integrations
-        </a>
-      </li>
-      <li class="nav-item w-md-200px pt-1 pb-1 bcd">
-        <a class="nav-link " data-bs-toggle="tab" href="#kt_vtab_pane_3">
-          <i class="bi bi-bell"></i>&nbsp; Notifications
-        </a>
-      </li>
-      <li class="nav-item w-md-200px pt-1 pb-1 bcd">
-        <a class="nav-link" data-bs-toggle="tab" href="#kt_vtab_pane_3">
-          <span class="bi bi-card-image mr-4"></span>&nbsp; Status Page
-        </a>
-      </li>
-      <li class="nav-item w-md-200px pt-1 pb-1">
-        <a class="nav-link " data-bs-toggle="tab" href="#kt_vtab_pane_3">
-          <i class="bi bi-journal fa-fw"></i>&nbsp; One more
-        </a>
-      </li>
-    </ul>
-    """
-  end
+    <section class="header w-100">
+      <div class="">
+        <div class="row">
+          <div class="col-md-3">
+            <!-- Tabs nav -->
+            <div
+              class="nav flex-column nav-pills nav-pills-custom"
+              id="v-pills-tab"
+              role="tablist"
+              aria-orientation="vertical"
+            >
+              <a
+                class="nav-link mb-3 p-3 shadow active"
+                id="nav-monitor-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#monitor-tab"
+                role="tab"
+                aria-controls="monitor-tab"
+                aria-selected="true"
+              >
+                <span class="font-weight-bold small text-uppercase">
+                  <.icon />&nbsp;  Create Monitoring
+                </span>
+              </a>
 
-  defp content(assigns) do
-    ~H"""
-    <.content_item
-      title="Create your first monitor"
-      text="Check your website for a specific keyword and get alerted when it goes down."
-    >
-      <:button>
-        <%= link("Create monitor",
-          to: Routes.monitor_new_path(PulsariusWeb.Endpoint, :new),
-          class: "btn btn-primary"
-        ) %>
-      </:button>
-    </.content_item>
-    """
-  end
+              <a
+                class="nav-link mb-3 p-3 shadow"
+                id="nav-invite-tab"
+                role="tab"
+                data-bs-toggle="tab"
+                data-bs-target="#invite-tab"
+                aria-controls="invite-tab"
+                aria-selected="false"
+              >
+                <i class="bi bi-calendar2-event"></i>
+                <span class="font-weight-bold small text-uppercase">
+                  &nbsp; Invite colleagues
+                </span>
+              </a>
 
-  defp content_item(assigns) do
-    ~H"""
-    <div class="tab-pane fade active" id="kt_vtab_pane_1" role="tabpanel">
-      <div class="d-flex justify-content-center align-items-center flex-column">
-        <div class="mb-2">
-          <%!-- <%= render_slot(@icon) %> --%>
+              <a
+                class="nav-link mb-3 p-3 shadow"
+                id="nav-integrations-tab"
+                role="tab"
+                data-bs-toggle="tab"
+                data-bs-target="#integrations-tab"
+                aria-controls="notification-tab"
+                aria-selected="false"
+              >
+                <i class="bi bi-gear-wide-connected"></i>
+                <span class="font-weight-bold small text-uppercase">&nbsp; Integrations</span>
+              </a>
+
+              <a
+                class="nav-link mb-3 p-3 shadow"
+                id="nav-notification-tab"
+                role="tab"
+                data-bs-toggle="tab"
+                data-bs-target="#notification-tab"
+                aria-controls="notification-tab"
+                aria-selected="false"
+              >
+                <i class="bi bi-bell"></i>
+                <span class="font-weight-bold small text-uppercase">
+                  &nbsp; Notifications
+                </span>
+              </a>
+
+              <a
+                class="nav-link mb-3 p-3 shadow"
+                id="nav-status-page-tab"
+                role="tab"
+                data-bs-toggle="tab"
+                data-bs-target="#status-page-tab"
+                aria-controls="status-page-tab"
+                aria-selected="false"
+              >
+                <i class="bi bi-card-image mr-4"></i>
+                <span class="font-weight-bold small text-uppercase">&nbsp; Status Page</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-md-9">
+            <!-- Tabs content -->
+            <div class="tab-content ">
+              <div
+                class="tab-pane fade shadow rounded show active p-5 "
+                id="monitor-tab"
+                role="tabpanel"
+                aria-labelledby="nav-monitor-tab"
+              >
+                <.icon />
+                <h4>Create your first monitor</h4>
+                <p class="count-down">
+                  Check your website for a specific keyword and get alerted when it goes down.
+                </p>
+                <%= link("Create Monitor",
+                  to: Routes.monitor_new_path(PulsariusWeb.Endpoint, :new),
+                  class: "btn btn-secondary"
+                ) %>
+              </div>
+
+              <div
+                class="tab-pane fade shadow rounded  p-5"
+                id="invite-tab"
+                role="tabpanel"
+                aria-labelledby="nav-invite-tab"
+              >
+                <i class="bi bi-people"></i>
+                <h4>Invite your colleagues</h4>
+                <p class="count-down">Invite your team to collaborate on incidents faster.</p>
+                <%= link("Invite collegues",
+                  to: Routes.user_index_path(PulsariusWeb.Endpoint, :new),
+                  class: "btn btn-secondary"
+                ) %>
+              </div>
+
+              <div
+                class="tab-pane fade shadow rounded  p-5"
+                id="notification-tab"
+                role="tabpanel"
+                aria-labelledby="nav-notification-tab"
+              >
+              </div>
+
+              <div
+                class="tab-pane fade shadow rounded p-5"
+                id="status-page-tab"
+                role="tabpanel"
+                aria-labelledby="nav-status-page-tab"
+              >
+                <i class="bi bi-people pb-3"></i>
+                <h4>Create a public status page</h4>
+                <p class="count-down">
+                  Communicate the status of your services with <br />
+                  customers and build confidence in your product.
+                </p>
+                <a class="btn btn-secondary">Create status page</a>
+              </div>
+
+              <div
+                class="tab-pane fade shadow rounded p-5"
+                id="integrations-tab"
+                role="tabpanel"
+                aria-labelledby="nav-integrations-tab"
+              >
+                <i class="bi bi-slack mt-3"></i><i class="bi bi-microsoft-teams"></i>
+                <h4>Connect Slack or Microsoft Teams</h4>
+                <p class="count-down">Get alerted about new incidents directly on  Slack/MSTeams.</p>
+                <a class="btn btn-secondary">Integrations</a>
+              </div>
+            </div>
+          </div>
         </div>
-        <h4 class="sub-title"><%= @title %></h4>
-        <p class="count-down "><%= @text %></p>
-        <%= render_slot(@button) %>
       </div>
-    </div>
+    </section>
     """
   end
 

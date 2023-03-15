@@ -82,6 +82,14 @@ abc2 {
   max-width: 1200px;
 }
 
+.btn-secondary {
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  color: #939db8;
+}
+
 .abc {
   color: #939db8;
   font-size: 15px;
@@ -187,11 +195,11 @@ abc2 {
 }
 
 .nav-pills-custom .nav-link.active {
-    color: #0d6efd;
+    color: #939db8;
     /* background: #fff; */
     /* background: #222838; */
     background: #2f3648;
-    border: 1px solid #0d6efd;
+    border: 1px solid #545b6b;
 }
 
 
@@ -201,7 +209,7 @@ abc2 {
         content: '';
         display: block;
         border-top: 8px solid transparent;
-        border-left: 10px solid #0d6efd;
+        border-left: 10px solid #545b6b;
         border-bottom: 8px solid transparent;
         position: absolute;
         top: 50%;
@@ -226,4 +234,10 @@ abc2 {
 .dropdown-item:hover {
   background-color: #3b4255;
   color: #fff;
+}
+
+.tab-pane {
+  height: 350px;
+  text-align: center;
+  background-color: #2f3648;
 }

@@ -8,8 +8,6 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
 
   @impl true
   def update(assigns, socket) do
-    start_timer()
-
     {:ok,
      socket
      |> assign(assigns)}
@@ -33,25 +31,16 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
                 </h6>
               </div>
             </div>
-
             <div class="text-right d-flex">
-              <p
-                class="count-down mt-2"
-                data-toggle="tooltip"
-                data-placement="left"
-                title="Cheched every 3 minute"
-              >
-                <i class="bi bi-broadcast"></i> 3m
-              </p>
-
+              <.frequency_check_info />
               <.dropdown monitor={@monitor} id={@id} socket={@socket} />
             </div>
           </div>
         </div>
         <div class=" card-body d-flex ">
-          <.info_box value="181 ms" title="Avg. Response time" />
-          <.info_box value="100%" title="Availability" />
-          <.info_box value="0m" title="Downtime" />
+          <.statistics_info value="181 ms" title="Avg. Response time" />
+          <.statistics_info value="100%" title="Availability" />
+          <.statistics_info value="0m" title="Downtime" />
         </div>
         <div id={@monitor.id} phx-hook="Chart"></div>
       </div>
@@ -93,12 +82,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
 
   defp time(_assigns), do: ""
 
-  defp start_timer() do
-    Process.send_after(self(), :update_availability_time, 10000)
-    # :timer.send_interval(1000, self(), :update_availability_time)
-  end
-
-  defp info_box(assigns) do
+  defp statistics_info(assigns) do
     ~H"""
     <div class="col-lg-4 text-center">
       <p class="mb-0"><%= @value %></p>
@@ -161,6 +145,19 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
         <i class="bi bi-pause-circle"></i>&nbsp; Pause
       </a>
     <% end %>
+    """
+  end
+
+  defp frequency_check_info(assigns) do
+    ~H"""
+    <p
+      class="count-down mt-2"
+      data-toggle="tooltip"
+      data-placement="left"
+      title="Cheched every 3 minute"
+    >
+      <i class="bi bi-broadcast"></i> 3m
+    </p>
     """
   end
 end
