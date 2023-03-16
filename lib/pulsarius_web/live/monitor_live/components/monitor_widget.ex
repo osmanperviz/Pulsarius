@@ -38,9 +38,9 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
           </div>
         </div>
         <div class=" card-body d-flex ">
-          <.statistics_info value="181 ms" title="Avg. Response time" />
-          <.statistics_info value="100%" title="Availability" />
-          <.statistics_info value="0m" title="Downtime" />
+          <.statistics_info value={"#{@monitor.statistics.average_response_time}ms"} title="Avg. Response time" />
+          <.statistics_info value={"#{@monitor.statistics.total_avalability_in_percentage}%"} title="Availability" />
+          <.statistics_info value={"#{@monitor.statistics.total_down_time_in_minutes}m"} title="Downtime" />
         </div>
         <div id={@monitor.id} phx-hook="Chart"></div>
       </div>

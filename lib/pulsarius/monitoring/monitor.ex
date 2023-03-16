@@ -9,6 +9,8 @@ defmodule Pulsarius.Monitoring.Monitor do
   alias Pulsarius.Configurations.Configuration
   alias Pulsarius.Incidents.Incident
   alias Pulsarius.Accounts.Account
+  alias Pulsarius.Monitoring.StatusResponse
+
 
   @type t :: %__MODULE__{
           name: String.t(),
@@ -33,6 +35,10 @@ defmodule Pulsarius.Monitoring.Monitor do
       type: :binary_id
 
     has_many :users, through: [:account, :users]
+    has_many :incidents, Incident, on_replace: :delete
+    has_many :status_response, StatusResponse, on_replace: :delete
+
+    field :statistics, :map, virtual: true
 
     timestamps()
   end
@@ -51,6 +57,10 @@ defmodule Pulsarius.Monitoring.Monitor do
       # TODO: define what is active state
       where: m.status in [:initializing, :active, :inactive, :paused],
       preload: [:configuration, :active_incident]
+  end
+
+  def cast_statistics(monitor, statistics) do
+    %__MODULE__{monitor | statistics: statistics}
   end
 end
 

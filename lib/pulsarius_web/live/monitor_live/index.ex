@@ -4,14 +4,20 @@ defmodule PulsariusWeb.MonitorLive.Index do
   alias Pulsarius.Monitoring
   alias PulsariusWeb.MonitorLive.MonitorWidget
   alias PulsariusWeb.MonitorLive.ConfigurationProgressComponent
+  
+  alias Pulsarius.Monitoring.Monitor
 
   import PulsariusWeb.MonitorLive.MonitoringComponents
 
   @topic "monitor"
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :monitoring, Monitoring.list_monitoring())}
+  def mount(_params, _session, %{assigns: assigns} = socket) do
+    monitoring_list = Monitoring.list_monitoring_with_daily_statistics(assigns.account.id)
+
+    IO.inspect(monitoring_list, label: "monitoring_list =====>")
+
+    {:ok, assign(socket, :monitoring, monitoring_list)}
   end
 
   @impl true
@@ -70,4 +76,5 @@ defmodule PulsariusWeb.MonitorLive.Index do
 
     {:noreply, socket}
   end
+
 end

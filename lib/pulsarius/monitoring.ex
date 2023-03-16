@@ -6,19 +6,37 @@ defmodule Pulsarius.Monitoring do
   import Ecto.Query, warn: false
   alias Pulsarius.Repo
 
-  alias Pulsarius.Monitoring.{Monitor, StatusResponse}
+  alias Pulsarius.Monitoring.{Monitor, StatusResponse, AvalabilityStatistics}
 
   @doc """
-  Returns the list of monitoring.
+  Returns the list of monitoring for given account.
 
   ## Examples
 
-      iex> list_monitoring()
+      iex> list_monitoring(some_account_id)
       [%Monitor{}, ...]
 
   """
-  def list_monitoring do
-    Monitor |> order_by(asc: :inserted_at) |> Repo.all()
+  def list_monitoring(account_id) do
+    Monitor
+    |> where(account_id: ^account_id)
+    |> order_by(asc: :inserted_at)
+    |> Repo.all()
+    |> Repo.preload([:configuration, :active_incident, :incidents, :status_response])
+  end
+
+
+  def list_monitoring_with_daily_statistics(account_id) do
+    list_monitoring(account_id)
+    |> Enum.map(fn monitor ->
+      statistics =
+        Map.merge(AvalabilityStatistics.calculate_todays_stats(monitor.incidents), %{
+          average_response_time:
+            AvalabilityStatistics.calculate_average_response_time(monitor.status_response)
+        })
+
+      Monitor.cast_statistics(monitor, statistics)
+    end)
   end
 
   @doc """
