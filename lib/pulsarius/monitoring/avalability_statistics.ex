@@ -22,7 +22,7 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
       todays_statistics: calculate_todays_stats(incidents),
       weekly_statistics: calculate_weekly_stats(incidents),
       monthly_statistics: calculate_monthly_stats(incidents),
-      annual_statistics: calculate_annual_stats(incidents),
+      annual_statistics: calculate_annual_stats(incidents)
     }
   end
 
@@ -95,9 +95,9 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
   end
 
   def calculate_average_response_time(status_response) do
-    sum_of_all_ms = Enum.map(status_response,& &1.response_time_in_ms) |> Enum.sum()
+    sum_of_all_ms = Enum.map(status_response, & &1.response_time_in_ms) |> Enum.sum()
     number_of_status_responses = Enum.count(status_response)
-      
+
     (sum_of_all_ms / number_of_status_responses) |> Float.ceil(1)
   end
 

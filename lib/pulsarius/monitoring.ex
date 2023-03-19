@@ -25,7 +25,6 @@ defmodule Pulsarius.Monitoring do
     |> Repo.preload([:configuration, :active_incident, :incidents, :status_response])
   end
 
-
   def list_monitoring_with_daily_statistics(account_id) do
     list_monitoring(account_id)
     |> Enum.map(fn monitor ->

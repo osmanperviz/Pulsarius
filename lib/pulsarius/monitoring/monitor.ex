@@ -11,7 +11,6 @@ defmodule Pulsarius.Monitoring.Monitor do
   alias Pulsarius.Accounts.Account
   alias Pulsarius.Monitoring.StatusResponse
 
-
   @type t :: %__MODULE__{
           name: String.t(),
           status: String.t()

@@ -17,8 +17,29 @@ defmodule PulsariusWeb.LiveHelpers do
   def humanized_duration_in_minutes(from, until \\ Timex.now()) do
     Interval.new(from: from, until: until)
     |> Interval.duration(:minutes)
-    |> Duration.from_minutes()
-    |> Formatter.format(:humanized)
+    |> case do
+      0 ->
+        "less than an minute"
+
+      result ->
+        result
+        |> Duration.from_minutes()
+        |> Formatter.format(:humanized)
+    end
+  end
+
+  def humanized_duration_in_hours(from, until \\ Timex.now()) do
+    Interval.new(from: from, until: until)
+    |> Interval.duration(:hours)
+    |> case do
+      0 ->
+        "less than an hour"
+
+      result ->
+        result
+        |> Duration.from_hours()
+        |> Formatter.format(:humanized)
+    end
   end
 
   def modal(assigns) do

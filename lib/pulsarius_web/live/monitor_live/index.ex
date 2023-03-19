@@ -4,7 +4,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
   alias Pulsarius.Monitoring
   alias PulsariusWeb.MonitorLive.MonitorWidget
   alias PulsariusWeb.MonitorLive.ConfigurationProgressComponent
-  
+
   alias Pulsarius.Monitoring.Monitor
 
   import PulsariusWeb.MonitorLive.MonitoringComponents
@@ -14,8 +14,6 @@ defmodule PulsariusWeb.MonitorLive.Index do
   @impl true
   def mount(_params, _session, %{assigns: assigns} = socket) do
     monitoring_list = Monitoring.list_monitoring_with_daily_statistics(assigns.account.id)
-
-    IO.inspect(monitoring_list, label: "monitoring_list =====>")
 
     {:ok, assign(socket, :monitoring, monitoring_list)}
   end
@@ -44,7 +42,9 @@ defmodule PulsariusWeb.MonitorLive.Index do
     :ok = Pulsarius.EndpointChecker.update_state(monitor)
     Pulsarius.broadcast(@topic, {:monitor_paused, monitor})
 
-    {:noreply, assign(socket, :monitoring, Monitoring.list_monitoring())}
+    monitoring = replace_monitoring(assigns.monitoring, monitor.id, monitor)
+
+    {:noreply, assign(socket, :monitoring, monitoring)}
   end
 
   @impl true
@@ -61,7 +61,10 @@ defmodule PulsariusWeb.MonitorLive.Index do
     :ok = Pulsarius.EndpointChecker.update_state(monitor)
     Pulsarius.broadcast(@topic, {:monitor_unpaused, monitor})
 
-    {:noreply, assign(socket, :monitoring, Monitoring.list_monitoring())}
+    monitoring = replace_monitoring(assigns.monitoring, monitor.id, monitor)
+
+
+    {:noreply, assign(socket, :monitoring, monitoring)}
   end
 
   def handle_event("send-test-alert", _params, %{assigns: assigns} = socket) do
@@ -77,4 +80,11 @@ defmodule PulsariusWeb.MonitorLive.Index do
     {:noreply, socket}
   end
 
+  def replace_monitoring(list, id, to) do
+    list
+    |> Enum.map(fn
+      %Monitor{id: ^id } -> to
+      other -> other
+    end)
+  end
 end

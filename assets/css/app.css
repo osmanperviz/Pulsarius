@@ -31,6 +31,18 @@ abc2 {
   max-width: 42em;
 }
 
+/*
+ * chart overide
+ */
+.apexcharts-tooltip-title{
+    background-color: #939db8;
+    border-bottom: 1px solid #3b4255;
+    padding: 5px;
+  }
+
+.apexcharts-tooltip.apexcharts-theme-null {
+  background-color: #939db8;
+}
 
 /*
  * Header
@@ -202,7 +214,9 @@ abc2 {
     border: 1px solid #545b6b;
 }
 
-
+.tooltip-inner {
+    background-color:red;
+}
 /* Add indicator arrow for the active tab */
 @media (min-width: 992px) {
     .nav-pills-custom .nav-link::before {

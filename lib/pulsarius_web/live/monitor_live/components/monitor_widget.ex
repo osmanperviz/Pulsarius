@@ -1,16 +1,15 @@
 defmodule PulsariusWeb.MonitorLive.MonitorWidget do
   use PulsariusWeb, :live_component
-
-  @impl true
-  def mount(socket) do
-    {:ok, socket}
-  end
+  use Timex
 
   @impl true
   def update(assigns, socket) do
     {:ok,
      socket
-     |> assign(assigns)}
+     |> assign(assigns)
+     |> push_event("response_time", %{
+       response_time: build_response_time(assigns.monitor.status_response)
+     })}
   end
 
   def render(assigns) do
@@ -27,20 +26,31 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
                     to: Routes.monitor_show_path(@socket, :show, @monitor),
                     class: "text-capitalize text-white text-decoration-none"
                   ) %><br />
-                  <span class="count-down"><%= display_status(@monitor.status) %> · 16h 51m</span>
+                  <span class="count-down">
+                    <%= display_status(@monitor.status) %> · <%= time(@monitor) %>
+                  </span>
                 </h6>
               </div>
             </div>
-            <div class="text-right d-flex">
-              <.frequency_check_info />
+            <div class="col-lg-2 text-right d-flex justify-content-between">
+              <.frequency_check_info monitor={@monitor} />
               <.dropdown monitor={@monitor} id={@id} socket={@socket} />
             </div>
           </div>
         </div>
         <div class=" card-body d-flex ">
-          <.statistics_info value={"#{@monitor.statistics.average_response_time}ms"} title="Avg. Response time" />
-          <.statistics_info value={"#{@monitor.statistics.total_avalability_in_percentage}%"} title="Availability" />
-          <.statistics_info value={"#{@monitor.statistics.total_down_time_in_minutes}m"} title="Downtime" />
+          <.statistics_info
+            value={"#{@monitor.statistics.average_response_time}ms"}
+            title="Avg. Response time"
+          />
+          <.statistics_info
+            value={"#{@monitor.statistics.total_avalability_in_percentage}%"}
+            title="Availability"
+          />
+          <.statistics_info
+            value={"#{@monitor.statistics.total_down_time_in_minutes}m"}
+            title="Downtime"
+          />
         </div>
         <div id={@monitor.id} phx-hook="Chart"></div>
       </div>
@@ -58,26 +68,28 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
     end
   end
 
-  defp time(%{last_incident: last_incident, monitor: monitor} = _assigns)
+  defp time(monitor)
        when monitor.status == :active do
+    last_incident = List.last(monitor.incidents)
+
     from_time =
       if last_incident && last_incident.resolved_at != nil,
         do: last_incident.resolved_at,
-        else: monitor.inserted_at
+        else: monitor.updated_at
 
     from_time
-    |> humanized_duration_in_seconds()
+    |> humanized_duration_in_hours()
   end
 
-  defp time(%{active_incident: active_incident, monitor: monitor} = _assigns)
+  defp time(monitor)
        when monitor.status == :inactive do
-    active_incident.occured_at
-    |> humanized_duration_in_seconds()
+    monitor.active_incident.occured_at
+    |> humanized_duration_in_minutes()
   end
 
-  defp time(%{monitor: monitor} = _assigns) when monitor.status == :paused do
+  defp time(monitor) when monitor.status == :paused do
     monitor.updated_at
-    |> humanized_duration_in_seconds()
+    |> humanized_duration_in_hours()
   end
 
   defp time(_assigns), do: ""
@@ -150,14 +162,39 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
 
   defp frequency_check_info(assigns) do
     ~H"""
-    <p
-      class="count-down mt-2"
-      data-toggle="tooltip"
-      data-placement="left"
-      title="Cheched every 3 minute"
+    <a
+      href={Routes.monitor_edit_path(PulsariusWeb.Endpoint, :edit, @monitor)}
+      class="count-down mt-2 text-decoration-none"
+      data-bs-toggle="tooltip"
+      data-bs-placement="left"
+      title={"Cheched every #{display_frequency_check_in_seconds(@monitor.configuration.frequency_check_in_seconds)} minute"}
     >
-      <i class="bi bi-broadcast"></i> 3m
-    </p>
+      <i class="bi bi-broadcast"></i>
+      <%= display_frequency_check_in_seconds(@monitor.configuration.frequency_check_in_seconds) %>m
+    </a>
     """
+  end
+
+  defp display_frequency_check_in_seconds(frequency) do
+    (String.to_integer(frequency) / 60) |> round()
+  end
+
+  def build_response_time(response_time) do
+    Enum.filter(response_time, fn rt ->
+      rt.occured_at in todays_range
+    end)
+    |> Enum.sort_by(&Map.fetch!(&1, :inserted_at), :desc)
+    |> Enum.take(80)
+    |> Enum.reverse()
+    |> Enum.map(fn a ->
+      %{x: NaiveDateTime.to_time(a.occured_at) |> Time.to_string(), y: a.response_time_in_ms}
+    end)
+  end
+
+  defp todays_range() do
+    from = Timex.now() |> Timex.beginning_of_day()
+    until = Timex.now() |> Timex.end_of_day()
+
+    Interval.new(from: from, until: until)
   end
 end
