@@ -60,8 +60,7 @@ abc2 {
  }
 
  .bcd {
-       border-bottom: 1px solid #3b4255;
-
+    border-bottom: 1px solid #3b4255;
  }
 
 .nav-masthead .nav-link {
@@ -169,7 +168,7 @@ abc2 {
     border: 1px solid #4d576e;
 }
 
-.pulse {
+.pulse-paused {
 	border-radius: 50%;
 	/* margin-right: 15px; */
   /* margin-top: 40px; */
@@ -199,6 +198,69 @@ abc2 {
       box-shadow: 0 0 0 0 rgba(255, 177, 66, 0);
     }
   }
+
+.pulse-success{
+	border-radius: 50%;
+	/* margin-right: 15px; */
+  /* margin-top: 40px; */
+	height: 20px;
+	width: 20px;
+  background: #1ddd86;
+  /* background: #0d6efd; */
+   box-shadow: 0 0 0 0 #1ddd86;
+  /* box-shadow: #0d6efd; */
+	transform: scale(0.9);
+	animation: puls-animation 2s infinite;
+  }
+
+  @keyframes puls-animation {
+    0% {
+      transform: scale(0.3);
+      box-shadow: 0 0 0 0 #1ddd86;
+    }
+    
+    70% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 10px rgba(255, 177, 66, 0);
+    }
+    
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 177, 66, 0);
+    }
+  }
+
+  .pulse-inactive{
+	border-radius: 50%;
+	/* margin-right: 15px; */
+  /* margin-top: 40px; */
+	height: 20px;
+	width: 20px;
+  background: #1ddd86;
+  /* background: #0d6efd; */
+   box-shadow: 0 0 0 0 #de4411;
+  /* box-shadow: #0d6efd; */
+	transform: scale(0.9);
+	animation: puls-animation 2s infinite;
+  }
+
+  @keyframes puls-animation {
+    0% {
+      transform: scale(0.3);
+      box-shadow: 0 0 0 0 #de4411;
+    }
+    
+    70% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 10px rgba(255, 177, 66, 0);
+    }
+    
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(255, 177, 66, 0);
+    }
+  }
+
 .nav-pills-custom .nav-link {
     color: #ffffff;
     /* background: #fff; */
@@ -215,22 +277,26 @@ abc2 {
 }
 
 .tooltip-inner {
-    background-color:red;
+    background-color: #545b6b;
+}
+
+.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: #545b6b;
 }
 /* Add indicator arrow for the active tab */
 @media (min-width: 992px) {
-    .nav-pills-custom .nav-link::before {
-        content: '';
-        display: block;
-        border-top: 8px solid transparent;
-        border-left: 10px solid #545b6b;
-        border-bottom: 8px solid transparent;
-        position: absolute;
-        top: 50%;
-        right: -10px;
-        transform: translateY(-50%);
-        opacity: 0;
-    }
+  .nav-pills-custom .nav-link::before {
+      content: '';
+      display: block;
+      border-top: 8px solid transparent;
+      border-left: 10px solid #545b6b;
+      border-bottom: 8px solid transparent;
+      position: absolute;
+      top: 50%;
+      right: -10px;
+      transform: translateY(-50%);
+      opacity: 0;
+  }
 }
 
 .nav-pills-custom .nav-link.active::before {

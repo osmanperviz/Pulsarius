@@ -18,7 +18,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
         <span class="bi-chevron-left"></span> Monitors
       </.link>
       <div class="col-lg-12 d-flex m-0 p-0">
-        <div class="pulse mt-5"></div>
+        <div class="pulse-success mt-5"></div>
         <div class="m-4">
           <h5 class="mt-2"><%= @monitor.name %></h5>
           <p>

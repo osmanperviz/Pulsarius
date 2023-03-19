@@ -19,7 +19,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
         <div class="card-body bcd justify-content-between">
           <div class="d-flex justify-content-between bordered-1">
             <div id="abc" class="d-flex">
-              <div class="pulse m-2"></div>
+              <div class={" #{get_class(@monitor)} m-2"}></div>
               <div>
                 <h6 class="m-1">
                   <%= link(@monitor.name,
@@ -32,7 +32,8 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
                 </h6>
               </div>
             </div>
-            <div class="col-lg-2 text-right d-flex justify-content-between">
+            <div class="col-lg-3 text-right d-flex justify-content-between">
+              <.certificate_info monitor={@monitor} />
               <.frequency_check_info monitor={@monitor} />
               <.dropdown monitor={@monitor} id={@id} socket={@socket} />
             </div>
@@ -175,6 +176,18 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
     """
   end
 
+  defp certificate_info(assigns) do
+    ~H"""
+    <i
+      data-bs-toggle="tooltip"
+      data-bs-placement="top"
+      title={"Certificate expires in #{calculate_expiration_date(@monitor)}"}
+      class="bi bi-award-fill mt-1"
+    >
+    </i>
+    """
+  end
+
   defp display_frequency_check_in_seconds(frequency) do
     (String.to_integer(frequency) / 60) |> round()
   end
@@ -196,5 +209,26 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
     until = Timex.now() |> Timex.end_of_day()
 
     Interval.new(from: from, until: until)
+  end
+
+  defp calculate_expiration_date(monitor) do
+    expiration_date = monitor.ssl_expiry_date
+    from = Timex.now() |> Timex.beginning_of_day()
+
+
+    Interval.new(from: from, until: expiration_date)
+    |> Interval.duration(:months)
+    |> case do
+      0 -> "Less than an mounth (#{Calendar.strftime(expiration_date, "%A.%m.%Y")})"
+      result -> 
+      "#{result} mounths (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
+    end
+  end
+
+  defp get_class(monitor) do
+    cond do
+      monitor.status == :active -> "pulse-success"
+      monitor.status == :paused -> "pulse-paused"
+    end
   end
 end

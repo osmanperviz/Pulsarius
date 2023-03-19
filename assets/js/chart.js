@@ -59,7 +59,7 @@ export const ChartHook = {
   xaxis: {
     labels: {
       formatter: function (value) {
-        return  `Occured at: ${value}h`;
+        return `Occured at: ${value}h`;
       }
     }
 }
