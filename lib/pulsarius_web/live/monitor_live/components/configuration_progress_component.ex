@@ -6,9 +6,9 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
     <div class="col-lg-12 mt-5">
       <div class="box-item d-flex">
         <div class="card box w-100">
-          <.header />
+          <.header onboarding_progress={@onboarding_progress} />
           <div class="card-body d-flex">
-            <.onboarding_wizard />
+            <.onboarding_wizard onboarding_progress={@onboarding_progress} />
           </div>
         </div>
       </div>
@@ -24,20 +24,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
     >
       <h5>Onboarding progress</h5>
       <div class="d-flex justify-content-between col-lg-3">
-        <div class="d-flex justify-content-between">
-          <span style="font-size: 12px" class="p-2 mt-1">1 / 4</span>
-          <div
-            class="progress mt-3"
-            role="progressbar"
-            aria-label="Example 1px high"
-            aria-valuenow="25"
-            aria-valuemin="0"
-            aria-valuemax="100"
-            style="height: 7px; width: 150px;"
-          >
-            <div class="progress-bar" style="width: 50%"></div>
-          </div>
-        </div>
+        <.progress onboarding_progress={@onboarding_progress} />
         <.dropdown />
       </div>
     </div>
@@ -58,7 +45,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
               aria-orientation="vertical"
             >
               <a
-                class="nav-link mb-3 p-3 shadow active"
+                class={"nav-link mb-3 p-3 shadow #{active_item(:create_monitoring, @onboarding_progress)}"}
                 id="nav-monitor-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#monitor-tab"
@@ -66,13 +53,14 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
                 aria-controls="monitor-tab"
                 aria-selected="true"
               >
+               <i class={icon_for(:create_monitoring, @onboarding_progress.create_monitoring)}></i>
                 <span class="font-weight-bold small text-uppercase">
-                  <.icon />&nbsp;  Create Monitoring
+                  &nbsp;  Create Monitoring
                 </span>
               </a>
 
               <a
-                class="nav-link mb-3 p-3 shadow"
+                class={"nav-link mb-3 p-3 shadow #{active_item(:invite_colleagues, @onboarding_progress)}"}
                 id="nav-invite-tab"
                 role="tab"
                 data-bs-toggle="tab"
@@ -80,14 +68,14 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
                 aria-controls="invite-tab"
                 aria-selected="false"
               >
-                <i class="bi bi-calendar2-event"></i>
+                <i class={icon_for(:invite_colleagues, @onboarding_progress)}></i>
                 <span class="font-weight-bold small text-uppercase">
                   &nbsp; Invite colleagues
                 </span>
               </a>
 
               <a
-                class="nav-link mb-3 p-3 shadow"
+                class={"nav-link mb-3 p-3 shadow #{active_item(:integrations,@onboarding_progress)}"}
                 id="nav-integrations-tab"
                 role="tab"
                 data-bs-toggle="tab"
@@ -95,12 +83,12 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
                 aria-controls="notification-tab"
                 aria-selected="false"
               >
-                <i class="bi bi-gear-wide-connected"></i>
+                <i class={icon_for(:integrations, @onboarding_progress.integrations)}></i>
                 <span class="font-weight-bold small text-uppercase">&nbsp; Integrations</span>
               </a>
 
               <a
-                class="nav-link mb-3 p-3 shadow"
+                class={"nav-link mb-3 p-3 shadow #{active_item(:notifications, @onboarding_progress)}"}
                 id="nav-notification-tab"
                 role="tab"
                 data-bs-toggle="tab"
@@ -108,7 +96,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
                 aria-controls="notification-tab"
                 aria-selected="false"
               >
-                <i class="bi bi-bell"></i>
+                <i class={icon_for(:notifications, @onboarding_progress.notifications)}></i>
                 <span class="font-weight-bold small text-uppercase">
                   &nbsp; Notifications
                 </span>
@@ -123,7 +111,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
                 aria-controls="status-page-tab"
                 aria-selected="false"
               >
-                <i class="bi bi-card-image mr-4"></i>
+                <i class={icon_for(:status_page, @onboarding_progress.status_page)}></i>
                 <span class="font-weight-bold small text-uppercase">&nbsp; Status Page</span>
               </a>
             </div>
@@ -240,5 +228,48 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
       </ul>
     </div>
     """
+  end
+
+  defp progress(assigns) do
+    ~H"""
+    <div class="d-flex justify-content-between">
+      <span style="font-size: 12px" class="p-2 mt-1"><%= calculate_success_steps(@onboarding_progress) %> / 5</span>
+      <div
+        class="progress mt-3"
+        role="progressbar"
+        aria-label="Example 1px high"
+        aria-valuenow="20"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        style="height: 7px; width: 150px;"
+      >
+        <div class="progress-bar" style={calculate_percentage_width(@onboarding_progress)}></div>
+      </div>
+    </div>
+    """
+  end
+
+  defp active_item(current_item, progress) do
+    {key, value} = Enum.find(progress, fn {k, v} -> v == false end)
+    if key == current_item, do: "active", else: ""
+  end
+
+  defp icon_for(:create_monitoring, false), do: "<.icon />"
+  defp icon_for(:invite_colleagues, false), do: "bi bi-calendar2-event"
+  defp icon_for(:integrations, false), do: "bi bi-gear-wide-connected"
+  defp icon_for(:notifications, false), do: "bi bi-bell"
+  defp icon_for(:status_page, false), do: "bi bi-card-image"
+
+  defp icon_for(_step, _accoplished) do
+    "bi bi-check-circle-fill text-success"
+  end
+
+  defp calculate_success_steps(progress) do
+    Enum.filter(progress, fn {k, v} -> v == true end)
+    |> Enum.count()
+  end
+
+  def calculate_percentage_width(progress)  do
+    "width: #{(calculate_success_steps(progress) / 5) * 100}% "
   end
 end

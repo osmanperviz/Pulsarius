@@ -18,20 +18,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
       <div class="card box pt-2 w-100">
         <div class="card-body bcd justify-content-between">
           <div class="d-flex justify-content-between bordered-1">
-            <div id="abc" class="d-flex">
-              <div class={" #{get_class(@monitor)} m-2"}></div>
-              <div>
-                <h6 class="m-1">
-                  <%= link(@monitor.name,
-                    to: Routes.monitor_show_path(@socket, :show, @monitor),
-                    class: "text-capitalize text-white text-decoration-none"
-                  ) %><br />
-                  <span class="count-down">
-                    <%= display_status(@monitor.status) %> · <%= time(@monitor) %>
-                  </span>
-                </h6>
-              </div>
-            </div>
+            <.name_and_status_info monitor={@monitor} />
             <div class="col-lg-3 text-right d-flex justify-content-between">
               <.certificate_info monitor={@monitor} />
               <.frequency_check_info monitor={@monitor} />
@@ -54,6 +41,25 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
           />
         </div>
         <div id={@monitor.id} phx-hook="Chart"></div>
+      </div>
+    </div>
+    """
+  end
+
+  defp name_and_status_info(assigns) do
+    ~H"""
+    <div id="abc" class="d-flex">
+      <div class={"#{get_class(@monitor)} m-2"}></div>
+      <div>
+        <h6 class="m-1">
+          <%= link(@monitor.name,
+            to: Routes.monitor_show_path(PulsariusWeb.Endpoint, :show, @monitor),
+            class: "text-capitalize text-white text-decoration-none"
+          ) %><br />
+          <span class="count-down">
+            <%= display_status(@monitor.status) %> · <%= time(@monitor) %>
+          </span>
+        </h6>
       </div>
     </div>
     """
@@ -182,7 +188,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
       data-bs-toggle="tooltip"
       data-bs-placement="top"
       title={"Certificate expires in #{calculate_expiration_date(@monitor)}"}
-      class="bi bi-award-fill mt-1"
+      class="bi bi-award-fill mt-1 text-success"
     >
     </i>
     """
@@ -215,13 +221,14 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
     expiration_date = monitor.ssl_expiry_date
     from = Timex.now() |> Timex.beginning_of_day()
 
-
     Interval.new(from: from, until: expiration_date)
     |> Interval.duration(:months)
     |> case do
-      0 -> "Less than an mounth (#{Calendar.strftime(expiration_date, "%A.%m.%Y")})"
-      result -> 
-      "#{result} mounths (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
+      0 ->
+        "Less than an mounth (#{Calendar.strftime(expiration_date, "%A.%m.%Y")})"
+
+      result ->
+        "#{result} mounths (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
     end
   end
 
@@ -229,6 +236,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
     cond do
       monitor.status == :active -> "pulse-success"
       monitor.status == :paused -> "pulse-paused"
+      monitor.status == :inactive -> "pulse-inactive"
     end
   end
 end

@@ -7,6 +7,8 @@ defmodule PulsariusWeb.MonitorLive.Index do
 
   alias Pulsarius.Monitoring.Monitor
 
+  alias Pulsarius.Repo
+
   import PulsariusWeb.MonitorLive.MonitoringComponents
 
   @topic "monitor"
@@ -14,8 +16,14 @@ defmodule PulsariusWeb.MonitorLive.Index do
   @impl true
   def mount(_params, _session, %{assigns: assigns} = socket) do
     monitoring_list = Monitoring.list_monitoring_with_daily_statistics(assigns.account.id)
+    onboarding_progress = onboarding_progress(monitoring_list, assigns.account)
 
-    {:ok, assign(socket, :monitoring, monitoring_list)}
+    socket =
+      socket
+      |> assign(:monitoring, monitoring_list)
+      |> assign(:onboarding_progress, onboarding_progress)
+
+    {:ok, socket}
   end
 
   @impl true
@@ -63,7 +71,6 @@ defmodule PulsariusWeb.MonitorLive.Index do
 
     monitoring = replace_monitoring(assigns.monitoring, monitor.id, monitor)
 
-
     {:noreply, assign(socket, :monitoring, monitoring)}
   end
 
@@ -80,11 +87,40 @@ defmodule PulsariusWeb.MonitorLive.Index do
     {:noreply, socket}
   end
 
+  def handle_event(
+        "delete-monitoring",
+        %{"monitor_id" => monitor_id},
+        %{assigns: assigns} = socket
+      ) do
+    monitoring_list = Monitoring.list_monitoring_with_daily_statistics(assigns.account.id)
+
+    {:noreply, assign(socket, :monitoring, monitoring_list)}
+  end
+
   def replace_monitoring(list, id, to) do
     list
     |> Enum.map(fn
-      %Monitor{id: ^id } -> to
+      %Monitor{id: ^id} -> to
       other -> other
     end)
+  end
+
+  def onboarding_progress([monitor | _rest], account) do
+    %{
+      create_monitoring: true,
+      invite_colleagues: has_team_member?(account),
+      integrations: has_integrations_set?(monitor),
+      notifications: false,
+      status_page: false
+    }
+  end
+
+  defp has_team_member?(account) do
+    account = account |> Repo.preload(:users)
+    Enum.count(account.users) > 1
+  end
+
+  defp has_integrations_set?(monitor) do
+    monitor.configuration.slack_notification
   end
 end
