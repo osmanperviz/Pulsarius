@@ -111,6 +111,10 @@ abc2 {
   font-size: 1.2rem
 }
 
+.info-icon {
+  font-size: 0.7rem
+}
+
 .table-text {
   font-size: 15px;
   color: white;
@@ -230,13 +234,13 @@ abc2 {
     }
   }
 
-  .pulse-inactive{
+.pulse-inactive{
 	border-radius: 50%;
 	/* margin-right: 15px; */
   /* margin-top: 40px; */
 	height: 20px;
 	width: 20px;
-  background: #1ddd86;
+  background: #de4411;
   /* background: #0d6efd; */
    box-shadow: 0 0 0 0 #de4411;
   /* box-shadow: #0d6efd; */

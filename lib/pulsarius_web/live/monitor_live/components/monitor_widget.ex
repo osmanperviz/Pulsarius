@@ -30,18 +30,23 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
           <.statistics_info
             value={"#{@monitor.statistics.average_response_time}ms"}
             title="Avg. Response time"
+            tooltip_text="Today's average response time in miliseconds"
           />
           <.statistics_info
             value={"#{@monitor.statistics.total_avalability_in_percentage}%"}
             title="Availability"
+            tooltip_text="Today's availability"
           />
           <.statistics_info
             value={"#{@monitor.statistics.total_down_time_in_minutes}m"}
             title="Downtime"
+            tooltip_text="Today's downtime in minutes"
           />
         </div>
         <div id={@monitor.id} phx-hook="Chart"></div>
       </div>
+      <script>
+      </script>
     </div>
     """
   end
@@ -104,7 +109,16 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
   defp statistics_info(assigns) do
     ~H"""
     <div class="col-lg-4 text-center">
-      <p class="mb-0"><%= @value %></p>
+      <p class="mb-0">
+        <%= @value %>&nbsp;<i
+          class="bi bi-info-circle-fill info-icon"
+          id={generate_random_id()}
+          phx-hook="TooltipInit"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          title={@tooltip_text}
+        ></i>
+      </p>
       <p class="count-down"><%= @title %></p>
     </div>
     """
@@ -137,7 +151,11 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
           </a>
         </li>
         <li><hr class="dropdown-divider" /></li>
-        <li><a class="dropdown-item" href="#"><i class="bi bi-trash"></i>&nbsp; Delete</a></li>
+        <li>
+          <a data-confirm="Are you sure?" class="dropdown-item" href="#">
+            <i class="bi bi-trash"></i>&nbsp; Delete
+          </a>
+        </li>
       </ul>
     </div>
     """
@@ -172,8 +190,10 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
     <a
       href={Routes.monitor_edit_path(PulsariusWeb.Endpoint, :edit, @monitor)}
       class="count-down mt-2 text-decoration-none"
+      id={generate_random_id()}
+      phx-hook="TooltipInit"
       data-bs-toggle="tooltip"
-      data-bs-placement="left"
+      data-bs-placement="top"
       title={"Cheched every #{display_frequency_check_in_seconds(@monitor.configuration.frequency_check_in_seconds)} minute"}
     >
       <i class="bi bi-broadcast"></i>
@@ -185,6 +205,8 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
   defp certificate_info(assigns) do
     ~H"""
     <i
+      id={@monitor.id}
+      phx-hook="TooltipInit"
       data-bs-toggle="tooltip"
       data-bs-placement="top"
       title={"Certificate expires in #{calculate_expiration_date(@monitor)}"}
@@ -239,4 +261,6 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
       monitor.status == :inactive -> "pulse-inactive"
     end
   end
+
+  defp generate_random_id, do: Enum.random(?a..?z) |> to_string()
 end

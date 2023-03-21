@@ -29,11 +29,13 @@ import topbar from "../vendor/topbar"
 import { StripeHook } from "./stripe";
 import { ChartHook } from "./chart";
 import { DatailsChartHook } from "./detailsChart"
+import { TooltipInit } from "./tooltip"
 
 let Hooks = {
     Stripe: StripeHook,
     Chart: ChartHook,
-    DatailsChart: DatailsChartHook
+    DatailsChart: DatailsChartHook,
+    TooltipInit: TooltipInit
     
 };
 

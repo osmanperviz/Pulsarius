@@ -53,7 +53,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
                 aria-controls="monitor-tab"
                 aria-selected="true"
               >
-               <i class={icon_for(:create_monitoring, @onboarding_progress.create_monitoring)}></i>
+                <i class={icon_for(:create_monitoring, @onboarding_progress.create_monitoring)}></i>
                 <span class="font-weight-bold small text-uppercase">
                   &nbsp;  Create Monitoring
                 </span>
@@ -75,7 +75,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
               </a>
 
               <a
-                class={"nav-link mb-3 p-3 shadow #{active_item(:integrations,@onboarding_progress)}"}
+                class={"nav-link mb-3 p-3 shadow #{active_item(:integrations, @onboarding_progress)}"}
                 id="nav-integrations-tab"
                 role="tab"
                 data-bs-toggle="tab"
@@ -121,7 +121,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
             <!-- Tabs content -->
             <div class="tab-content ">
               <div
-                class="tab-pane fade shadow rounded show active p-5 "
+                class={"tab-pane fade shadow rounded p-5 #{active_item(:create_monitoring, @onboarding_progress)}"}
                 id="monitor-tab"
                 role="tabpanel"
                 aria-labelledby="nav-monitor-tab"
@@ -138,7 +138,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
               </div>
 
               <div
-                class="tab-pane fade shadow rounded  p-5"
+                class={"tab-pane fade shadow rounded p-5 #{active_item(:invite_colleagues, @onboarding_progress)}"}
                 id="invite-tab"
                 role="tabpanel"
                 aria-labelledby="nav-invite-tab"
@@ -161,7 +161,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
               </div>
 
               <div
-                class="tab-pane fade shadow rounded p-5"
+                class={"tab-pane fade shadow rounded p-5  #{active_item(:status_page, @onboarding_progress)}"}
                 id="status-page-tab"
                 role="tabpanel"
                 aria-labelledby="nav-status-page-tab"
@@ -176,7 +176,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
               </div>
 
               <div
-                class="tab-pane fade shadow rounded p-5"
+                class={"tab-pane fade shadow rounded p-5  #{active_item(:integrations, @onboarding_progress)}"}
                 id="integrations-tab"
                 role="tabpanel"
                 aria-labelledby="nav-integrations-tab"
@@ -233,7 +233,9 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
   defp progress(assigns) do
     ~H"""
     <div class="d-flex justify-content-between">
-      <span style="font-size: 12px" class="p-2 mt-1"><%= calculate_success_steps(@onboarding_progress) %> / 5</span>
+      <span style="font-size: 12px" class="p-2 mt-1">
+        <%= calculate_success_steps(@onboarding_progress) %> / <%= 5 %>
+      </span>
       <div
         class="progress mt-3"
         role="progressbar"
@@ -251,7 +253,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
 
   defp active_item(current_item, progress) do
     {key, value} = Enum.find(progress, fn {k, v} -> v == false end)
-    if key == current_item, do: "active", else: ""
+    if key == current_item, do: "active show", else: ""
   end
 
   defp icon_for(:create_monitoring, false), do: "<.icon />"
@@ -260,16 +262,14 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
   defp icon_for(:notifications, false), do: "bi bi-bell"
   defp icon_for(:status_page, false), do: "bi bi-card-image"
 
-  defp icon_for(_step, _accoplished) do
-    "bi bi-check-circle-fill text-success"
-  end
+  defp icon_for(_step, _accoplished), do: "bi bi-check-circle-fill text-success"
 
   defp calculate_success_steps(progress) do
     Enum.filter(progress, fn {k, v} -> v == true end)
     |> Enum.count()
   end
 
-  def calculate_percentage_width(progress)  do
-    "width: #{(calculate_success_steps(progress) / 5) * 100}% "
+  def calculate_percentage_width(progress) do
+    "width: #{calculate_success_steps(progress) / 5 * 100}% "
   end
 end
