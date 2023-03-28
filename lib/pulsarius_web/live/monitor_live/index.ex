@@ -35,7 +35,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
   end
 
   @impl true
-  def handle_event("delete-monitor", %{"id" => id}, %{assigns: assigns} = socket) do
+  def handle_event("delete-monitor", %{"id" => id}, socket) do
     {:ok, monitor} =
       Monitoring.get_monitor!(id)
       |> Monitoring.delete_monitor()

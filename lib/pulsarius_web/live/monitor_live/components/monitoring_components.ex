@@ -1,7 +1,7 @@
 defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   use PulsariusWeb, :component
 
-  attr :monitor, :string, required: true
+  attr :name, :string, required: true
 
   def greetings(assigns) do
     ~H"""
@@ -10,6 +10,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   end
 
   attr :monitor, Pulsarius.Monitoring.Monitor, required: true
+
 
   def header(assigns) do
     ~H"""
