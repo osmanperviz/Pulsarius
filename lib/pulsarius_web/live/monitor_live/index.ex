@@ -4,6 +4,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
   alias Pulsarius.Monitoring
   alias PulsariusWeb.MonitorLive.MonitorWidget
   alias PulsariusWeb.MonitorLive.ConfigurationProgressComponent
+  alias Pulsarius.Accounts
 
   alias Pulsarius.Monitoring.Monitor
 
@@ -14,27 +15,35 @@ defmodule PulsariusWeb.MonitorLive.Index do
   @topic "monitor"
 
   @impl true
-  def mount(_params, _session, %{assigns: assigns} = socket) do
-    monitoring_list = Monitoring.list_monitoring_with_daily_statistics(assigns.account.id)
-    onboarding_progress = onboarding_progress(monitoring_list, assigns.account)
-
-    socket =
-      socket
-      |> assign(:monitoring, monitoring_list)
-      |> assign(:onboarding_progress, onboarding_progress)
-
-    {:ok, socket}
+  def mount(_params, _session, socket) do
+    {:ok, fetch_default_assigns(socket)}
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    monitor = Monitoring.get_monitor!(id)
-    {:ok, _} = Monitoring.delete_monitor(monitor)
+  def handle_event("dismiss-onboarding-progress-wizard", _params, %{assigns: assigns} = socket) do
+    {:ok, user} =
+      Accounts.update_user(assigns.current_user, %{
+        show_onboard_progress_wizard: false
+      })
+
+    socket =
+      socket
+      |> assign(:current_user, user)
+      |> fetch_default_assigns()
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("delete-monitor", %{"id" => id}, %{assigns: assigns} = socket) do
+    {:ok, monitor} =
+      Monitoring.get_monitor!(id)
+      |> Monitoring.delete_monitor()
 
     # stop related running monitor process
     Pulsarius.EndpointChecker.stop_monitoring(monitor)
 
-    {:noreply, assign(socket, :monitoring, Monitoring.list_monitoring())}
+    {:noreply, fetch_default_assigns(socket)}
   end
 
   @impl true
@@ -87,16 +96,6 @@ defmodule PulsariusWeb.MonitorLive.Index do
     {:noreply, socket}
   end
 
-  def handle_event(
-        "delete-monitoring",
-        %{"monitor_id" => monitor_id},
-        %{assigns: assigns} = socket
-      ) do
-    monitoring_list = Monitoring.list_monitoring_with_daily_statistics(assigns.account.id)
-
-    {:noreply, assign(socket, :monitoring, monitoring_list)}
-  end
-
   def replace_monitoring(list, id, to) do
     list
     |> Enum.map(fn
@@ -113,6 +112,32 @@ defmodule PulsariusWeb.MonitorLive.Index do
       notifications: false,
       status_page: false
     }
+  end
+
+  def onboarding_progress(_no_monitor, account) do
+    %{
+      create_monitoring: false,
+      invite_colleagues: has_team_member?(account),
+      integrations: false,
+      notifications: false,
+      status_page: false
+    }
+  end
+
+  def fetch_default_assigns(%{assigns: assigns} = socket) do
+    monitoring_list = Monitoring.list_monitoring_with_daily_statistics(assigns.account.id)
+
+    if assigns.current_user.show_onboard_progress_wizard do
+      onboarding_progress = onboarding_progress(monitoring_list, assigns.account)
+
+      socket
+      |> assign(:monitoring, monitoring_list)
+      |> assign(:onboarding_progress, onboarding_progress)
+    else
+      socket
+      |> assign(:monitoring, monitoring_list)
+      |> assign(:onboarding_progress, false)
+    end
   end
 
   defp has_team_member?(account) do

@@ -18,6 +18,7 @@ defmodule Pulsarius.Accounts.User do
     field :first_name, :string
     field :last_name, :string
     field :status, Ecto.Enum, values: [:pending, :registered], default: :pending
+    field :show_onboard_progress_wizard, :boolean, default: true
 
     belongs_to :account, Account,
       foreign_key: :account_id,
@@ -29,7 +30,7 @@ defmodule Pulsarius.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :last_name, :email, :status])
+    |> cast(attrs, [:first_name, :last_name, :email, :status, :show_onboard_progress_wizard])
     |> validate_required([:first_name, :last_name, :email, :status])
   end
 

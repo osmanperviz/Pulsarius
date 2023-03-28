@@ -112,7 +112,8 @@ abc2 {
 }
 
 .info-icon {
-  font-size: 0.7rem
+  font-size: 0.7rem;
+  color: #939db8;
 }
 
 .table-text {

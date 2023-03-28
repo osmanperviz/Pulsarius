@@ -5,7 +5,7 @@ export const ChartHook = {
   chart: {
     id: 'spark4',
     type: 'area',
-    height: 120,
+    height: 100,
     sparkline: {
       enabled: true
             },
@@ -19,6 +19,18 @@ export const ChartHook = {
     show: true,
     width: 1.5,
     curve: 'smooth',
+          },
+  noData: {
+    text: "No response data available for last hour.",
+    align: 'center',
+    verticalAlign: 'top',
+    offsetX: 0,
+    offsetY: 0,
+    style: {
+      color: "#fff",
+      fontSize: '14px',
+      fontFamily: undefined
+    }
   },
   
   markers: {
@@ -37,13 +49,6 @@ export const ChartHook = {
     }
   },
   colors: ['#939db8', '#939db8', '#939db8'],
-// colors: ['#008FFB'],
-  xaxis: {
-    crosshairs: {
-      width: 1,
-      type: 'datetime',
-    },
-  },
   tooltip: {
     fillSeriesColor: true,
     theme: null,
@@ -56,7 +61,11 @@ export const ChartHook = {
       }
     }
           },
-  xaxis: {
+    xaxis: {
+     crosshairs: {
+      width: 1,
+      type: 'datetime',
+    },
     labels: {
       formatter: function (value) {
         return `Occured at: ${value}h`;
@@ -65,7 +74,7 @@ export const ChartHook = {
 }
 }
 
-    var chart = new ApexCharts(this.el, spark4)
+    let chart = new ApexCharts(this.el, spark4)
     chart.render()
     
     this.handleEvent("response_time", ({ response_time }) => {

@@ -20,7 +20,9 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
           <div class="d-flex justify-content-between bordered-1">
             <.name_and_status_info monitor={@monitor} />
             <div class="col-lg-3 text-right d-flex justify-content-between">
-              <.certificate_info monitor={@monitor} />
+              <%= if @monitor.ssl_expiry_date != nil do %>
+                <.certificate_info monitor={@monitor} />
+              <% end %>
               <.frequency_check_info monitor={@monitor} />
               <.dropdown monitor={@monitor} id={@id} socket={@socket} />
             </div>
@@ -152,7 +154,13 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
         </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
-          <a data-confirm="Are you sure?" class="dropdown-item" href="#">
+          <a
+            phx-click="delete-monitor"
+            phx-value-id={@monitor.id}
+            data-confirm="Are you sure?"
+            class="dropdown-item"
+            href="#"
+          >
             <i class="bi bi-trash"></i>&nbsp; Delete
           </a>
         </li>
@@ -259,6 +267,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
       monitor.status == :active -> "pulse-success"
       monitor.status == :paused -> "pulse-paused"
       monitor.status == :inactive -> "pulse-inactive"
+      true -> "pulse-inactive"
     end
   end
 

@@ -30,9 +30,8 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
     # total number of minutes in one day
     total_numbers_of_minutes = 1440
     todays_incidents = incidents_for_date_range(incidents, todays_range())
-
     avalability_in_percentage = calculate_avalability(todays_incidents, total_numbers_of_minutes)
-    total_down_time = calculate_total_downtime(todays_incidents)
+    total_down_time = calculate_unavailability_in_minutes(todays_incidents)
     longest_incident_duration_in_minutes = calculate_longest_incident_duration(todays_incidents)
 
     %{
@@ -49,7 +48,7 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
     week_incidents = incidents_for_date_range(incidents, week_range())
 
     avalability_in_percentage = calculate_avalability(week_incidents, total_numbers_of_minutes)
-    total_down_time = calculate_total_downtime(week_incidents)
+    total_down_time = calculate_unavailability_in_minutes(week_incidents)
     longest_incident_duration_in_minutes = calculate_longest_incident_duration(week_incidents)
 
     %{
@@ -66,7 +65,7 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
     month_incidents = incidents_for_date_range(incidents, month_range())
 
     avalability_in_percentage = calculate_avalability(month_incidents, total_numbers_of_minutes)
-    total_down_time = calculate_total_downtime(month_incidents)
+    total_down_time = calculate_unavailability_in_minutes(month_incidents)
     longest_incident_duration_in_minutes = calculate_longest_incident_duration(month_incidents)
 
     %{
@@ -83,7 +82,7 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
     anual_incidents = incidents_for_date_range(incidents, annual_range())
 
     avalability_in_percentage = calculate_avalability(anual_incidents, total_numbers_of_minutes)
-    total_down_time = calculate_total_downtime(anual_incidents)
+    total_down_time = calculate_unavailability_in_minutes(anual_incidents)
     longest_incident_duration_in_minutes = calculate_longest_incident_duration(anual_incidents)
 
     %{
@@ -93,6 +92,8 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
       longest_incident_duration_in_minutes: longest_incident_duration_in_minutes
     }
   end
+
+  def calculate_average_response_time(status_response) when length(status_response) == 0, do: 0
 
   def calculate_average_response_time(status_response) do
     sum_of_all_ms = Enum.map(status_response, & &1.response_time_in_ms) |> Enum.sum()
@@ -111,13 +112,13 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
     end)
   end
 
-  defp calculate_total_downtime(incidents) do
-    number_of_minutes = calculate_unavailability_in_minutes(incidents)
-  end
-
   defp incidents_for_date_range(incidents, date_range) do
     Enum.filter(incidents, fn incident ->
-      incident.occured_at in date_range
+      if incident.status == :active do
+        true
+      else
+        incident.occured_at in date_range
+      end
     end)
   end
 
@@ -133,11 +134,14 @@ defmodule Pulsarius.Monitoring.AvalabilityStatistics do
 
   defp calculate_unavailability_in_minutes(incidents) do
     Enum.reduce(incidents, 0, fn incident, acc ->
-      duration =
-        Timex.diff(incident.resolved_at || incident.inserted_at, incident.occured_at, :minutes)
+      duration_in_minutes =
+        if incident.status == :active do
+          Timex.diff(Timex.now(), incident.occured_at, :minutes)
+        else
+          Timex.diff(incident.resolved_at, incident.occured_at, :minutes)
+        end
 
-      acc = acc + duration
-      acc
+      acc + duration_in_minutes
     end)
   end
 

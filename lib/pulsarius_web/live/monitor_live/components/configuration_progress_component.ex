@@ -1,5 +1,6 @@
 defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
   use PulsariusWeb, :live_component
+  alias Phoenix.LiveView.JS
 
   def render(assigns) do
     ~H"""
@@ -60,21 +61,6 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
               </a>
 
               <a
-                class={"nav-link mb-3 p-3 shadow #{active_item(:invite_colleagues, @onboarding_progress)}"}
-                id="nav-invite-tab"
-                role="tab"
-                data-bs-toggle="tab"
-                data-bs-target="#invite-tab"
-                aria-controls="invite-tab"
-                aria-selected="false"
-              >
-                <i class={icon_for(:invite_colleagues, @onboarding_progress)}></i>
-                <span class="font-weight-bold small text-uppercase">
-                  &nbsp; Invite colleagues
-                </span>
-              </a>
-
-              <a
                 class={"nav-link mb-3 p-3 shadow #{active_item(:integrations, @onboarding_progress)}"}
                 id="nav-integrations-tab"
                 role="tab"
@@ -85,6 +71,21 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
               >
                 <i class={icon_for(:integrations, @onboarding_progress.integrations)}></i>
                 <span class="font-weight-bold small text-uppercase">&nbsp; Integrations</span>
+              </a>
+
+              <a
+                class={"nav-link mb-3 p-3 shadow #{active_item(:invite_colleagues, @onboarding_progress)}"}
+                id="nav-invite-tab"
+                role="tab"
+                data-bs-toggle="tab"
+                data-bs-target="#invite-tab"
+                aria-controls="invite-tab"
+                aria-selected="false"
+              >
+                <i class={icon_for(:invite_colleagues, @onboarding_progress.invite_colleagues)}></i>
+                <span class="font-weight-bold small text-uppercase">
+                  &nbsp; Invite colleagues
+                </span>
               </a>
 
               <a
@@ -220,7 +221,19 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
       </a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="123">
         <li>
-          <a class="dropdown-item pb-1" href="#"><i class="bi bi-x-circle"></i>&nbsp; Dismiss</a>
+          <a
+            phx-remove={
+              JS.hide(transition: {"ease-out duration-1000", "opacity-100", "opacity-0"}, time: 1000)
+            }
+            phx-mounted={
+              JS.show(transition: {"ease-in duration-1000", "opacity-0", "opacity-100"}, time: 1000)
+            }
+            phx-click="dismiss-onboarding-progress-wizard"
+            class="dropdown-item pb-1"
+            href="#"
+          >
+            <i class="bi bi-x-circle"></i>&nbsp; Dismiss
+          </a>
         </li>
         <li>
           <a class="dropdown-item" href="#"><i class="bi bi-journal-text"></i>&nbsp; Give feedback</a>
