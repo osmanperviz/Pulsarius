@@ -169,8 +169,31 @@ abc2 {
 }
 
 .search-monitors {
-    background-color: #222838;
+    /* background-color: #222838; */
+    background-color: #293040;
     border: 1px solid #4d576e;
+    color: #fff;
+    
+}
+
+input.form-check-input {
+  background-color: #293040;
+  border: 1px solid #4d576e;
+}
+
+input.form-check-input:checked {
+  background-color: #293040;
+  border: 1px solid #4d576e;
+}
+
+input.search-monitors:focus {
+  background-color: #222838;
+  color: #fff;
+}
+
+select.search-monitors:focus {
+  background-color: #222838;
+  color: #fff;
 }
 
 .pulse-paused {

@@ -1,36 +1,143 @@
 <div>
+  <div class="">
+    <.link
+      href={Routes.monitor_index_path(@socket, :index)}
+      class="btn bg-transparent abc p-0 mb-4"
+    >
+      <span class="bi-chevron-left"></span> Monitors
+    </.link>
+  </div>
+  <div class="col-lg-12 mb-5">
+    <h3>Create monitor</h3>
+  </div>
   <.form :let={f} for={@changeset} id="monitor-form" phx-validate="validate" phx-submit="save">
-    <div>
-      <%= text_input(f, :name, placeholder: "Pronounceable monitor name", class: "form-control") %>
-      <%= inputs_for f, :configuration, fn c -> %>
-        <%= select(
-          c,
-          :frequency_check_in_seconds,
-          Configuration.frequency_check_in_seconds_values(),
-          "phx-throttle": "300",
-          class: "form-control mt-3"
-        ) %>
-        <%= text_input(c, :url_to_monitor,
-          placeholder: "Application URL",
-          class: "form-control mt-3"
-        ) %>
-        <div class="form-check form-check-inline form-switch mt-3">
-          <%= label(c, :sms_notification, "Send sms") %>
-          <%= checkbox(c, :sms_notification, class: "form-check-input") %>
+    <%= inputs_for f, :configuration, fn c -> %>
+      <div class="col-lg-12 d-flex">
+        <div class="col-lg-5">
+          <h5>What to monitor</h5>
+          <p class="count-down">Configure the target website you want to monitor.</p>
         </div>
-        <div class="form-check form-check-inline form-switch mt-3">
-          <%= label(c, :email_notification, "Send e-mail") %>
-          <%= checkbox(c, :email_notification, class: "form-check-input") %>
+        <div class="col-lg-7">
+          <div class="card box pb-2 pt-2 w-100">
+            <div class="card-body pt-4 pb-4">
+              <%= label(f, :name, "Monitor name", class: "mb-2") %>
+              <%= text_input(f, :name,
+                placeholder: "Pronounceable monitor name",
+                class: "form-control search-monitors"
+              ) %>
+
+              <%= label(f, :name, "Application URL", class: "mb-2 mt-4") %>
+              <%= text_input(c, :url_to_monitor,
+                placeholder: "https://",
+                class: "form-control search-monitors"
+              ) %>
+
+              <div class="col-lg-12 d-flex gap-5">
+                <div class="flex-grow-1 mt-4">
+                  <%= label(c, :frequency_check_in_seconds, "Check frequency", class: "mb-2") %>
+                  <%= select(
+                    c,
+                    :frequency_check_in_seconds,
+                    Configuration.frequency_check_in_seconds_values(),
+                    "phx-throttle": "300",
+                    class: "form-control search-monitors"
+                  ) %>
+                </div>
+
+                <div class="flex-grow-0 mt-4">
+                  <%= label(c, :frequency_check_in_seconds, "Alert us when the URL above",
+                    class: "mb-2"
+                  ) %>
+                  <%= select(
+                    c,
+                    :frequency_check_in_seconds,
+                    [
+                      "Becomes unavailable",
+                      "Doesn't contain keyword",
+                      "Contains keyword",
+                      "Returns HTTP status other than"
+                    ],
+                    "phx-throttle": "300",
+                    class: "form-control search-monitors"
+                  ) %>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      <% end %>
-      <div class="form-group mt-3">
-        <%= submit("Save",
+      </div>
+      <div class="col-lg-12 d-flex mt-1">
+        <div class="col-lg-5">
+          <h5>Notifications</h5>
+          <p class="count-down">
+            Set up rules for who's going to be notified and how when an incident occurs.
+          </p>
+        </div>
+        <div class="col-lg-7">
+          <div class="card box pb-2 pt-2 w-100">
+            <div class="card-body pt-4 pb-4">
+              <div class="col-lg-12">
+                <h6>In case of a new incident</h6>
+                
+                <div class="d-flex ">
+                  <div class="col-lg-3">
+                    <%= checkbox(c, :email_notification, class: "form-check-input ") %>
+                    <%= label(c, :email_notification, "Send e-mail", class: " ml-4 checkbox-inline") %>
+                  </div>
+
+                  <div class="col-lg-3">
+                    <%= checkbox(c, :sms_notification, class: "form-check-input ml-3") %>
+                    <%= label(c, :sms_notification, "Send sms", class: "ml-3 checkbox-inline") %>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 d-flex mt-1">
+        <div class="col-lg-5">
+          <h5>SSL Verification</h5>
+          <p class="count-down">
+            Should we check your security certificates?
+          </p>
+        </div>
+        <div class="col-lg-7">
+          <div class="card box pb-2 pt-2 w-100">
+            <div class="card-body pt-4 pb-4">
+              <div class="col-lg-12 d-flex gap-5">
+                <div class="flex-grow-1">
+                  <%= label(c, :frequency_check_in_seconds, "SSL expiration", class: "mb-2") %>
+                  <%= select(
+                    c,
+                    :frequency_check_in_seconds,
+                    Configuration.frequency_check_in_seconds_values(),
+                    "phx-throttle": "300",
+                    class: "form-control search-monitors"
+                  ) %>
+                </div>
+                <div class="flex-grow-1">
+                  <%= label(c, :frequency_check_in_seconds, "Domain expiration", class: "mb-2") %>
+                  <%= select(
+                    c,
+                    :frequency_check_in_seconds,
+                    Configuration.frequency_check_in_seconds_values(),
+                    "phx-throttle": "300",
+                    class: "form-control search-monitors"
+                  ) %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 pb-5 pt-5 text-center">
+        <%= submit("Create monitor",
           phx_disable_with: "Saving...",
           class: "btn btn-primary btn-lg btn-block"
         ) %>
       </div>
-    </div>
+    <% end %>
   </.form>
 </div>
-
-<span><%= live_patch("Monitors", to: Routes.monitor_index_path(@socket, :index)) %></span>

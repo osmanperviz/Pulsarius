@@ -11,7 +11,6 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
 
   attr :monitor, Pulsarius.Monitoring.Monitor, required: true
 
-
   def header(assigns) do
     ~H"""
     <div class="mt-2">
@@ -223,6 +222,16 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
         </div>
       </div>
     </div>
+    """
+  end
+
+  defp box(assigns) do
+    ~H"""
+      <div class="card box pb-2 pt-2 w-100">
+        <div class="card-body pt-4 pb-4">
+          
+        </div>
+      </div>
     """
   end
 
