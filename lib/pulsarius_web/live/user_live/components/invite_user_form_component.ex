@@ -3,7 +3,6 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
   Component responsible for taking emails from user to invite.
   """
   use PulsariusWeb, :live_component
-
   alias Pulsarius.Accounts
   alias Ueberauth.Strategy.Passwordless
 

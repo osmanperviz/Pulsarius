@@ -1,41 +1,160 @@
 <div>
-  <.form
-    :let={f}
-    for={@changeset}
-    id="monitor-form"
-    phx-target={@myself}
-    phx-change="validate"
-    phx-submit="save"
-  >
-    <div>
-      <%= text_input(f, :name, placeholder: "Pronounceable monitor name", class: "form-control") %>
-      <%= inputs_for f, :configuration, fn c -> %>
-        <%= select(
-          c,
-          :frequency_check_in_seconds,
-          Configuration.frequency_check_in_seconds_values(),
-          "phx-throttle": "300",
-          class: "form-control mt-3"
-        ) %>
-        <%= text_input(c, :url_to_monitor,
-          placeholder: "Application URL",
-          class: "form-control mt-3"
-        ) %>
-        <div class="form-check form-check-inline form-switch mt-3">
-          <%= label(c, :sms_notification, "Send sms") %>
-          <%= checkbox(c, :sms_notification, class: "form-check-input") %>
+  <.form :let={f} for={@changeset} id="monitor-form" phx-submit="save" phx-target={@myself}>
+    <%= inputs_for f, :configuration, fn c -> %>
+      <div class="col-lg-12 d-flex">
+        <div class="col-lg-4">
+          <h5>What to monitor</h5>
+          <p class="count-down">Configure the target website you want to monitor.</p>
         </div>
-        <div class="form-check form-check-inline form-switch mt-3">
-          <%= label(c, :email_notification, "Send e-mail") %>
-          <%= checkbox(c, :email_notification, class: "form-check-input") %>
+        <div class="col-lg-8">
+          <div class="card box pb-2 pt-2 w-100">
+            <div class="card-body pt-4 pb-4">
+              <%= label(f, :name, "Monitor name", class: "mb-2") %>
+              <%= text_input(f, :name,
+                placeholder: "Pronounceable monitor name",
+                class: "form-control search-monitors"
+              ) %>
+              <%= error_tag(f, :name) %>
+
+              <%= label(c, :url_to_monitor, "Application URL", class: "mb-2 mt-4") %>
+              <%= text_input(c, :url_to_monitor,
+                placeholder: "https://",
+                class: "form-control search-monitors"
+              ) %>
+              <%= error_tag(c, :url_to_monitor) %>
+
+              <div class={"col-lg-12 d-flex #{if @show_keyword_input or @show_http_status_code, do: 'gap-2', else: 'gap-5'}"}>
+                <div class="flex-grow-1 mt-4">
+                  <%= label(c, :frequency_check_in_seconds, "Check frequency", class: "mb-2") %>
+                  <%= select(
+                    c,
+                    :frequency_check_in_seconds,
+                    Configuration.frequency_check_in_seconds_values(),
+                    "phx-throttle": "300",
+                    class: "form-control search-monitors"
+                  ) %>
+                  <%= error_tag(c, :frequency_check_in_seconds) %>
+                </div>
+
+                <div class="flex-grow-1 mt-4">
+                  <%= label(c, :alert_rule, "Alert us when the URL above", class: "mb-2") %>
+                  <%= select(c, :alert_rule, Configuration.alert_rules_values(),
+                    "phx-throttle": "300",
+                    "phx-change": "alert-rule-changed",
+                    class: "form-control search-monitors"
+                  ) %>
+                  <%= error_tag(c, :alert_rule) %>
+                </div>
+
+                <%= if @show_keyword_input do %>
+                  <div class="flex-grow-1 ">
+                    <%= label(f, :alert_condition, "Keyword to find on the page",
+                      class: "mb-2 mt-4"
+                    ) %>
+                    <%= text_input(c, :alert_condition, class: "form-control search-monitors") %>
+                    <%= error_tag(c, :alert_condition) %>
+                    <div class="form-text">We use case insensitive matching.</div>
+                  </div>
+                <% end %>
+
+                <%= if @show_http_status_code do %>
+                  <div class="flex-grow-1 mt-4">
+                    <%= label(c, :alert_condition, "Expected HTTP status codes", class: "mb-2") %>
+                    <%= select(c, :alert_condition, Configuration.status_codes(),
+                      "phx-throttle": "300",
+                      "phx-change": "alert-rule-changed",
+                      class: "form-control search-monitors"
+                    ) %>
+                    <%= error_tag(c, :alert_condition) %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
         </div>
-      <% end %>
-      <div class="form-group mt-3">
-        <%= submit("Save",
+      </div>
+      <div class="col-lg-12 d-flex mt-3 p-1">
+        <div class="col-lg-4">
+          <h5>Notifications</h5>
+          <p class="count-down">
+            Set up rules for who's going to be notified and how when an incident occurs.
+          </p>
+        </div>
+        <div class="col-lg-8">
+          <div class="card box pb-2 pt-2 w-100">
+            <div class="card-body pt-4 pb-4">
+              <div class="col-lg-12">
+                <h6>In case of a new incident</h6>
+                <div class="row">
+                  <div class="col-lg-3">
+                    <%= checkbox(c, :email_notification, class: "form-check-input ") %> &nbsp; <%= label(
+                      c,
+                      :email_notification,
+                      "Send e-mail",
+                      class: "mr-4 checkbox-inline"
+                    ) %>
+                  </div>
+
+                  <div class="col-lg-3">
+                    <%= checkbox(c, :sms_notification, class: "form-check-input ml-3") %> &nbsp; <%= label(
+                      c,
+                      :sms_notification,
+                      "Send sms",
+                      class: "ml-3 checkbox-inline"
+                    ) %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 d-flex mt-3">
+        <div class="col-lg-4">
+          <h5>Domain & ssl verification</h5>
+          <p class="count-down">
+            Should we check your domain and ssl expiration date?
+          </p>
+        </div>
+        <div class="col-lg-8">
+          <div class="card box pb-2 pt-2 w-100">
+            <div class="card-body pt-4 pb-4">
+              <div class="col-lg-12 d-flex gap-5">
+                <div class="flex-grow-1">
+                  <%= label(c, :ssl_notify_before_in_days, "SSL expiration check", class: "mb-2") %>
+                  <%= select(
+                    c,
+                    :ssl_notify_before_in_days,
+                    Configuration.domain_and_ssl_notification_configuration(),
+                    "phx-throttle": "300",
+                    class: "form-control search-monitors"
+                  ) %>
+                  <%= error_tag(c, :ssl_notify_before_in_days) %>
+                </div>
+                <div class="flex-grow-1">
+                  <%= label(c, :domain_notify_before_in_days, "Domain expiration check",
+                    class: "mb-2"
+                  ) %>
+                  <%= select(
+                    c,
+                    :domain_notify_before_in_days,
+                    Configuration.domain_and_ssl_notification_configuration(),
+                    "phx-throttle": "300",
+                    class: "form-control search-monitors"
+                  ) %>
+                  <%= error_tag(c, :domain_notify_before_in_days) %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 pb-5 pt-5 text-center">
+        <%= submit(@submit_button_title,
           phx_disable_with: "Saving...",
           class: "btn btn-primary btn-lg btn-block"
         ) %>
       </div>
-    </div>
+    <% end %>
   </.form>
 </div>

@@ -20,7 +20,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
           <div class="d-flex justify-content-between bordered-1">
             <.name_and_status_info monitor={@monitor} />
             <div class="col-lg-3 text-right d-flex justify-content-between">
-              <%= if @monitor.ssl_expiry_date != nil do %>
+              <%= if @monitor.configuration.ssl_expiry_date != nil do %>
                 <.certificate_info monitor={@monitor} />
               <% end %>
               <.frequency_check_info monitor={@monitor} />
@@ -248,17 +248,20 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
   end
 
   defp calculate_expiration_date(monitor) do
-    expiration_date = monitor.ssl_expiry_date
+    expiration_date = monitor.configuration.ssl_expiry_date
     from = Timex.now() |> Timex.beginning_of_day()
 
     Interval.new(from: from, until: expiration_date)
     |> Interval.duration(:months)
     |> case do
       0 ->
-        "Less than an mounth (#{Calendar.strftime(expiration_date, "%A.%m.%Y")})"
+        "Less than an month (#{Calendar.strftime(expiration_date, "%A.%m.%Y")})"
+
+      1 ->
+        "1 month (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
 
       result ->
-        "#{result} mounths (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
+        "#{result} months (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
     end
   end
 

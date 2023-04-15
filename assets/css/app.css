@@ -196,6 +196,9 @@ select.search-monitors:focus {
   color: #fff;
 }
 
+.form-text {
+  font-size: 0.775rem;
+}
 .pulse-paused {
 	border-radius: 50%;
 	/* margin-right: 15px; */
@@ -348,4 +351,8 @@ select.search-monitors:focus {
   height: 350px;
   text-align: center;
   background-color: #2f3648;
+}
+
+.invalid-feedback {
+  display: flex;
 }

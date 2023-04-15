@@ -14,7 +14,10 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
   def header(assigns) do
     ~H"""
     <div class="mt-2">
-      <.link href={Routes.monitor_index_path(@socket, :index)} class="btn bg-transparent abc p-0">
+      <.link
+        href={Routes.monitor_index_path(PulsariusWeb.Endpoint, :index)}
+        class="btn bg-transparent abc p-0"
+      >
         <span class="bi-chevron-left"></span> Monitors
       </.link>
       <div class="col-lg-12 d-flex m-0 p-0">
@@ -36,7 +39,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
           <span class="bi-exclamation-triangle bi-lg"></span>&nbsp;Send test alert
         </button>
         <a
-          href={Routes.incidents_index_path(@socket, :index, @monitor.id)}
+          href={Routes.incidents_index_path(PulsariusWeb.Endpoint, :index, @monitor.id)}
           role="button"
           class="btn bg-transparent abc mr-4"
         >
@@ -55,7 +58,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
         <a
           role="button"
           class="btn bg-transparent abc mr-4"
-          href={Routes.monitor_edit_path(@socket, :edit, @monitor)}
+          href={Routes.monitor_edit_path(PulsariusWeb.Endpoint, :edit, @monitor)}
         >
           <span class="bi-gear"></span>&nbsp;Configure
         </a>
@@ -227,11 +230,9 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
 
   defp box(assigns) do
     ~H"""
-      <div class="card box pb-2 pt-2 w-100">
-        <div class="card-body pt-4 pb-4">
-          
-        </div>
-      </div>
+    <div class="card box pb-2 pt-2 w-100">
+      <div class="card-body pt-4 pb-4"></div>
+    </div>
     """
   end
 

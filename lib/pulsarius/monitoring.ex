@@ -136,7 +136,9 @@ defmodule Pulsarius.Monitoring do
   def set_ssl_expiry(monitor) do
     {:ok, _valid_from, valid_until} = check_ssl_expiry(monitor.configuration.url_to_monitor)
 
-    update_monitor(monitor, %{ssl_expiry_date: valid_until})
+    params = Map.put(Map.from_struct(monitor.configuration), :ssl_expiry_date, valid_until)
+
+    update_monitor(monitor, %{configuration: params})
   end
 
   @doc """
