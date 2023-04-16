@@ -20,6 +20,25 @@ defmodule PulsariusWeb.MonitorLive.Index do
   end
 
   @impl true
+  def handle_event(
+        "search-monitor",
+        %{"monitor_search" => %{"query" => query}},
+        %{assigns: assigns} = socket
+      )
+      when query != "" do
+    monitoring_list = Enum.filter(assigns.monitoring, &String.contains?(&1.name, query))
+
+    {:noreply, assign(socket, :monitoring, monitoring_list)}
+  end
+
+  def handle_event("search-monitor", _params, %{assigns: assigns} = socket) do
+    monitoring_list = Monitoring.list_monitoring_with_daily_statistics(assigns.account.id)
+
+    {:noreply, assign(socket, :monitoring, monitoring_list)}
+  end
+
+  # Enum.count(monitoring_list)
+  @impl true
   def handle_event("dismiss-onboarding-progress-wizard", _params, %{assigns: assigns} = socket) do
     {:ok, user} =
       Accounts.update_user(assigns.current_user, %{

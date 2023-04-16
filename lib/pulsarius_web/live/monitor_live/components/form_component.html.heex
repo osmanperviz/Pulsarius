@@ -62,7 +62,6 @@
                     <%= label(c, :alert_condition, "Expected HTTP status codes", class: "mb-2") %>
                     <%= select(c, :alert_condition, Configuration.status_codes(),
                       "phx-throttle": "300",
-                      "phx-change": "alert-rule-changed",
                       class: "form-control search-monitors"
                     ) %>
                     <%= error_tag(c, :alert_condition) %>

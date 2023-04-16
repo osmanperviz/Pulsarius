@@ -2,18 +2,24 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   use PulsariusWeb, :live_component
 
   alias Pulsarius.Monitoring
+  alias Pulsarius.Monitoring.Monitor
   alias Pulsarius.Configurations.Configuration
 
   @impl true
   def update(%{monitor: monitor} = assigns, socket) do
     changeset = Monitoring.change_monitor(monitor)
 
+    show_keyword_input? =
+      monitor.configuration.alert_rule in [:does_not_contain_keyword, :contain_keyword]
+
+    show_http_status_code? = monitor.configuration.alert_rule == :http_status_other_than
+
     socket =
       socket
       |> assign(assigns)
       |> assign(:changeset, changeset)
-      |> assign(:show_http_status_code, false)
-      |> assign(:show_keyword_input, false)
+      |> assign(:show_http_status_code, show_http_status_code?)
+      |> assign(:show_keyword_input, show_keyword_input?)
       |> assign(:show_domain_alert_configuration, false)
       |> assign(:show_ssl_alert_configuration, false)
 
@@ -32,32 +38,25 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
 
   def handle_event(
         "alert-rule-changed",
-        %{
-          "monitor" => %{
-            "configuration" => %{"alert_rule" => alert_rule}
-          }
-        },
+        %{"monitor" => %{"configuration" => %{"alert_rule" => alert_rule}}},
         socket
       ) do
-    socket =
-      cond do
-        alert_rule == "does_not_contain_keyword" or alert_rule == "contain_keyword" ->
-          socket
-          |> assign(:show_http_status_code, false)
-          |> assign(:show_keyword_input, true)
+    changes =
+      case alert_rule do
+        "does_not_contain_keyword" ->
+          %{show_http_status_code: false, show_keyword_input: true}
 
-        alert_rule == "http_status_other_than" ->
-          socket
-          |> assign(:show_http_status_code, true)
-          |> assign(:show_keyword_input, false)
+        "contain_keyword" ->
+          %{show_http_status_code: false, show_keyword_input: true}
 
-        true ->
-          socket
-          |> assign(:show_http_status_code, false)
-          |> assign(:show_keyword_input, false)
+        "http_status_other_than" ->
+          %{show_http_status_code: true, show_keyword_input: false}
+
+        _ ->
+          %{show_http_status_code: false, show_keyword_input: false}
       end
 
-    {:noreply, socket}
+    {:noreply, assign(socket, changes)}
   end
 
   def handle_event("save", %{"monitor" => monitor_params}, socket) do

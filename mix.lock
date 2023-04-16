@@ -53,5 +53,6 @@
   "ueberauth_passwordless": {:git, "https://github.com/STUDITEMPS/ueberauth_passwordless.git", "045dfdd7fcc7bb394b3e46409d0236a71b8896ea", [branch: "master"]},
   "unicode_util_compat": {:hex, :unicode_util_compat, "0.7.0", "bc84380c9ab48177092f43ac89e4dfa2c6d62b40b8bd132b1059ecc7232f9a78", [:rebar3], [], "hexpm", "25eee6d67df61960cf6a794239566599b09e17e668d3700247bc498638152521"},
   "uri_query": {:hex, :uri_query, "0.1.2", "ae35b83b472f3568c2c159eee3f3ccf585375d8a94fb5382db1ea3589e75c3b4", [:mix], [], "hexpm", "e3bc81816c98502c36498b9b2f239b89c71ce5eadfff7ceb2d6c0a2e6ae2ea0c"},
+  "whois": {:hex, :whois, "0.1.1", "2bd7d6cd39f3aa2c82cae2b6da0d044ce641a7cca34e68ac12efe20abc97fc04", [:mix], [], "hexpm", "818cbf3ae7dd4df21b1f544718a8fc62d05bd7ea98eb012bcef9d315190702b7"},
   "x509": {:hex, :x509, "0.8.5", "22b2c5dfc87b05d46595d3764f41a23fcb7360f891e0464f1a2ec118177cd4e4", [:mix], [], "hexpm", "c63eb89e8bbe8a5e21b6404ad1082faff670e38b74960297f90d023177949e07"},
 }

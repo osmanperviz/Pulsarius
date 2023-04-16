@@ -159,21 +159,30 @@ abc2 {
   flex: 1 1 100%
 }
 
+.flex-grow-50 {
+  flex: 1 0 50%
+}
+
 .text-decoration-none {
   text-decoration: none;
 }
 
 .count-down{
-    color: #939db8;
+  color: #939db8;
   font-size: 0.8rem;
 }
 
 .search-monitors {
-    /* background-color: #222838; */
-    background-color: #293040;
+    background-color: #222838;
+    /* background-color: #293040; */
     border: 1px solid #4d576e;
     color: #fff;
-    
+    padding: 0.7rem;
+    flex: 1 0 50%
+}
+
+.create-monitor-button {
+  padding: 0.7rem
 }
 
 input.form-check-input {
@@ -187,7 +196,7 @@ input.form-check-input:checked {
 }
 
 input.search-monitors:focus {
-  background-color: #222838;
+  background-color: #293040;
   color: #fff;
 }
 

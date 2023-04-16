@@ -54,7 +54,8 @@ defmodule Pulsarius.MixProject do
       {:ueberauth_passwordless, github: "STUDITEMPS/ueberauth_passwordless", branch: "master"},
       {:stripity_stripe, "~> 2.0"},
       {:x509, "~> 0.8.5"},
-      {:timex, "~> 3.5"}
+      {:timex, "~> 3.5"},
+      {:whois, "~> 0.1.0"}
     ]
   end
 
