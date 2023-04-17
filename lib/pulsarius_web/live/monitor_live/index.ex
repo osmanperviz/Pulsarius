@@ -37,7 +37,6 @@ defmodule PulsariusWeb.MonitorLive.Index do
     {:noreply, assign(socket, :monitoring, monitoring_list)}
   end
 
-  # Enum.count(monitoring_list)
   @impl true
   def handle_event("dismiss-onboarding-progress-wizard", _params, %{assigns: assigns} = socket) do
     {:ok, user} =
@@ -126,7 +125,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
   def onboarding_progress([monitor | _rest], account) do
     %{
       create_monitoring: true,
-      invite_colleagues: has_team_member?(account),
+      invite_colleagues: Accounts.has_team_member?(account),
       integrations: has_integrations_set?(monitor),
       notifications: false,
       status_page: false
@@ -136,7 +135,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
   def onboarding_progress(_no_monitor, account) do
     %{
       create_monitoring: false,
-      invite_colleagues: has_team_member?(account),
+      invite_colleagues: Accounts.has_team_member?(account),
       integrations: false,
       notifications: false,
       status_page: false
@@ -157,11 +156,6 @@ defmodule PulsariusWeb.MonitorLive.Index do
       |> assign(:monitoring, monitoring_list)
       |> assign(:onboarding_progress, false)
     end
-  end
-
-  defp has_team_member?(account) do
-    account = account |> Repo.preload(:users)
-    Enum.count(account.users) > 1
   end
 
   defp has_integrations_set?(monitor) do

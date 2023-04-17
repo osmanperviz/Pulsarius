@@ -251,4 +251,9 @@ defmodule Pulsarius.Accounts do
       |> Repo.insert()
     end)
   end
+
+  def has_team_member?(account) do
+    account = account |> Repo.preload(:users)
+    Enum.count(account.users) > 1
+  end
 end
