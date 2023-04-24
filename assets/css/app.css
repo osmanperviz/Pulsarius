@@ -54,7 +54,6 @@ abc2 {
  }
 
  .sub-title {
-      /* background-color: #2f3647; */
    border-bottom: 1px solid #3b4255;
    color: #939db8
  }
@@ -105,6 +104,10 @@ abc2 {
   color: #939db8;
   font-size: 15px;
   padding: 3px;
+}
+
+.gray-color {
+  color: #939db8
 }
 
 .icon-dots {
@@ -364,4 +367,33 @@ select.search-monitors:focus {
 
 .invalid-feedback {
   display: flex;
+}
+
+#user-table td{
+  vertical-align: middle;
+}
+
+#user-table > thead > tr {
+  height: 50px;
+  border-bottom: 1px solid #939db8 ;
+}
+
+.modal-content {
+  background-color: #293040;
+  color: #fff;
+}
+
+.modal-header{
+  border-bottom: 1px solid #222838;
+}
+
+.invite-email-input {
+  background-color: #293040;
+  border: 1px solid #4d576e;
+  color: white;
+}
+
+.invite-email-input:focus {
+  background-color: #222838;
+  color: white;
 }

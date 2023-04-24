@@ -6,6 +6,7 @@ defmodule Pulsarius.Repo.Migrations.AddAccountEntity do
       add :id, :uuid, primary_key: true
       add :type, :string
       add :stripe_id, :string
+      add :invitation_token, :string
 
       timestamps()
     end

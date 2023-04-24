@@ -64,27 +64,10 @@ defmodule Pulsarius.Accounts do
 
   """
   def create_user(account, attrs \\ %{}) do
+    attrs = Map.put(attrs, "status", "registered")
+
     %User{}
     |> User.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:account, account)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Creates a user with pending state, without first name and second name.
-
-  ## Examples
-
-      iex> create_pending_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_pending_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_pending_user(account, attrs \\ %{}) do
-    %User{}
-    |> User.invitation_changeset(attrs)
     |> Ecto.Changeset.put_assoc(:account, account)
     |> Repo.insert()
   end
@@ -137,6 +120,42 @@ defmodule Pulsarius.Accounts do
   end
 
   @doc """
+  Gets a single account.
+
+  Raises `Ecto.NoResultsError` if the Account does not exist.
+
+  ## Examples
+
+      iex> get_account!(123)
+      %Account{}
+
+      iex> get_account!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+
+  def get_account!(id), do: Repo.get!(Account, id)
+
+  @doc """
+  Gets a single account by invitation token.
+
+  Raises `Ecto.NoResultsError` if the Account does not exist.
+
+  ## Examples
+
+      iex> get_by_account_invitation_token(123)
+      %Account{}
+
+      iex> get_by_account_invitation_token(456)
+      ** nil
+
+  """
+
+  def get_by_account_invitation_token(invitation_token) do
+    Account |> where(invitation_token: ^invitation_token) |> Repo.one()
+  end
+
+  @doc """
   Fetch account by stripe_id.
 
   ## Examples
@@ -165,6 +184,8 @@ defmodule Pulsarius.Accounts do
 
   """
   def create_account(attrs \\ %{}) do
+    attrs = Map.put(attrs, "invitation_token", generate_token())
+
     %Account{}
     |> Account.changeset(attrs)
     |> Repo.insert()
@@ -189,7 +210,7 @@ defmodule Pulsarius.Accounts do
   end
 
   @doc """
-  Creates a user invitation record and pending user in DB.
+  Creates a user invitation record with email, user for invitation via email.
 
   ## Examples
 
@@ -200,57 +221,55 @@ defmodule Pulsarius.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  @spec invite_user(Account.t(), map()) :: {:ok, UserInvitation.t()} | {:error, any()}
-  def invite_user(account, user_invitation_params) do
-    Multi.new()
-    |> do_create_pending_user(account, user_invitation_params)
-    |> do_invite_user(account, user_invitation_params)
-    |> Repo.transaction()
-    |> case do
-      {:ok, result} ->
-        {:ok, result.create_user_invitation}
+  @spec invite_user_via_email(Account.t(), String.t()) ::
+          {:ok, UserInvitation.t()} | {:error, any()}
+  def invite_user_via_email(account, email) do
+    attrs = %{email: email, token: generate_token()}
 
-      error ->
-        error
-    end
+    %UserInvitation{}
+    |> UserInvitation.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:account, account)
+    |> Pulsarius.Repo.insert()
   end
 
   @doc """
-  Fetch invited user from invitation token
+  Fetch invitation from token
 
   ## Examples
 
-      iex> fetch_user_from_invitation(account, params)
+      iex> fetch_invitation_from_token(account, token)
       %UserInvitation{}
 
-      iex> invite_user(account, params)
+      iex> fetch_invitation_from_token(account, token)
       nil
 
   """
-  @spec fetch_user_from_invitation(String.t()) :: UserInvitation.t() | nil
-  def fetch_user_from_invitation(token) do
+  @spec fetch_invitation_from_token(String.t()) :: UserInvitation.t() | nil
+  def fetch_invitation_from_token(token) do
     UserInvitation.by_token(token)
-    |> preload([:pending_user])
     |> Repo.one()
   end
 
-  defp do_create_pending_user(multi, account, user_invitation_params) do
-    multi
-    |> Multi.run(:create_pending_user, fn _, _ ->
-      create_pending_user(account, user_invitation_params)
-    end)
+  @doc """
+  Fetch invitation by type
+
+  ## Examples
+
+      iex> fetch_invitation_from_token(account, token)
+      [%UserInvitation{}, %UserInvitation{} ....]
+
+      iex> fetch_invitation_from_token(account, token)
+      []
+
+  """
+  @spec fetch_invitation_from_token(String.t()) :: [UserInvitation.t()] | nil
+  def fetch_invitation_by_type(account_id, type, status \\ "pending") do
+    UserInvitation.by_type_and_status(type, status)
+    |> Repo.all()
   end
 
-  defp do_invite_user(multi, account, params) do
-    multi
-    |> Multi.run(:create_user_invitation, fn _, %{create_pending_user: user} ->
-      %UserInvitation{}
-      |> UserInvitation.changeset(params)
-      |> Ecto.Changeset.put_assoc(:account, account)
-      |> Ecto.Changeset.put_assoc(:pending_user, user)
-      |> Repo.insert()
-    end)
-  end
+  defp generate_token(),
+    do: :crypto.strong_rand_bytes(24) |> Base.url_encode64(padding: false)
 
   def has_team_member?(account) do
     account = account |> Repo.preload(:users)

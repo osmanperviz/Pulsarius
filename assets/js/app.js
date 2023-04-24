@@ -30,12 +30,14 @@ import { StripeHook } from "./stripe";
 import { ChartHook } from "./chart";
 import { DatailsChartHook } from "./detailsChart"
 import { TooltipInit } from "./tooltip"
+import { UserInvitationLinkClipboardHook } from "./user_invitation_link_clipboard"
 
 let Hooks = {
     Stripe: StripeHook,
     Chart: ChartHook,
     DatailsChart: DatailsChartHook,
-    TooltipInit: TooltipInit
+    TooltipInit: TooltipInit,
+    UserInvitationLinkClipboard: UserInvitationLinkClipboardHook
     
 };
 

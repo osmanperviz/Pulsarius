@@ -46,23 +46,13 @@ defmodule PulsariusWeb.LiveHelpers do
     assigns = assign_new(assigns, :return_to, fn -> nil end)
 
     ~H"""
-    <div
-      id="123"
-      class="modal fade show bg-dark"
-      phx-capture-click="close"
-      phx-window-keydown="close"
-      phx-key="escape"
-      phx-target="#123"
-      phx-page-loading
-      style="display: block;"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="modal-title"><%= @title %></div>
-            <%= live_patch("✖", to: @return_to, class: "phx-modal-close") %>
-          </div>
-          <div class="modal-body">
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+      <div id="123" class="modal fade show" style="display: block;">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle"><%= @title %></h5>
+            </div>
             <%= render_slot(@inner_block) %>
           </div>
         </div>

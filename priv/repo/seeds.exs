@@ -20,7 +20,8 @@ if Mix.env() == :dev do
         "email" => "test@test.test",
         "first_name" => "test",
         "last_name" => "test",
-        "status" => "registered"
+        "status" => "registered",
+        "admin" => "true"
       }
     ]
   }

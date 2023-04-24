@@ -7,12 +7,17 @@ defmodule Pulsarius.Accounts.UserInvitation do
 
   @type t :: %__MODULE__{
           email: String.t(),
-          token: String.t()
+          token: String.t(),
+          status: String.t()
         }
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+
   schema "user_invitations" do
-    field :email, :string
     field :token, :string
+    field :email, :string
+    field :status, :string, default: "pending"
+    field :type, Ecto.Enum, values: [:email, :link], default: :email
 
     belongs_to :account, Account,
       foreign_key: :account_id,
@@ -28,13 +33,25 @@ defmodule Pulsarius.Accounts.UserInvitation do
   @doc false
   def changeset(user_invitation, attrs) do
     user_invitation
-    |> cast(attrs, [:email, :token])
-    |> validate_required([:email, :token])
+    |> cast(attrs, [:token, :email, :type])
+    |> validate_required([:token, :email])
+  end
+
+  def link_invitation_changeset(user_invitation, attrs) do
+    user_invitation
+    |> cast(attrs, [:token, :type])
+    |> validate_required([:token, :type])
   end
 
   @spec by_token(Ecto.Queryable.t(), String.t()) :: Ecto.Query.t()
   def by_token(queryable \\ __MODULE__, token) do
     from ui in queryable,
       where: ui.token == ^token
+  end
+
+  @spec by_type_and_status(Ecto.Queryable.t(), String.t()) :: Ecto.Query.t()
+  def by_type_and_status(queryable \\ __MODULE__, type, status) do
+    from ui in queryable,
+      where: ui.type == ^type and ui.status == ^status
   end
 end

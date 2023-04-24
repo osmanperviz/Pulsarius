@@ -45,7 +45,8 @@ defmodule PulsariusWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {PulsariusWeb.LayoutView, "live.html"}
+        layout: {PulsariusWeb.LayoutView, "live.html"},
+        container: {:div, class: "h-100"}
 
       unquote(view_helpers())
     end

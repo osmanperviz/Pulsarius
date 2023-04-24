@@ -1,4 +1,4 @@
-<main class="container main-container">
+<main class="container main-container h-100">
   <%= if Map.has_key?(@flash, "info") do %>
     <p class="alert alert-info" role="alert" phx-click="lv:clear-flash" phx-value-key="info">
       <%= live_flash(@flash, :info) %>

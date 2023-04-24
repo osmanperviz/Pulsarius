@@ -7,20 +7,23 @@
     phx-change="validate"
     phx-submit="save"
   >
-    <%= label(f, :first_name) %>
-    <%= text_input(f, :first_name, class: "form-control") %>
+    <%= label(f, :first_name, class: "mb-2") %>
+    <%= text_input(f, :first_name, class: "form-control search-monitors") %>
     <%= error_tag(f, :first_name) %>
 
-    <%= label(f, :last_name) %>
-    <%= text_input(f, :last_name, class: "form-control") %>
+    <%= label(f, :last_name, class: "mt-4 mb-2") %>
+    <%= text_input(f, :last_name, class: "form-control search-monitors") %>
     <%= error_tag(f, :last_name) %>
 
-    <%= label(f, :email) %>
-    <%= text_input(f, :email, class: "form-control") %>
+    <%= label(f, :email, class: "mt-4 mb-2") %>
+    <%= text_input(f, :email, class: "form-control search-monitors") %>
     <%= error_tag(f, :email) %>
 
-    <div class="form-group mt-3">
-      <%= submit("Save", phx_disable_with: "Saving...", class: "btn btn-primary") %>
+    <div class="form-group mt-4 text-center">
+      <%= submit("Register",
+        phx_disable_with: "Saving...",
+        class: "btn btn-primary btn-lg btn-block"
+      ) %>
     </div>
   </.form>
 </div>

@@ -8,13 +8,8 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
 
   @topic "invitations"
 
-  def handle_event("save", %{"invite_user" => %{"email" => email} = invite_user_params}, socket) do
-    # TODO: transforme this to take multiple use emails and send invitation
-    # it's built like this just for sake of simplicity
-    {:ok, token} = Passwordless.create_token(email)
-    invite_user_params = Map.merge(invite_user_params, %{"token" => token})
-
-    case Accounts.invite_user(socket.assigns.account, invite_user_params) do
+  def handle_event("invite", %{"invite_user" => %{"email" => email} = invite_user_params}, socket) do
+    case Accounts.invite_user_via_email(socket.assigns.account, email) do
       {:ok, user_invitation} ->
         :ok =
           Pulsarius.broadcast(
@@ -39,12 +34,63 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
 
   def render(assigns) do
     ~H"""
-    <div>
-      <.form :let={f} for={:invite_user} id="user-invite-form" phx-submit="save" phx-target={@myself}>
-        <%= label(f, :email) %>
-        <%= text_input(f, :email, class: "form-control") %>
-        <%= error_tag(f, :email) %>
-      </.form>
+    <%!-- <span>
+      <div class="modal-body">
+        <div class="col-lg-12">
+          <.form
+            :let={f}
+            as={:invite_user}
+            id="user-invite-form"
+            phx-submit="invite"
+            phx-target={@myself}
+          >
+            <%= text_input(f, :email,
+              class: "form-control input-lg invite-email-input",
+              placeholder: "Email"
+            ) %>
+            <%= error_tag(f, :email) %>
+          </.form>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <a
+          href={Routes.user_index_path(PulsariusWeb.Endpoint, :index)}
+          type="button"
+          class="btn btn-secondary"
+        >
+          Close
+        </a>
+        <button type="submit" class="btn btn-primary" phx-click="save">Invite</button>
+      </div>
+    </span> --%>
+
+    <div class="col-lg-12 d-flex h-100 align-items-center justify-content-center">
+      <div class="col-lg-5 ">
+        <div class="card box pb-2 pt-2 w-100 text-center">
+          <div class="card-header pb-0">
+            <h6 class=""><%= @title %></h6>
+            <%= if @message != nil do %>
+              <p class="gray-color" style="font-size: 0.8rem"><%= @message %></p>
+            <% end %>
+          </div>
+           
+          <div class="card-body pt-4 pb-4">
+            <.form :let={f} as={:invite_user} id="user-invite-form" phx-submit="send-invite">
+              <%= text_input(f, :email,
+                class: "form-control search-monitors",
+                placeholder: "Your email"
+              ) %>
+              <%= error_tag(f, :email) %>
+              <div class="col-lg-12 d-grid mt-4">
+                <%= submit(@button_title,
+                  phx_disable_with: "Saving...",
+                  class: "btn btn-primary "
+                ) %>
+              </div>
+            </.form>
+          </div>
+        </div>
+      </div>
     </div>
     """
   end

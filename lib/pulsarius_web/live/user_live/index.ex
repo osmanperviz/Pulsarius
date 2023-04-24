@@ -5,8 +5,13 @@ defmodule PulsariusWeb.UserLive.Index do
   alias Pulsarius.Accounts.User
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :users, list_users(socket.assigns.account.id))}
+  def mount(_params, _session, %{assigns: %{account: account}} = socket) do
+    socket =
+      socket
+      |> assign(:users, list_users(account.id))
+      |> assign(:pending_invitations, Accounts.fetch_invitation_by_type(account.id, :email))
+
+    {:ok, socket}
   end
 
   @impl true
@@ -38,6 +43,23 @@ defmodule PulsariusWeb.UserLive.Index do
     {:ok, _} = Accounts.delete_user(user)
 
     {:noreply, assign(socket, :users, list_users(socket.assigns.account.id))}
+  end
+
+  def handle_event("generate-invitation-link", _params, socket) do
+    {:noreply,
+     socket
+     |> push_event("copy_user_invitation_link", %{
+       link:
+         Routes.user_invitation_url(
+           PulsariusWeb.Endpoint,
+           :join,
+           socket.assigns.account.invitation_token
+         )
+     })
+     |> put_flash(
+       :info,
+       "Invitation link copied!"
+     )}
   end
 
   defp list_users(account_id) do

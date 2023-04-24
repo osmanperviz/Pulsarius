@@ -26,6 +26,7 @@ defmodule PulsariusWeb.Router do
 
     get "/monitor/:id/integrations/slack", IntegrationController, :index
     get "/users/invite/:token", UserInvitationController, :accept
+    get "/users/join/:invitation_token", UserInvitationController, :join
   end
 
   # Other scopes may use custom stacks.
@@ -48,7 +49,10 @@ defmodule PulsariusWeb.Router do
 
       live_dashboard "/dashboard", metrics: PulsariusWeb.Telemetry
 
-      live "/users/:id/invitation", PulsariusWeb.UserLive.Show, :invitation
+      live_session :invite, root_layout: {PulsariusWeb.LayoutView, :invite} do
+        live "/invitation/:id", PulsariusWeb.InvitationLive.New, :new
+        live "/invitation/join/:account_id", PulsariusWeb.InvitationLive.Join, :join
+      end
 
       live_session :users, on_mount: [PulsariusWeb.AuthAssigns] do
         live "/monitors", PulsariusWeb.MonitorLive.Index, :index

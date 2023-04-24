@@ -2,6 +2,7 @@ defmodule PulsariusWeb.UserLive.Show do
   use PulsariusWeb, :live_view
 
   alias Pulsarius.Accounts
+  alias Pulsarius.Accounts.{User, UserInvitation}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -13,9 +14,11 @@ defmodule PulsariusWeb.UserLive.Show do
   end
 
   defp apply_action(socket, :invitation, %{"id" => id}) do
+    invitation = Pulsarius.Repo.get(UserInvitation, id)
+
     socket
     |> assign(:page_title, "Finish Registration")
-    |> assign(:user, Accounts.get_user!(id))
+    |> assign(:user, %User{email: invitation.email})
   end
 
   defp apply_action(socket, :show, %{"id" => id}) do

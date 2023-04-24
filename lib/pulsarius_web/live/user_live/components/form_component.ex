@@ -54,7 +54,6 @@ defmodule PulsariusWeb.UserLive.FormComponent do
   end
 
   defp save_user(socket, :invitation, user_params) do
-    # TODO: refacture this!
     user_params = Map.merge(user_params, %{"status" => "registered"})
 
     case Accounts.update_user(socket.assigns.user, user_params) do
