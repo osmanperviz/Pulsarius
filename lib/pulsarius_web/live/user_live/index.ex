@@ -38,11 +38,31 @@ defmodule PulsariusWeb.UserLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete-user", %{"id" => id}, socket) do
     user = Accounts.get_user!(id)
     {:ok, _} = Accounts.delete_user(user)
 
-    {:noreply, assign(socket, :users, list_users(socket.assigns.account.id))}
+    {:noreply,
+     socket
+     |> assign(:users, list_users(socket.assigns.account.id))
+     |> put_flash(
+       :info,
+       "User deleted"
+     )}
+  end
+
+  @impl true
+  def handle_event("promote-to-admin", %{"id" => id}, socket) do
+    user = Accounts.get_user!(id)
+    {:ok, _user} = Accounts.update_user(user, %{"admin" => "true"})
+
+    {:noreply,
+     socket
+     |> assign(:users, list_users(socket.assigns.account.id))
+     |> put_flash(
+       :info,
+       "User promoted to Admin"
+     )}
   end
 
   def handle_event("generate-invitation-link", _params, socket) do
@@ -59,6 +79,23 @@ defmodule PulsariusWeb.UserLive.Index do
      |> put_flash(
        :info,
        "Invitation link copied!"
+     )}
+  end
+
+  def handle_event("resend-invite", %{"invitation_token" => invitation_token}, socket) do
+    invitation = Accounts.fetch_invitation_from_token(invitation_token)
+
+    :ok =
+      Pulsarius.broadcast(
+        "invitations",
+        {:user_invitation_created, invitation}
+      )
+
+    {:noreply,
+     socket
+     |> put_flash(
+       :info,
+       "Invitation sended!"
      )}
   end
 

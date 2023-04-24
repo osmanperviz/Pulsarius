@@ -8,7 +8,11 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
 
   @topic "invitations"
 
-  def handle_event("invite", %{"invite_user" => %{"email" => email} = invite_user_params}, socket) do
+  def handle_event(
+        "send-invite",
+        %{"invite_user" => %{"email" => email} = invite_user_params},
+        socket
+      ) do
     case Accounts.invite_user_via_email(socket.assigns.account, email) do
       {:ok, user_invitation} ->
         :ok =
@@ -34,36 +38,6 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
 
   def render(assigns) do
     ~H"""
-    <%!-- <span>
-      <div class="modal-body">
-        <div class="col-lg-12">
-          <.form
-            :let={f}
-            as={:invite_user}
-            id="user-invite-form"
-            phx-submit="invite"
-            phx-target={@myself}
-          >
-            <%= text_input(f, :email,
-              class: "form-control input-lg invite-email-input",
-              placeholder: "Email"
-            ) %>
-            <%= error_tag(f, :email) %>
-          </.form>
-        </div>
-      </div>
-      <div class="modal-footer border-0">
-        <a
-          href={Routes.user_index_path(PulsariusWeb.Endpoint, :index)}
-          type="button"
-          class="btn btn-secondary"
-        >
-          Close
-        </a>
-        <button type="submit" class="btn btn-primary" phx-click="save">Invite</button>
-      </div>
-    </span> --%>
-
     <div class="col-lg-12 d-flex h-100 align-items-center justify-content-center">
       <div class="col-lg-5 ">
         <div class="card box pb-2 pt-2 w-100 text-center">
@@ -73,9 +47,15 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
               <p class="gray-color" style="font-size: 0.8rem"><%= @message %></p>
             <% end %>
           </div>
-           
+
           <div class="card-body pt-4 pb-4">
-            <.form :let={f} as={:invite_user} id="user-invite-form" phx-submit="send-invite">
+            <.form
+              :let={f}
+              as={:invite_user}
+              id="user-invite-form"
+              phx-submit="send-invite"
+              phx-target={@myself}
+            >
               <%= text_input(f, :email,
                 class: "form-control search-monitors",
                 placeholder: "Your email"

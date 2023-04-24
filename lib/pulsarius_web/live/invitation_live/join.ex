@@ -35,7 +35,7 @@ defmodule PulsariusWeb.InvitationLive.Join do
 
   def render(assigns) do
     ~H"""
-     <.live_component
+    <.live_component
       module={PulsariusWeb.UserLive.InviteUserFormComponent}
       id={:invite_user}
       account={@account}

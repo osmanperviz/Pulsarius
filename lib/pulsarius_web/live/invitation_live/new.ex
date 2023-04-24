@@ -22,16 +22,15 @@ defmodule PulsariusWeb.InvitationLive.New do
 
   def render(assigns) do
     ~H"""
-    <div class="col-lg-12 mb-5 mt-2">
-      <h3>Welcome to Pulsarius</h3>
-    </div>
-    <div class="col-lg-12 d-flex ">
-      <div class="col-lg-4">
-        <h5>Registration</h5>
-        <p class="count-down">Please finish your Registration by providing missing data.</p>
-      </div>
-      <div class="col-lg-8">
-        <div class="card box pb-2 pt-2 w-100">
+    <div class="col-lg-12 d-flex h-100 align-items-center justify-content-center">
+      <div class="col-lg-5 ">
+        <div class="card box pb-2 pt-2 w-100 ">
+          <div class="card-header pb-0 text-center">
+            <h6 class="">Welcome to Pulsarius</h6>
+            <p class="gray-color" style="font-size: 0.8rem">
+              Please finish your Registration by providing missing data.
+            </p>
+          </div>
           <div class="card-body pt-4 pb-4">
             <.live_component
               module={PulsariusWeb.UserLive.FormComponent}
