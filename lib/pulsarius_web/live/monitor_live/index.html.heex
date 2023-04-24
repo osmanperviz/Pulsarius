@@ -5,7 +5,6 @@
       <form phx-change="search-monitor">
         <%= text_input(:monitor_search, :query,
           placeholder: " Search monitors",
-          autofocus: true,
           "phx-debounce": "300",
           class: "form-control search-monitors",
           type: :search
