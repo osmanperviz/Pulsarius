@@ -71,6 +71,8 @@ defmodule PulsariusWeb.Router do
         live "/billing/pricing", PulsariusWeb.SubscriptionLive.Pricing, :pricing
         live "/billing/subscription", PulsariusWeb.SubscriptionLive.New, :new
         live "/billing/change_subscription", PulsariusWeb.SubscriptionLive.Edit, :edit
+
+        live "/integrations", PulsariusWeb.IntegrationsLive.Index, :index
       end
     end
   end

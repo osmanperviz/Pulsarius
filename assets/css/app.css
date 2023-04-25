@@ -397,3 +397,9 @@ select.search-monitors:focus {
   background-color: #222838;
   color: white;
 }
+
+.integration-button{
+  background-color: #282f3e;
+  color: #fff;
+  border: 1px solid #8e98b2
+}
