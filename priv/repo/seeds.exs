@@ -26,7 +26,7 @@ if Mix.env() == :dev do
     ]
   }
 
-  {:ok, account} = Accounts.create_account(params)
+  {:ok, _account} = Accounts.create_account(params)
 
   free_plan = %{
     charging_interval: 1000,
@@ -55,7 +55,7 @@ if Mix.env() == :dev do
     type: :bussines
   }
 
-  {:ok, plan} = Pulsarius.Billing.create_plans(free_plan)
+  {:ok, _plan} = Pulsarius.Billing.create_plans(free_plan)
   Pulsarius.Billing.create_plans(small_team_plan)
   Pulsarius.Billing.create_plans(bussiness_plan)
 end

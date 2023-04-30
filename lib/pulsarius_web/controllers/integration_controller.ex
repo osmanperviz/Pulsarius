@@ -2,24 +2,26 @@ defmodule PulsariusWeb.IntegrationController do
   use PulsariusWeb, :controller
 
   alias Pulsarius.Integrations.Slack.SlackClient
-  alias Pulsarius.Monitoring
-  alias Pulsarius.Configurations
+  alias Pulsarius.Integrations
+  alias Pulsarius.Accounts
 
   def index(conn, %{"id" => id, "code" => code} = _params) do
-    {:ok, data} = SlackClient.fetch_data(code)
-    monitor = Monitoring.get_monitor!(id)
+    {:ok, %{"incoming_webhook" => incoming_webhook}} = SlackClient.fetch_data(code)
+    account = Accounts.get_account!(id)
+
+    IO.inspect(incoming_webhook, label: "incoming_webhook =====>")
 
     params = %{
-      "slack_notification" => true,
-      "slack_notification_webhook_url" => data["incoming_webhook"]["url"]
+      "channel_name" => Map.get(incoming_webhook, "channel"),
+      "webhook_url" => Map.get(incoming_webhook, "url"),
+      "channel_id" => Map.get(incoming_webhook, "channel_id"),
+      "type" => "slack"
     }
 
-    {:ok, _configuration} =
-      monitor.configuration
-      |> Configurations.update_configuration(params)
+    {:ok, integration} = Integrations.create_integration(account, params)
 
     conn
     |> put_flash(:success, "You have successfully added slack integration.")
-    |> redirect(to: Routes.monitor_show_path(conn, :show, monitor))
+    |> redirect(to: Routes.integrations_index_path(conn, :index))
   end
 end

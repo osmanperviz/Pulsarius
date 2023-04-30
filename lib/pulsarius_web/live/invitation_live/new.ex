@@ -1,8 +1,10 @@
 defmodule PulsariusWeb.InvitationLive.New do
-  use PulsariusWeb, :live_view
+  use Phoenix.LiveView,
+    container: {:div, class: "h-100"}
 
   alias Pulsarius.Accounts.{User, UserInvitation}
   alias Pulsarius.Repo
+  alias PulsariusWeb.Router.Helpers, as: Routes
 
   @impl true
   def mount(_params, _session, socket) do

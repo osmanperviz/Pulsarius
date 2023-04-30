@@ -1,13 +1,64 @@
+<header class="p-1 mb-5">
+  <div class="menu">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <%!-- <a href="/" class=" text-decoration-none">
+            <svg width="150" height="60">
+              <rect width="100%" height="100%" fill="none" />
+              <text
+                x="50%"
+                y="50%"
+                text-anchor="middle"
+                alignment-baseline="central"
+                fill="#646566"
+                font-size="30"
+                font-weight="bold"
+              >
+                Pulsarius
+              </text>
+            </svg>
+          </a> --%>
+
+      <ul class="nav col-12  mb-2 justify-content-center mb-md-0">
+        <%= for {menu_name, path, icon} <- @menus do %>
+          <li class={"nav-item ml-2 #{if path == @current_path, do: "active-item"}"}>
+            <a href={path} class="nav-link px-2 text-white">
+              <i class={icon}></i> <%= menu_name %>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+
+      <%!-- <div class="text-end">
+            <button type="button" class="btn btn-outline-light me-2">Login</button>
+            <button type="button" class="btn btn-warning">Sign-up</button>
+          </div> --%>
+    </div>
+  </div>
+</header>
 <main class="container main-container h-100">
   <%= if Map.has_key?(@flash, "info") do %>
-    <p class="alert alert-info" role="alert" phx-click="lv:clear-flash" phx-value-key="info">
+    <%!-- <p class="alert alert-info" role="alert" phx-click="lv:clear-flash" phx-value-key="info">
       <%= live_flash(@flash, :info) %>
-    </p>
+    </p> --%>
+    <%!-- <div class="sticky-top alert alert-info alert-dismissible" role="alert">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= live_flash(@flash, :info) %>
+
+    </div> --%>
+    <div id="alert" class="alert alert-info animated fade-out" phx-click="lv:clear-flash">
+      <%= live_flash(@flash, :info) %>
+    </div>
   <% end %>
 
   <%= if Map.has_key?(@flash, "error") do %>
     <p class="alert alert-danger" role="alert" phx-click="lv:clear-flash" phx-value-key="error">
       <%= live_flash(@flash, :error) %>
+    </p>
+  <% end %>
+
+  <%= if Map.has_key?(@flash, "success") do %>
+    <p class="alert alert-success" role="alert" phx-click="lv:clear-flash" phx-value-key="error">
+      <%= live_flash(@flash, :success) %>
     </p>
   <% end %>
   <%= @inner_content %>

@@ -403,3 +403,89 @@ select.search-monitors:focus {
   color: #fff;
   border: 1px solid #8e98b2
 }
+
+.list-group-item {
+  background: transparent;
+  color: white;
+}
+
+.subscription-input {
+    background-color: #30313d;
+    border: 1px solid #424353;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5), 0px 1px 6px rgba(0, 0, 0, 0);
+    padding: 1rem;
+}
+.subscription-input:focus {
+  border: 1px solid green;
+   background-color: #30313d;
+   color: white
+}
+.active-item {
+  color: white;
+    background-color: #222838;
+    border-radius: 2rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    border: 1px solid #75787f;
+   
+}
+.nav-item {
+ margin-left: 50px;
+ padding-left: 1.2rem;
+    padding-right: 1.2rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.nav-item:hover{
+   color: white;
+    background-color: #222838;
+    border-radius: 2rem;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+    border: 1px solid #75787f;
+}
+
+.nav-link {
+  color: white;
+    font-size: 1.1rem;
+}
+
+
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    transition: opacity 200ms, display 200ms;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation-name: fade-in;
+}
+
+.fade-out {
+  animation-name: fade-out;
+}
+
+.animated {
+  animation-duration: 5s;
+  animation-fill-mode: both;
+}
+
+ul.list-group {
+  background-color: #2f3648;
+}

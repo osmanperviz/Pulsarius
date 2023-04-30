@@ -14,11 +14,10 @@ defmodule PulsariusWeb.InvitationLive.Join do
   def handle_params(%{"account_id" => account_id}, _url, socket) do
     %Account{} = account = Accounts.get_account!(account_id)
 
-    changeset =
-      {:noreply,
-       socket
-       |> assign(:page_title, "Finish Registration")
-       |> assign(:account, account)}
+    {:noreply,
+     socket
+     |> assign(:page_title, "Finish Registration")
+     |> assign(:account, account)}
   end
 
   def handle_event("send-invite", %{"invite_user" => %{"email" => email}}, socket) do

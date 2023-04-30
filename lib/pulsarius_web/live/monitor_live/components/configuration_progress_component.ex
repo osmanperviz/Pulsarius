@@ -185,7 +185,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
                 <i class="bi bi-slack mt-3"></i><i class="bi bi-microsoft-teams"></i>
                 <h4>Connect Slack or Microsoft Teams</h4>
                 <p class="count-down">Get alerted about new incidents directly on  Slack/MSTeams.</p>
-                <a class="btn btn-secondary">Integrations</a>
+                <a href="/integrations" class="btn btn-secondary">Integrations</a>
               </div>
             </div>
           </div>

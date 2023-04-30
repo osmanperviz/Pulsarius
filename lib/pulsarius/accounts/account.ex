@@ -5,6 +5,7 @@ defmodule Pulsarius.Accounts.Account do
   alias Pulsarius.Accounts.User
   alias Pulsarius.Monitoring.Monitor
   alias Pulsarius.Billing.Subscriptions
+  alias Pulsarius.Integrations.Integration
 
   @type t :: %__MODULE__{
           type: String.t()
@@ -19,6 +20,7 @@ defmodule Pulsarius.Accounts.Account do
 
     has_many :users, User, on_replace: :delete
     has_many :monitors, Monitor, on_replace: :delete
+    has_many :integrations, Integration, on_replace: :delete
 
     has_one :subscription, Subscriptions, on_replace: :delete
 

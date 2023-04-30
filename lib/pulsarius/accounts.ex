@@ -271,8 +271,45 @@ defmodule Pulsarius.Accounts do
   defp generate_token(),
     do: :crypto.strong_rand_bytes(24) |> Base.url_encode64(padding: false)
 
+  @doc """
+  Checks if account has more than one user(initial registred Admin)
+
+  ## Examples
+
+      iex> has_team_member(?%Account{})
+      [%User{}, %User{} ....]
+
+      iex> has_team_member?(%Account{})
+      []
+
+  """
+  @spec has_team_member?(Account.t()) :: boolean()
   def has_team_member?(account) do
-    account = account |> Repo.preload(:users)
-    Enum.count(account.users) > 1
+    account
+    |> Repo.preload(:users)
+    |> Map.get(:users)
+    |> Enum.count()
+    |> Kernel.>(1)
+  end
+
+  @doc """
+  Checks if account any integrations set (Slack, MSTeams...)
+
+  ## Examples
+
+      iex> has_any_integration_set?(%Account{})
+      [%User{}, %User{} ....]
+
+      iex> has_any_integration_set?(%Account{})
+      []
+
+  """
+
+  @spec has_any_integration_set?(Account.t()) :: boolean()
+  def has_any_integration_set?(account) do
+    account
+    |> Repo.preload(:integrations)
+    |> Map.get(:integrations)
+    |> Enum.any?()
   end
 end

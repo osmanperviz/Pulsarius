@@ -3,7 +3,20 @@ defmodule PulsariusWeb.IntegrationsLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    account = Pulsarius.Repo.preload(socket.assigns.account, :integrations)
+
+    has_slack_integrated? =
+      Enum.filter(account.integrations, &(&1.type == :slack))
+      |> Enum.any?()
+
+    has_ms_teams_integrated? =
+      Enum.filter(account.integrations, &(&1.type == :ms_teams))
+      |> Enum.any?()
+
+    {:ok,
+     socket
+     |> assign(:has_slack_integrated?, has_slack_integrated?)
+     |> assign(:has_ms_teams_integrated?, has_ms_teams_integrated?)}
   end
 
   def render(assigns) do
@@ -17,7 +30,17 @@ defmodule PulsariusWeb.IntegrationsLive.Index do
           <div class="card-header pb-0 d-flex">
             <h4 class="">Slack</h4>
             <div style="margin-left: auto;" class="pb-2">
-              <button class="integration-button btn btn-light btn-sm">Add Slack</button>
+              <%= if @has_slack_integrated? do %>
+                <%= link("Add Channel",
+                  to: Routes.integrations_slack_index_path(PulsariusWeb.Endpoint, :index),
+                  class: "integration-button btn btn-light btn-sm"
+                ) %>
+              <% else %>
+                <%= link("Add Slack",
+                  to: slack_link(),
+                  class: "integration-button btn btn-light btn-sm"
+                ) %>
+              <% end %>
             </div>
           </div>
 
@@ -60,9 +83,14 @@ defmodule PulsariusWeb.IntegrationsLive.Index do
       <div class="col-lg-6 ">
         <div class="card box pb-2 pt-2 w-100">
           <div class="card-header pb-0 d-flex">
-            <h4 class="">MSTeams</h4>
+            <h4 class="">MsTeams</h4>
             <div style="margin-left: auto;" class="pb-2">
-              <button class="btn btn-light btn-sm integration-button">Add MSTeams</button>
+              <a
+                href={Routes.integrations_teams_new_path(PulsariusWeb.Endpoint, :new)}
+                class="btn btn-light btn-sm integration-button"
+              >
+                Add MsTeams
+              </a>
             </div>
           </div>
           <div class="card-body pt-4 pb-4 d-flex">
@@ -90,5 +118,11 @@ defmodule PulsariusWeb.IntegrationsLive.Index do
       </div>
     </div>
     """
+  end
+
+  defp slack_link() do
+    client_id = Application.get_env(:pulsarius, :slack_integration)[:client_id]
+
+    "https://slack.com/oauth/v2/authorize?client_id=#{client_id}&scope=users:read,users:read.email,incoming-webhook&user_scope="
   end
 end

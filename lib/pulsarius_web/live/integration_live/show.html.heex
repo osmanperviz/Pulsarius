@@ -1,0 +1,44 @@
+<h1>Show Integration</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.integration_show_path(@socket, :show, @integration)}>
+    <.live_component
+      module={PulsariusWeb.IntegrationLive.FormComponent}
+      id={@integration.id}
+      title={@page_title}
+      action={@live_action}
+      integration={@integration}
+      return_to={Routes.integration_show_path(@socket, :show, @integration)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+  <li>
+    <strong>Name:</strong>
+    <%= @integration.name %>
+  </li>
+
+  <li>
+    <strong>Type:</strong>
+    <%= @integration.type %>
+  </li>
+
+  <li>
+    <strong>Channel name:</strong>
+    <%= @integration.channel_name %>
+  </li>
+
+  <li>
+    <strong>Webhook url:</strong>
+    <%= @integration.webhook_url %>
+  </li>
+</ul>
+
+<span>
+  <%= live_patch("Edit",
+    to: Routes.integration_show_path(@socket, :edit, @integration),
+    class: "button"
+  ) %>
+</span>
+| <span><%= live_redirect("Back", to: Routes.integration_index_path(@socket, :index)) %></span>

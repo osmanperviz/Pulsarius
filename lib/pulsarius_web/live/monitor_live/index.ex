@@ -126,7 +126,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
     %{
       create_monitoring: true,
       invite_colleagues: Accounts.has_team_member?(account),
-      integrations: has_integrations_set?(monitor),
+      integrations: Accounts.has_any_integration_set?(account),
       notifications: false,
       status_page: false
     }
@@ -136,7 +136,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
     %{
       create_monitoring: false,
       invite_colleagues: Accounts.has_team_member?(account),
-      integrations: false,
+      integrations: Accounts.has_any_integration_set?(account),
       notifications: false,
       status_page: false
     }
@@ -156,9 +156,5 @@ defmodule PulsariusWeb.MonitorLive.Index do
       |> assign(:monitoring, monitoring_list)
       |> assign(:onboarding_progress, false)
     end
-  end
-
-  defp has_integrations_set?(monitor) do
-    monitor.configuration.slack_notification
   end
 end

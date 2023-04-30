@@ -24,7 +24,7 @@ defmodule PulsariusWeb.Router do
 
     get "/", PageController, :index
 
-    get "/monitor/:id/integrations/slack", IntegrationController, :index
+    get "/account/:id/integrations/slack", IntegrationController, :index
     get "/users/invite/:token", UserInvitationController, :accept
     get "/users/join/:invitation_token", UserInvitationController, :join
   end
@@ -54,7 +54,7 @@ defmodule PulsariusWeb.Router do
         live "/invitation/join/:account_id", PulsariusWeb.InvitationLive.Join, :join
       end
 
-      live_session :users, on_mount: [PulsariusWeb.AuthAssigns] do
+      live_session :users, on_mount: [PulsariusWeb.RouteAssigns, PulsariusWeb.AuthAssigns] do
         live "/monitors", PulsariusWeb.MonitorLive.Index, :index
         live "/monitors/new", PulsariusWeb.MonitorLive.New, :new
         live "/monitors/:id/edit", PulsariusWeb.MonitorLive.Edit, :edit
@@ -73,6 +73,11 @@ defmodule PulsariusWeb.Router do
         live "/billing/change_subscription", PulsariusWeb.SubscriptionLive.Edit, :edit
 
         live "/integrations", PulsariusWeb.IntegrationsLive.Index, :index
+        live "/integrations/slack/new", PulsariusWeb.IntegrationsLive.Slack.New, :new
+        live "/integrations/slack", PulsariusWeb.IntegrationsLive.Slack.Index, :index
+
+        live "/integrations/teams/new", PulsariusWeb.IntegrationsLive.Teams.New, :new
+        live "/integrations/teams", PulsariusWeb.IntegrationsLive.Teams.Index, :index
       end
     end
   end

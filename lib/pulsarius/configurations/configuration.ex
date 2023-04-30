@@ -24,8 +24,6 @@ defmodule Pulsarius.Configurations.Configuration do
     :frequency_check_in_seconds,
     :sms_notification,
     :email_notification,
-    :slack_notification,
-    :slack_notification_webhook_url,
     :alert_condition,
     :alert_rule,
     :ssl_expiry_date,
@@ -40,9 +38,6 @@ defmodule Pulsarius.Configurations.Configuration do
     field :url_to_monitor, :string
     field :email_notification, :boolean, default: false
     field :sms_notification, :boolean, default: false
-
-    field :slack_notification, :boolean, default: false
-    field :slack_notification_webhook_url, :string
 
     field :alert_rule, Ecto.Enum, values: @alert_rules_values, default: :becomes_unavailable
     field :alert_condition, :string
