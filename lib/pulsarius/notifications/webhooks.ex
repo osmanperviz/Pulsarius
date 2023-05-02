@@ -1,5 +1,6 @@
 defmodule Pulsarius.Notifications.Webhooks do
   alias Pulsarius.Notifications.Webhooks.Slack
+  alias Pulsarius.Notifications.Webhooks.MsTeams
   alias Pulsarius.Incidents.Incident
   alias Pulsarius.Monitoring.Monitor
 
@@ -12,15 +13,18 @@ defmodule Pulsarius.Notifications.Webhooks do
   end
 
   def notifications_for(type, params) do
-    cond do
-      slack_integration_enabled?(params) ->
-        [apply(Slack, type, [params, get_webhook_url(params)])]
+    apply(Slack, type, [params, get_webhook_url(params, :slack)])
+    apply(MsTeams, type, [params, get_webhook_url(params, :ms_teams)])
+    # cond do
+    #   # slack_integration_enabled?(params) ->
+    #   true ->
+    #     apply(Slack, type, [params, get_webhook_url(params, :slack)])
 
-      # ms_teams_integration_enabled? -> 
-      # [apply(MsTeams, type, args)]
-      true ->
-        []
-    end
+    #   # ms_teams_integration_enabled? -> 
+    #   # [apply(MsTeams, type, args)]
+    #   true ->
+    #     []
+    # end
   end
 
   def render_body(incident, template) do
@@ -39,12 +43,22 @@ defmodule Pulsarius.Notifications.Webhooks do
     monitor.configuration.slack_notification
   end
 
-  defp get_webhook_url(%Incident{} = incident) do
-    incident.monitor.configuration.slack_notification_webhook_url
+  defp get_webhook_url(%Incident{} = incident, :slack) do
+    Pulsarius.Repo.preload(incident.monitor, :slack_integrations)
+    |> Map.get(:slack_integrations)
+    |> Enum.map(& &1.webhook_url)
   end
 
-  defp get_webhook_url(%Monitor{} = monitor) do
-    monitor.configuration.slack_notification_webhook_url
+  defp get_webhook_url(%Monitor{} = monitor, :slack) do
+    Pulsarius.Repo.preload(monitor, :slack_integrations)
+    |> Map.get(:slack_integrations)
+    |> Enum.map(& &1.webhook_url)
+  end
+
+  defp get_webhook_url(%Monitor{} = monitor, :ms_teams) do
+    Pulsarius.Repo.preload(monitor, :ms_teams_integrations)
+    |> Map.get(:ms_teams_integrations)
+    |> Enum.map(& &1.webhook_url)
   end
 end
 
@@ -55,3 +69,7 @@ end
 # })
 
 #  HTTPoison.post("https://slack.com/api/oauth.v2.access", body, [{"Content-Type", "application/x-www-form-urlencoded"}])  
+
+
+# i = Pulsarius.Repo.get(Pulsarius.Incidents.Incident, "2304d27f-29ad-4720-8615-8b401b247827") |> Pulsarius.Repo.preload(:monitor) 
+# Pulsarius.broadcast("incidents", {:incident_created, i}) 

@@ -17,7 +17,7 @@ defmodule PulsariusWeb.IntegrationsLive.Slack.Index do
 
     integrations =
       socket.assigns.account
-      |> Pulsarius.Repo.preload(integrations)
+      |> Pulsarius.Repo.preload(:integrations)
       |> Map.get(:integrations)
 
     {:noreply,

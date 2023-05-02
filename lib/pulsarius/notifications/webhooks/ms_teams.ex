@@ -1,6 +1,6 @@
-defmodule Pulsarius.Notifications.Webhooks.Slack do
-  @moduledoc """
-    Implementing Notification protocol, responsible for sending and composing different types of Slack notifications.
+defmodule Pulsarius.Notifications.Webhooks.MsTeams do
+ @moduledoc """
+    Implementing Notification protocol, responsible for sending and composing different types of MS Teams notifications.
   """
 
   alias Pulsarius.Notifications.Webhooks
@@ -13,7 +13,7 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
 
   defstruct [:type, :webhook_url, :body]
 
-  @spec incident_created(incident, webhook_urls) :: [Slack.t()]
+  @spec incident_created(incident, webhook_urls) :: [MsTeams.t()]
   def incident_created(incident, webhook_urls) do
     body = Webhooks.render_body(incident, "incident_created.html")
 
@@ -21,7 +21,7 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     |> Enum.map(&build_template(:incidentincident_created_auto_resolved, &1, body))
   end
 
-  @spec incident_auto_resolved(incident, webhook_urls) :: [Slack.t()]
+  @spec incident_auto_resolved(incident, webhook_urls) :: [MsTeams.t()]
   def incident_auto_resolved(incident, webhook_urls) do
     body = Webhooks.render_body(incident, "incident_auto_resolved.html")
 
@@ -29,7 +29,7 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     |> Enum.map(&build_template(:incident_auto_resolved, &1, body))
   end
 
-  @spec monitor_paused(monitor, webhook_urls) :: [Slack.t()]
+  @spec monitor_paused(monitor, webhook_urls) :: [MsTeams.t()]
   def monitor_paused(monitor, webhook_urls) do
     body = Webhooks.render_body(monitor, "monitor_paused.html")
 
@@ -37,7 +37,7 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     |> Enum.map(&build_template(:monitor_paused, &1, body))
   end
 
-  @spec monitor_unpaused(monitor, webhook_urls) :: [Slack.t()]
+  @spec monitor_unpaused(monitor, webhook_urls) :: [MsTeams.t()]
   def monitor_unpaused(monitor, webhook_urls) do
     body = Webhooks.render_body(monitor, "monitor_unpaused.html")
 
@@ -49,7 +49,7 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     %__MODULE__{type: type, webhook_url: webhook_url, body: body}
   end
 
-  defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Webhooks.Slack do
+  defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Webhooks.MsTeams do
     alias Pulsarius.Notifications.Webhooks
 
     @spec send(%{args: list, body: String.t()}) :: :ok

@@ -17,8 +17,8 @@ defmodule Pulsarius.Integrations do
       [%Integration{}, ...]
 
   """
-  def list_integrations do
-    Repo.all(Integration)
+  def list_integrations(account_id, type) do
+    Repo.all(Integration, where: account_id == account_id and type == type)
   end
 
   @doc """

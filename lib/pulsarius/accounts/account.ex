@@ -22,6 +22,9 @@ defmodule Pulsarius.Accounts.Account do
     has_many :monitors, Monitor, on_replace: :delete
     has_many :integrations, Integration, on_replace: :delete
 
+    has_many :slack_integrations, Integration,  where: [type: :slack]
+    has_many :ms_teams_integrations, Integration,  where: [type: :ms_teams]
+
     has_one :subscription, Subscriptions, on_replace: :delete
 
     timestamps()

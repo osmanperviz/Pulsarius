@@ -10,6 +10,7 @@ defmodule Pulsarius.Monitoring.Monitor do
   alias Pulsarius.Incidents.Incident
   alias Pulsarius.Accounts.Account
   alias Pulsarius.Monitoring.StatusResponse
+  alias Pulsarius.Integrations.Integration
 
   @type t :: %__MODULE__{
           name: String.t(),
@@ -35,6 +36,7 @@ defmodule Pulsarius.Monitoring.Monitor do
     has_many :users, through: [:account, :users]
     has_many :incidents, Incident, on_replace: :delete
     has_many :status_response, StatusResponse, on_replace: :delete
+    has_many :slack_integrations, through: [:account, :slack_integrations]
 
     field :statistics, :map, virtual: true
 
