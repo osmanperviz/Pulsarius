@@ -15,6 +15,8 @@ defmodule Pulsarius.Notifications do
     webhook_notifications = Webhooks.notifications_for(:incident_created, incident)
     email_notifications = Email.notifications_for(:incident_created, incident)
 
+    dbg()
+
     (webhook_notifications ++ email_notifications)
     |> Enum.map(&Notification.send/1)
   end

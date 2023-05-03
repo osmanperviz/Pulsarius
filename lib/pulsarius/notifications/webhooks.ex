@@ -13,18 +13,10 @@ defmodule Pulsarius.Notifications.Webhooks do
   end
 
   def notifications_for(type, params) do
-    apply(Slack, type, [params, get_webhook_url(params, :slack)])
-    apply(MsTeams, type, [params, get_webhook_url(params, :ms_teams)])
-    # cond do
-    #   # slack_integration_enabled?(params) ->
-    #   true ->
-    #     apply(Slack, type, [params, get_webhook_url(params, :slack)])
+    slack_notifications = apply(Slack, type, [params, get_webhook_urls(params, :slack)])
+    ms_tems_notifications = apply(MsTeams, type, [params, get_webhook_urls(params, :ms_teams)])
 
-    #   # ms_teams_integration_enabled? -> 
-    #   # [apply(MsTeams, type, args)]
-    #   true ->
-    #     []
-    # end
+    slack_notifications ++ ms_tems_notifications
   end
 
   def render_body(incident, template) do
@@ -34,30 +26,25 @@ defmodule Pulsarius.Notifications.Webhooks do
     Jason.encode!(%{text: message, type: "mrkdwn"})
   end
 
-  # TODO: REFACTURE THIS!
-  defp slack_integration_enabled?(%Incident{} = incident) do
-    incident.monitor.configuration.slack_notification
+  defp get_webhook_urls(%Incident{} = incident, :slack) do
+    extract_webhook_urls_from(incident.monitor, :slack_integrations)
   end
 
-  defp slack_integration_enabled?(%Monitor{} = monitor) do
-    monitor.configuration.slack_notification
+  defp get_webhook_urls(%Monitor{} = monitor, :slack) do
+    extract_webhook_urls_from(monitor, :slack_integrations)
   end
 
-  defp get_webhook_url(%Incident{} = incident, :slack) do
-    Pulsarius.Repo.preload(incident.monitor, :slack_integrations)
-    |> Map.get(:slack_integrations)
-    |> Enum.map(& &1.webhook_url)
+  defp get_webhook_urls(%Incident{} = incident, :ms_teams) do
+    extract_webhook_urls_from(incident.monitor, :ms_teams_integrations)
   end
 
-  defp get_webhook_url(%Monitor{} = monitor, :slack) do
-    Pulsarius.Repo.preload(monitor, :slack_integrations)
-    |> Map.get(:slack_integrations)
-    |> Enum.map(& &1.webhook_url)
+  defp get_webhook_urls(%Monitor{} = monitor, :ms_teams) do
+    extract_webhook_urls_from(monitor, :ms_teams_integrations)
   end
 
-  defp get_webhook_url(%Monitor{} = monitor, :ms_teams) do
-    Pulsarius.Repo.preload(monitor, :ms_teams_integrations)
-    |> Map.get(:ms_teams_integrations)
+  defp extract_webhook_urls_from(resource, integration_type) do
+   Pulsarius.Repo.preload(resource, integration_type)
+    |> Map.get(integration_type)
     |> Enum.map(& &1.webhook_url)
   end
 end
@@ -69,7 +56,6 @@ end
 # })
 
 #  HTTPoison.post("https://slack.com/api/oauth.v2.access", body, [{"Content-Type", "application/x-www-form-urlencoded"}])  
-
 
 # i = Pulsarius.Repo.get(Pulsarius.Incidents.Incident, "2304d27f-29ad-4720-8615-8b401b247827") |> Pulsarius.Repo.preload(:monitor) 
 # Pulsarius.broadcast("incidents", {:incident_created, i}) 

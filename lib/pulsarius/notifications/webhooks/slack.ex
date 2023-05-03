@@ -17,32 +17,33 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
   def incident_created(incident, webhook_urls) do
     body = Webhooks.render_body(incident, "incident_created.html")
 
-    webhook_urls
-    |> Enum.map(&build_template(:incidentincident_created_auto_resolved, &1, body))
+    build_notifications(:incident_created, webhook_urls, body)
   end
 
   @spec incident_auto_resolved(incident, webhook_urls) :: [Slack.t()]
   def incident_auto_resolved(incident, webhook_urls) do
     body = Webhooks.render_body(incident, "incident_auto_resolved.html")
 
-    webhook_urls
-    |> Enum.map(&build_template(:incident_auto_resolved, &1, body))
+    build_notifications(:incident_auto_resolved, webhook_urls, body)
   end
 
   @spec monitor_paused(monitor, webhook_urls) :: [Slack.t()]
   def monitor_paused(monitor, webhook_urls) do
     body = Webhooks.render_body(monitor, "monitor_paused.html")
 
-    webhook_urls
-    |> Enum.map(&build_template(:monitor_paused, &1, body))
+    build_notifications(:monitor_paused, webhook_urls, body)
   end
 
   @spec monitor_unpaused(monitor, webhook_urls) :: [Slack.t()]
   def monitor_unpaused(monitor, webhook_urls) do
     body = Webhooks.render_body(monitor, "monitor_unpaused.html")
 
+    build_notifications(:monitor_unpaused, webhook_urls, body)
+  end
+
+  defp build_notifications(type, webhook_urls, body) do
     webhook_urls
-    |> Enum.map(&build_template(:monitor_unpaused, &1, body))
+    |> Enum.map(&build_template(type, &1, body))
   end
 
   defp build_template(type, webhook_url, body) do

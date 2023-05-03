@@ -37,6 +37,7 @@ defmodule Pulsarius.Monitoring.Monitor do
     has_many :incidents, Incident, on_replace: :delete
     has_many :status_response, StatusResponse, on_replace: :delete
     has_many :slack_integrations, through: [:account, :slack_integrations]
+    has_many :ms_teams_integrations, through: [:account, :ms_teams_integrations]
 
     field :statistics, :map, virtual: true
 
