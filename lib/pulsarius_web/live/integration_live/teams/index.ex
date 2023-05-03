@@ -5,9 +5,9 @@ defmodule PulsariusWeb.IntegrationsLive.Teams.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    account = Pulsarius.Repo.preload(socket.assigns.account, :integrations)
+    account = Pulsarius.Repo.preload(socket.assigns.account, :ms_teams_integrations)
 
-    {:ok, assign(socket, :integrations, account.integrations)}
+    {:ok, assign(socket, :integrations, account.ms_teams_integrations)}
   end
 
   def handle_event("remove-channel", %{"id" => id}, socket) do
@@ -17,24 +17,8 @@ defmodule PulsariusWeb.IntegrationsLive.Teams.Index do
 
     integrations =
       socket.assigns.account
-      |> Pulsarius.Repo.preload(:integrations)
-      |> Map.get(:integrations)
-
-    {:noreply,
-     socket
-     |> assign(:integrations, integrations)
-     |> put_flash(:info, "You have successfully removed the MSTeams channel integration")}
-  end
-
-  def handle_event("save", %{"id" => id}, socket) do
-    integration = Integrations.get_integration!(id)
-
-    {:ok, _integration} = Integrations.delete_integration(integration)
-
-    integrations =
-      socket.assigns.account
-      |> Pulsarius.Repo.preload(:integrations)
-      |> Map.get(:integrations)
+      |> Pulsarius.Repo.preload(:ms_teams_integrations)
+      |> Map.get(:ms_teams_integrations)
 
     {:noreply,
      socket

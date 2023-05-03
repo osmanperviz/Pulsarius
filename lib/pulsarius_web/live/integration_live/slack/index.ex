@@ -5,9 +5,9 @@ defmodule PulsariusWeb.IntegrationsLive.Slack.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    account = Pulsarius.Repo.preload(socket.assigns.account, :integrations)
+    account = Pulsarius.Repo.preload(socket.assigns.account, :slack_integrations)
 
-    {:ok, assign(socket, :integrations, account.integrations)}
+    {:ok, assign(socket, :integrations, account.slack_integrations)}
   end
 
   def handle_event("remove-channel", %{"id" => id}, socket) do
@@ -17,8 +17,8 @@ defmodule PulsariusWeb.IntegrationsLive.Slack.Index do
 
     integrations =
       socket.assigns.account
-      |> Pulsarius.Repo.preload(:integrations)
-      |> Map.get(:integrations)
+      |> Pulsarius.Repo.preload(:slack_integrations)
+      |> Map.get(:slack_integrations)
 
     {:noreply,
      socket
