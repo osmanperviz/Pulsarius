@@ -120,8 +120,7 @@ abc2 {
 }
 
 .table-text {
-  font-size: 15px;
-  color: white;
+  font-size: 1rem;
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
@@ -488,4 +487,22 @@ select.search-monitors:focus {
 
 ul.list-group {
   background-color: #2f3648;
+}
+
+.users-list {
+  background-color: #293040;
+}
+
+.user-list-group-item {
+  border-bottom: 2px solid #2f3647
+}
+
+.list-group-item.active {
+  background: #2f3647;
+  border: none;
+  border-bottom: 2px solid  #2f3647
+}
+
+.user-badge {
+  background-color: #545b6b;
 }

@@ -43,7 +43,7 @@ defmodule Pulsarius.Notifications.Webhooks do
   end
 
   defp extract_webhook_urls_from(resource, integration_type) do
-   Pulsarius.Repo.preload(resource, integration_type)
+    Pulsarius.Repo.preload(resource, integration_type)
     |> Map.get(integration_type)
     |> Enum.map(& &1.webhook_url)
   end

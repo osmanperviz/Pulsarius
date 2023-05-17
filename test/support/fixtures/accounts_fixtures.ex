@@ -21,11 +21,13 @@ defmodule Pulsarius.AccountsFixtures do
   end
 
   def account_fixture(attrs \\ %{}) do
-    {:ok, user} =
+    {:ok, account} =
       attrs
       |> Enum.into(%{
-        type: :freelancer
+        "type" => "freelancer"
       })
       |> Pulsarius.Accounts.create_account()
+
+    account
   end
 end

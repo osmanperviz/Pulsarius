@@ -38,7 +38,7 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
 
   def handle_event(
         "alert-rule-changed",
-        %{"monitor" => %{"configuration" => %{"alert_rule" => alert_rule}}},
+        %{"monitor" => %{"configuration" => %{"alert_rule" => alert_rule} = monitor_params}},
         socket
       ) do
     changes =
@@ -56,7 +56,12 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
           %{show_http_status_code: false, show_keyword_input: false}
       end
 
-    {:noreply, assign(socket, changes)}
+    socket =
+      socket
+      |> assign(:changeset, Monitoring.change_monitor(socket.assigns.monitor, monitor_params))
+      |> assign(changes)
+
+    {:noreply, socket}
   end
 
   def handle_event("save", %{"monitor" => monitor_params}, socket) do
@@ -67,7 +72,7 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
     case Monitoring.update_monitor(socket.assigns.monitor, monitor_params) do
       {:ok, monitor} ->
         # update related running monitor process
-        Pulsarius.EndpointChecker.update_state(monitor)
+        Pulsarius.UrlMonitor.update_state(monitor)
 
         {:noreply,
          socket
@@ -104,7 +109,7 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
     case Monitoring.update_monitor(socket.assigns.monitor, monitor_params) do
       {:ok, monitor} ->
         # update related running monitor process
-        Pulsarius.EndpointChecker.update_state(monitor)
+        Pulsarius.UrlMonitor.update_state(monitor)
 
         {:noreply,
          socket

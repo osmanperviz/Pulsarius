@@ -3,13 +3,15 @@ defmodule PulsariusWeb.MonitorLiveTest do
 
   import Phoenix.LiveViewTest
   import Pulsarius.MonitoringFixtures
+  import Pulsarius.AccountsFixtures
 
   @create_attrs %{}
   @update_attrs %{}
   @invalid_attrs %{}
 
   defp create_monitor(_) do
-    monitor = monitor_fixture()
+    account = account_fixture()
+    monitor = monitor_fixture(account)
     %{monitor: monitor}
   end
 

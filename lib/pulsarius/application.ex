@@ -18,7 +18,7 @@ defmodule Pulsarius.Application do
       PulsariusWeb.Endpoint,
       {Pulsarius.EndpointDynamicSupervisor,
        name: Pulsarius.EndpointDynamicSupervisor, strategy: :one_for_one},
-      {Registry, [keys: :unique, name: :endpoint_checker]},
+      {Registry, [keys: :unique, name: :url_monitor]},
       # On application boot it starts all interrupted monitor processes again.
       {Task, fn -> Pulsarius.EndpointDynamicSupervisor.auto_start_monitoring() end},
       # Start a worker by calling: Pulsarius.Worker.start_link(arg)

@@ -4,6 +4,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
   alias Pulsarius.Monitoring
   alias PulsariusWeb.MonitorLive.MonitorWidget
   alias PulsariusWeb.MonitorLive.ConfigurationProgressComponent
+  alias Pulsarius.Monitoring.{AvalabilityStatistics, StatusResponse}
   alias Pulsarius.Accounts
 
   alias Pulsarius.Monitoring.Monitor
@@ -12,11 +13,16 @@ defmodule PulsariusWeb.MonitorLive.Index do
 
   import PulsariusWeb.MonitorLive.MonitoringComponents
 
+  use Timex
+
   @topic "monitor"
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, fetch_default_assigns(socket)}
+    socket = fetch_default_assigns(socket)
+    subscribe_to_monitor_events(socket.assigns.monitoring)
+
+    {:ok, socket}
   end
 
   @impl true
@@ -59,7 +65,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
       |> Monitoring.delete_monitor()
 
     # stop related running monitor process
-    Pulsarius.EndpointChecker.stop_monitoring(monitor)
+    Pulsarius.UrlMonitor.stop_monitoring(monitor)
 
     {:noreply, fetch_default_assigns(socket)}
   end
@@ -74,7 +80,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
     {:ok, monitor} = Monitoring.update_monitor(monitor, %{status: "paused"})
 
     monitor = Pulsarius.Repo.preload(monitor, [:configuration])
-    :ok = Pulsarius.EndpointChecker.update_state(monitor)
+    :ok = Pulsarius.UrlMonitor.update_state(monitor)
     Pulsarius.broadcast(@topic, {:monitor_paused, monitor})
 
     monitoring = replace_monitoring(assigns.monitoring, monitor.id, monitor)
@@ -89,11 +95,17 @@ defmodule PulsariusWeb.MonitorLive.Index do
         %{assigns: assigns} = socket
       ) do
     monitor = Enum.find(assigns.monitoring, &(&1.id == monitor_id))
-    {:ok, monitor} = Monitoring.update_monitor(monitor, %{status: "active"})
+
+    status =
+      if monitor.active_incident == nil,
+        do: "active",
+        else: "inactive"
+
+    {:ok, monitor} = Monitoring.update_monitor(monitor, %{status: status})
 
     monitor = Pulsarius.Repo.preload(monitor, [:configuration])
 
-    :ok = Pulsarius.EndpointChecker.update_state(monitor)
+    :ok = Pulsarius.UrlMonitor.update_state(monitor)
     Pulsarius.broadcast(@topic, {:monitor_unpaused, monitor})
 
     monitoring = replace_monitoring(assigns.monitoring, monitor.id, monitor)
@@ -113,6 +125,42 @@ defmodule PulsariusWeb.MonitorLive.Index do
 
     {:noreply, socket}
   end
+
+  def handle_info(%Monitor{} = monitor, %{assigns: assigns} = socket) do
+    monitor =
+      Pulsarius.Repo.preload(monitor, [
+        :configuration,
+        :active_incident,
+        :incidents,
+        :status_response
+      ])
+
+    statistics =
+      Map.merge(AvalabilityStatistics.calculate_todays_stats(monitor.incidents), %{
+        average_response_time:
+          AvalabilityStatistics.calculate_average_response_time(monitor.status_response)
+      })
+
+    monitor = Monitor.cast_statistics(monitor, statistics)
+
+    monitoring_list = Enum.filter(assigns.monitoring, &(&1.id != monitor.id)) ++ [monitor]
+
+    {:noreply, assign(socket, :monitoring, monitoring_list)}
+  end
+
+  def handle_info(%StatusResponse{} = status_response, %{assigns: assigns} = socket) do
+    monitor = assigns.monitoring |> Enum.find(&(&1.id == status_response.monitoring.id))
+
+    {:noreply,
+     socket
+     |> push_event("response_time:#{monitor.id}", %{
+       response_time: build_response_time(monitor.status_response ++ [status_response])
+     })}
+  end
+
+  # monitor:f744567e-dfbb-487b-acb8-3fb90a401ce2
+  #  monitor = Pulsarius.Repo.get!(Pulsarius.Monitoring.Monitor, "f744567e-dfbb-487b-acb8-3fb90a401ce2")
+  #  Pulsarius.broadcast("monitor:" <> monitor.id, monitor)
 
   def replace_monitoring(list, id, to) do
     list
@@ -142,7 +190,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
     }
   end
 
-  def fetch_default_assigns(%{assigns: assigns} = socket) do
+  defp fetch_default_assigns(%{assigns: assigns} = socket) do
     monitoring_list = Monitoring.list_monitoring_with_daily_statistics(assigns.account.id)
 
     if assigns.current_user.show_onboard_progress_wizard do
@@ -156,5 +204,29 @@ defmodule PulsariusWeb.MonitorLive.Index do
       |> assign(:monitoring, monitoring_list)
       |> assign(:onboarding_progress, false)
     end
+  end
+
+  defp subscribe_to_monitor_events(monitors) do
+    monitors
+    |> Enum.map(&Pulsarius.subscribe("monitor:" <> &1.id))
+  end
+
+  def build_response_time(response_time) do
+    Enum.filter(response_time, fn rt ->
+      rt.occured_at in todays_range()
+    end)
+    |> Enum.sort_by(&Map.fetch!(&1, :inserted_at), :desc)
+    |> Enum.take(80)
+    |> Enum.reverse()
+    |> Enum.map(fn a ->
+      %{x: NaiveDateTime.to_time(a.occured_at) |> Time.to_string(), y: a.response_time_in_ms}
+    end)
+  end
+
+  defp todays_range() do
+    from = Timex.now() |> Timex.beginning_of_day()
+    until = Timex.now() |> Timex.end_of_day()
+
+    Interval.new(from: from, until: until)
   end
 end

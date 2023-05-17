@@ -7,15 +7,15 @@ defmodule Pulsarius.IncidentsFixtures do
   @doc """
   Generate a incident.
   """
-  def incident_fixture(attrs \\ %{}) do
-    {:ok, incident} =
-      attrs
-      |> Enum.into(%{
-        occured_at: ~N[2023-01-16 09:43:00],
+  def incident_fixture(monitor, attrs \\ %{}) do
+    attrs =
+      Enum.into(attrs, %{
+        occured_at: DateTime.utc_now(),
         page_response: "some page_response",
-        resolved_at: ~N[2023-01-16 09:43:00]
+        resolved_at: DateTime.utc_now()
       })
-      |> Pulsarius.Incidents.create_incident()
+
+    {:ok, incident} = Pulsarius.Incidents.create_incident(monitor, attrs)
 
     incident
   end

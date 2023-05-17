@@ -8,4 +8,7 @@ defmodule PulsariusWeb.IncidentsLive.Index do
     {:ok, socket}
     # {:ok, assign(socket, :monitoring, Incidents.list_monitoring())}
   end
+
+  def render(assigns) do
+  end
 end

@@ -47,6 +47,10 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :pulsarius, :frequency_check_in_seconds_allowed_values, [60, 120, 180, 240, 300]
+
+config :pulsarius, :api, url_monitor_api: Pulsarius.UrlMonitor.UrlMonitorClient
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

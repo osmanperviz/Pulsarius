@@ -24,7 +24,7 @@ defmodule Pulsarius.Monitoring.Monitor do
 
     field :status, Ecto.Enum,
       values: [:initializing, :active, :inactive, :paused],
-      default: :initializing
+      default: :active
 
     has_one :configuration, Configuration, on_replace: :delete
     has_one :active_incident, Incident, where: [status: :active]

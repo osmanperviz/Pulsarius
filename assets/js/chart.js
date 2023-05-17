@@ -76,8 +76,12 @@ export const ChartHook = {
 
     let chart = new ApexCharts(this.el, spark4)
     chart.render()
+
+    const event = `response_time:${this.el.id}`
     
-    this.handleEvent("response_time", ({ response_time }) => {
+    this.handleEvent(event, ({ response_time }) => {
+      console.log(response_time)
+      console.log(`${event} => ${response_time.length}`)
       chart.updateSeries([{
         data: response_time
       }])

@@ -20,6 +20,10 @@ config :pulsarius, PulsariusWeb.Endpoint,
   secret_key_base: "2JSQqlXriGhwCmYXEiw3Hoqy6y1hi8XjLgC18k7TYqPvnvcMsEYdzX+MdJlNXxdr",
   server: false
 
+config :ueberauth, Ueberauth.Strategy.Passwordless,
+  token_secret: "MK5izBztrRZoUmfc8P/XwoBXmOKzEE8o",
+  mailer: MyApp.MyMailer
+
 # In test we don't send emails.
 config :pulsarius, Pulsarius.Mailer, adapter: Swoosh.Adapters.Test
 
@@ -28,3 +32,5 @@ config :logger, level: :warn
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :pulsarius, :frequency_check_in_seconds_allowed_values, [1]

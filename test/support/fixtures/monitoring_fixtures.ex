@@ -4,14 +4,20 @@ defmodule Pulsarius.MonitoringFixtures do
   entities via the `Pulsarius.Monitoring` context.
   """
 
+  import Pulsarius.AccountsFixtures
+
   @doc """
   Generate a monitor.
   """
-  def monitor_fixture(attrs \\ %{}) do
-    {:ok, monitor} =
+  def monitor_fixture(account, attrs \\ %{}) do
+    params =
       attrs
-      |> Enum.into(%{})
-      |> Pulsarius.Monitoring.create_monitor()
+      |> Enum.into(%{
+        name: "some monitor",
+        status: :active
+      })
+
+    {:ok, monitor} = Pulsarius.Monitoring.create_monitor(account, params)
 
     monitor
   end

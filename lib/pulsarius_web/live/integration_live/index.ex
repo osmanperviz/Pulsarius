@@ -85,19 +85,19 @@ defmodule PulsariusWeb.IntegrationsLive.Index do
           <div class="card-header pb-0 d-flex">
             <h4 class="">MsTeams</h4>
             <div style="margin-left: auto;" class="pb-2">
-                <%= if @has_ms_teams_integrated? do %>
+              <%= if @has_ms_teams_integrated? do %>
                 <%= link("Channel list",
                   to: Routes.integrations_teams_index_path(PulsariusWeb.Endpoint, :index),
                   class: "integration-button btn btn-light btn-sm"
                 ) %>
               <% else %>
-                 <a
-                href={Routes.integrations_teams_new_path(PulsariusWeb.Endpoint, :new)}
-                class="btn btn-light btn-sm integration-button"
-              >
-                Add MsTeams
-              </a>
-                <% end %>
+                <a
+                  href={Routes.integrations_teams_new_path(PulsariusWeb.Endpoint, :new)}
+                  class="btn btn-light btn-sm integration-button"
+                >
+                  Add MsTeams
+                </a>
+              <% end %>
             </div>
           </div>
           <div class="card-body pt-4 pb-4 d-flex">

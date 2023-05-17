@@ -32,7 +32,7 @@ defmodule PulsariusWeb.MonitorLive.CheckedAtWidget do
   end
 
   defp time(%{last_status_response: last_status_response, monitor: monitor} = _assigns)
-       when monitor.status == :active do
+       when monitor.status == :active and last_status_response != nil do
     last_status_response.occured_at
     |> humanized_duration_in_seconds
   end

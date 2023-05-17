@@ -36,7 +36,7 @@ defmodule Pulsarius.EndpointDynamicSupervisor do
     {:ok, pid} =
       DynamicSupervisor.start_child(
         __MODULE__,
-        {Pulsarius.EndpointChecker, monitor}
+        {Pulsarius.UrlMonitor, monitor}
       )
 
     Logger.info("Start monitoring endpoint on URL: #{monitor.configuration.url_to_monitor}")

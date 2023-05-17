@@ -2,12 +2,14 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
   use PulsariusWeb, :live_component
   use Timex
 
+  alias Pulsarius.Monitoring.StatusResponse
+
   @impl true
   def update(assigns, socket) do
     {:ok,
      socket
      |> assign(assigns)
-     |> push_event("response_time", %{
+     |> push_event("response_time:#{assigns.monitor.id}", %{
        response_time: build_response_time(assigns.monitor.status_response)
      })}
   end
@@ -230,7 +232,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
 
   def build_response_time(response_time) do
     Enum.filter(response_time, fn rt ->
-      rt.occured_at in todays_range
+      rt.occured_at in todays_range()
     end)
     |> Enum.sort_by(&Map.fetch!(&1, :inserted_at), :desc)
     |> Enum.take(80)

@@ -181,7 +181,9 @@ defmodule Pulsarius.Configurations.Configuration do
 
   defp validate_frequency_check_in_seconds_value(changeset) do
     value = get_field(changeset, :frequency_check_in_seconds)
-    allowed_values = Keyword.values(frequency_check_in_seconds_values())
+
+    # allowed_values = Keyword.values(frequency_check_in_seconds_values())
+    allowed_values = Application.get_env(:pulsarius, :frequency_check_in_seconds_allowed_values)
 
     if value && !Enum.member?(allowed_values, String.to_integer(value)) do
       add_error(changeset, :frequency_check_in_seconds, "invalid value")

@@ -18,12 +18,8 @@
         <span class="bi-chevron-left"></span> Monitors
       </.link>
     </div>
-    <div class="col-lg-12 mb-5">
-      <h3>Team Members</h3>
-    </div>
   </div>
-
-  <div class="col-lg-10">
+  <div>
     <div class="col-lg-12 pb-3">
       <a
         href={Routes.user_index_path(PulsariusWeb.Endpoint, :new)}
@@ -43,85 +39,62 @@
         <span class="bi bi-share-fill"></span>&nbsp;Copy invitation link
       </button>
     </div>
-    <div class="card box pb-3">
-      <div class="card-body">
-        <table id="user-table" class="table table-borderless table-responsive table-hover">
-          <thead>
-            <tr>
-              <th class="gray-color">Team member</th>
-              <th class="gray-color">Status</th>
-              <th class="gray-color"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <%= for user <- @users do %>
-              <tr style="height: 70px;" id={"user-#{user.id}"}>
-                <td class="table-text">
-                  <%= if user.first_name do %>
-                    <span><%= Pulsarius.Accounts.User.full_name(user) %></span>
-                    <%= if user.admin do %>
-                      &nbsp;<span class="badge bg-secondary ml-3">Admin</span>
-                    <% end %>
-                  <% end %>
-                  <br /> <span class="gray-color"><%= user.email %></span>
-                </td>
-                <td class="table-text"><%= Pulsarius.Accounts.User.status(user) %></td>
-                <td class="text-end">
-                  <div class="dropdown">
-                    <a
-                      class="abc"
-                      data-bs-toggle="dropdown"
-                      type="button"
-                      aria-expanded="false"
-                      id={user.id}
-                    >
-                      <i class="bi bi-three-dots icon-dots"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby={user.id}>
-                      <li>
-                        <button
-                          phx-value-id={user.id}
-                          phx-click="delete-user"
-                          class="dropdown-item pb-1"
-                        >
-                          <i class="bi bi-x-circle"></i>&nbsp; Delete
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          class="dropdown-item"
-                          phx-value-id={user.id}
-                          phx-click="promote-to-admin"
-                        >
-                          <i class="bi bi-journal-text"></i>&nbsp; Make an Admin
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
-              </tr>
-            <% end %>
-            <%= for invitation <- @pending_invitations do %>
-              <tr style="height: 70px;" id={"invitation-#{invitation.id}"}>
-                <td class="table-text">
-                  <span><%= invitation.email %></span>
-                </td>
-                <td class="table-text">Pending</td>
-                <td class="text-end">
-                  <a
-                    class="abc"
-                    href="#"
-                    phx-value-invitation_token={invitation.token}
-                    phx-click="resend-invite"
-                  >
-                    Resend Invite
-                  </a>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
+    <div class="list-group users-list">
+      <h5 class="list-group-item pt-4 pb-4 active" aria-current="true">
+        Team Members
+      </h5>
+      <%= for user <- @users do %>
+        <li class="d-flex justify-content-between align-items-start pb-3 pt-3 user-list-group-item ">
+          <div class="ms-3 me-auto">
+            <div class="fs-6">
+              <%= Pulsarius.Accounts.User.full_name(user) %>
+              <%= if user.admin do %>
+                &nbsp;<span class="badge user-badge ml-3">Admin</span>
+              <% end %>
+            </div>
+            <span class="gray-color"><%= user.email %></span>
+          </div>
+          <div class="dropdown me-3">
+            <a
+              class="abc"
+              data-bs-toggle="dropdown"
+              type="button"
+              aria-expanded="false"
+              id={user.id}
+            >
+              <i class="bi bi-three-dots icon-dots"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby={user.id}>
+              <li>
+                <button phx-value-id={user.id} phx-click="delete-user" class="dropdown-item pb-1">
+                  <i class="bi bi-x-circle"></i>&nbsp; Delete
+                </button>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <button class="dropdown-item" phx-value-id={user.id} phx-click="promote-to-admin">
+                  <i class="bi bi-journal-text"></i>&nbsp; Make an Admin
+                </button>
+              </li>
+            </ul>
+          </div>
+        </li>
+      <% end %>
+      <%= for invitation <- @pending_invitations do %>
+        <li class="d-flex justify-content-between align-items-start user-list-group-item pb-4 pt-4">
+          <div class="ms-3 me-auto">
+            <div class="fs-6"><%= invitation.email %></div>
+          </div>
+          <a
+            class="abc me-3"
+            href="#"
+            phx-value-invitation_token={invitation.token}
+            phx-click="resend-invite"
+          >
+            Resend Invite
+          </a>
+        </li>
+      <% end %>
     </div>
   </div>
 <% end %>
