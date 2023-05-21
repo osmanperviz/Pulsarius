@@ -8,6 +8,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
   import PulsariusWeb.MonitorLive.AddSlackIntegrationComponent
   import PulsariusWeb.MonitorLive.MonitoringComponents
+  import PulsariusWeb.CoreComponents
 
   @topic "monitor"
 

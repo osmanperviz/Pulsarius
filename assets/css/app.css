@@ -23,6 +23,10 @@ body {
   font-weight: 100;
 }
 
+.body-background-color {
+  background-color: #222838;
+}
+
 abc2 {
   font-size: 10px;
 }
@@ -505,4 +509,9 @@ ul.list-group {
 
 .user-badge {
   background-color: #545b6b;
+}
+
+
+.font-size-3-rem {
+  font-size: 3rem;
 }

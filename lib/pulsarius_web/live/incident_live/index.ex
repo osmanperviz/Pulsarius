@@ -2,13 +2,18 @@ defmodule PulsariusWeb.IncidentsLive.Index do
   use PulsariusWeb, :live_view
 
   alias Pulsarius.Incidents
+  alias Pulsarius.Monitoring
+
+  import PulsariusWeb.MonitorLive.IncidentsComponents
+  import PulsariusWeb.CoreComponents
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, socket}
-    # {:ok, assign(socket, :monitoring, Incidents.list_monitoring())}
-  end
+  def mount(%{"id" => monitor_id}, _session, socket) do
+    monitor = Monitoring.get_monitor!(monitor_id)
 
-  def render(assigns) do
+    {:ok,
+     socket
+     |> assign(:incidents, Incidents.list_incidents(monitor_id))
+     |> assign(:monitor, monitor)}
   end
 end

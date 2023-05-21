@@ -42,6 +42,26 @@ defmodule PulsariusWeb.LiveHelpers do
     end
   end
 
+  def humanized_duration(from, until \\ Timex.now()) do
+    interval = Interval.new(from: from, until: until)
+
+    cond do
+      Interval.duration(interval, :days) > 0 ->
+        Interval.duration(interval, :days)
+        |> Duration.from_days(interval)
+        |> Formatter.format(:humanized)
+
+      Interval.duration(interval, :hours) > 0 ->
+        humanized_duration_in_hours(from, until)
+
+      Interval.duration(interval, :minutes) > 0 ->
+        humanized_duration_in_minutes(from, until)
+
+      Interval.duration(interval, :seconds) > 0 ->
+        humanized_duration_in_seconds(from, until)
+    end
+  end
+
   def modal(assigns) do
     assigns = assign_new(assigns, :return_to, fn -> nil end)
 

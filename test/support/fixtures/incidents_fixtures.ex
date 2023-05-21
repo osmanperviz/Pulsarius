@@ -12,7 +12,8 @@ defmodule Pulsarius.IncidentsFixtures do
       Enum.into(attrs, %{
         occured_at: DateTime.utc_now(),
         page_response: "some page_response",
-        resolved_at: DateTime.utc_now()
+        resolved_at: DateTime.utc_now(),
+        status_code: "500"
       })
 
     {:ok, incident} = Pulsarius.Incidents.create_incident(monitor, attrs)

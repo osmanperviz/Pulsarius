@@ -6,9 +6,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
   alias PulsariusWeb.MonitorLive.ConfigurationProgressComponent
   alias Pulsarius.Monitoring.{AvalabilityStatistics, StatusResponse}
   alias Pulsarius.Accounts
-
   alias Pulsarius.Monitoring.Monitor
-
   alias Pulsarius.Repo
 
   import PulsariusWeb.MonitorLive.MonitoringComponents

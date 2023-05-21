@@ -1,0 +1,15 @@
+<div class="container">
+  <.header monitor={@monitor} incident={@incident} />
+  <div class="d-flex main-wrapper">
+    <div class="box-wrapper">
+      <.box_item title="Cause" value={"Status #{@incident.status_code}"} />
+      <.box_item
+        title="Started at"
+        value={Timex.format!(@incident.occured_at, "{WDshort}, {D} {Mshort} at {h24}:{0m}:{0s}")}
+      />
+      <.box_item title="Length" value={@duration} />
+    </div>
+
+    <.incident_detail incident={@incident} monitor={@monitor} />
+  </div>
+</div>

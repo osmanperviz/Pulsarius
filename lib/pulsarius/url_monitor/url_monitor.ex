@@ -75,7 +75,7 @@ defmodule Pulsarius.UrlMonitor do
             {:noreply, handle_available(state)}
 
           :unavailable ->
-            {:noreply, handle_unavailable(state)}
+            {:noreply, handle_unavailable(state, response)}
         end
 
       {:error, reason} ->
@@ -172,9 +172,9 @@ defmodule Pulsarius.UrlMonitor do
         monitor: %{id: 1, status: :inactive},
         start_measuring_response_time: nil}
   """
-  def handle_unavailable(%{in_incident_mode: false, monitor: monitor} = state) do
+  def handle_unavailable(%{in_incident_mode: false, monitor: monitor} = state, response) do
     state
-    |> retry_or_notify_unavailable()
+    |> retry_or_notify_unavailable(response)
   end
 
   @doc """
@@ -266,10 +266,15 @@ defmodule Pulsarius.UrlMonitor do
       iex> retry_or_notify_unavailable(%{retries: 2, retry_limit: 3})
       %{in_incident_mode: true, retries: 3, ...}
   """
-  defp retry_or_notify_unavailable(state) do
+  defp retry_or_notify_unavailable(state, response) do
     if state.retries >= state.retry_limit do
       {:ok, monitor} = Monitoring.update_monitor(state.monitor, %{status: :inactive})
-      {:ok, incident} = Incidents.create_incident(monitor)
+
+      {:ok, incident} =
+        Incidents.create_incident(monitor, %{
+          status_code: response.status_code,
+          page_response: response.body
+        })
 
       Pulsarius.broadcast(@incidents_topic, {:incident_created, incident})
       Pulsarius.broadcast(@monitor_topic <> monitor.id, monitor)
