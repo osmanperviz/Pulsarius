@@ -16,4 +16,14 @@ defmodule PulsariusWeb.IncidentsLive.Index do
      |> assign(:incidents, Incidents.list_incidents(monitor_id))
      |> assign(:monitor, monitor)}
   end
+
+  def handle_event("delete-incident", %{"id" => incident_id, "monitor-id" => monitor_id}, socket) do
+    incident = Incidents.get_incident!(incident_id)
+    {:ok, _incident} = Incidents.delete_incident(incident)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Incident deleted!")
+     |> push_redirect(to: Routes.incidents_index_path(PulsariusWeb.Endpoint, :index, monitor_id))}
+  end
 end

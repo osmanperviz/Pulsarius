@@ -21,11 +21,13 @@ defmodule PulsariusWeb.IncidentsLive.Show do
 
   def handle_event("delete-incident", _params, socket) do
     {:ok, _monitor} = Incidents.delete_incident(socket.assigns.incident)
-    
-     {:noreply,
-         socket
-         |> put_flash(:info, "Incident deleted!")
-         |> push_redirect(to: Routes.incidents_index_path(PulsariusWeb.Endpoint, :index, socket.assigns.monitor.id))}
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Incident deleted!")
+     |> push_redirect(
+       to: Routes.incidents_index_path(PulsariusWeb.Endpoint, :index, socket.assigns.monitor.id)
+     )}
   end
 
   defp calculate_duration(%Incident{status: :active} = _incident) do

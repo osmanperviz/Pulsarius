@@ -1,1 +1,111 @@
-<h1>Incidents</h1>
+<div class="col-lg-12 d-flex justify-content-between mt-3">
+  <h5>Incidents</h5>
+  <%= link("Report Incident",
+    to: Routes.monitor_new_path(@socket, :new),
+    class: "btn btn-primary n"
+  ) %>
+</div>
+<div class="col-lg-12 mt-4">
+  <table id="incident-table" class="table table-hover">
+    <thead class=" t-head p-3">
+      <tr>
+        <th scope="col">Monitor</th>
+        <th scope="col">Started at</th>
+        <th scope="col">Length</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for incident <- @incidents do %>
+        <tr>
+          <td>
+            <a href={
+              Routes.incidents_show_path(
+                PulsariusWeb.Endpoint,
+                :show,
+                incident.monitor.id,
+                incident.id
+              )
+            }>
+              <.incident_icon incident={incident} />
+              <%= incident.monitor.name %>
+            </a>
+          </td>
+          <td>
+            <a href={
+              Routes.incidents_show_path(
+                PulsariusWeb.Endpoint,
+                :show,
+                incident.monitor.id,
+                incident.id
+              )
+            }>
+              <%= Timex.format!(
+                incident.occured_at,
+                "{WDshort}, {D} {Mshort} at {h24}:{0m}:{0s}"
+              ) %>
+            </a>
+          </td>
+          <td>
+            <%= if incident.resolved_at == nil do %>
+              <span class="red-dot"></span> Ongoing
+            <% else %>
+              <%= humanized_duration(incident.occured_at, incident.resolved_at) %>
+            <% end %>
+          </td>
+          <td>
+            <div class="dropdown">
+              <a
+                class="abc"
+                data-bs-toggle="dropdown"
+                type="button"
+                aria-expanded="false"
+                id={incident.id}
+              >
+                <i class="bi bi-three-dots icon-dots"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby={incident.id}>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    phx-value-id={incident.id}
+                    phx-click="promote-to-admin"
+                  >
+                    <i class="bi bi-eye-fill"></i>&nbsp; Acknowledge
+                  </button>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a
+                    href={
+                      Routes.incidents_show_path(
+                        PulsariusWeb.Endpoint,
+                        :show,
+                        incident.monitor.id,
+                        incident.id
+                      )
+                    }
+                    class="dropdown-item pb-1"
+                  >
+                    <i class="bi bi-display"></i>&nbsp; View
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <button
+                    phx-value-id={incident.id}
+                    phx-value-monitor-id={incident.monitor.id}
+                    phx-click="delete-incident"
+                    class="dropdown-item pb-1"
+                  >
+                    <i class="bi bi-x-circle"></i>&nbsp; Delete
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

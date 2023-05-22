@@ -515,3 +515,49 @@ ul.list-group {
 .font-size-3-rem {
   font-size: 3rem;
 }
+
+.t-head {
+  background-color: #2f3648;
+  color: #939db8;
+}
+
+#incident-table {
+  background: #293040;
+    color: #939db8;
+    /* overflow: hidden; */
+    border-radius: 6px;
+    border-color: #3c4254
+}
+#incident-table tbody > tr > td {
+  padding-top: 1rem;
+  padding-bottom: 0.rem;
+}
+
+#incident-table tbody > tr:last-child > td  {
+  border-bottom: 0;
+}
+
+#incident-table tbody > tr:last-child > th  {
+  border-bottom: 0;
+}
+
+.red-dot {
+  height: 8px;
+  width: 8px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 2px;
+  margin-right: 2px;
+}
+
+.table>:not(caption)>*>* {
+  padding: 1rem;
+}
+.table a {
+  color: #939db8;
+  text-decoration: none;
+}
+.table a:hover {
+  color: white;
+}

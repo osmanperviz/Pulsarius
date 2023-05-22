@@ -11,7 +11,7 @@ defmodule PulsariusWeb.MonitorLive.IncidentsComponents do
         <span class="bi-chevron-left"></span> Incidents
       </.link>
       <div class="col-lg-12 d-flex m-0 p-0">
-        <span class={incident_icon_class(@incident)}></span>
+        <.incident_icon incident={@incident} fs="font-size-3-rem" />
         <div class="m-2">
           <h5 class="mt-2"><%= @monitor.name %></h5>
           <%= if @incident.status == :active do %>
@@ -55,12 +55,7 @@ defmodule PulsariusWeb.MonitorLive.IncidentsComponents do
         <span class="bi bi-terminal"></span> Monitor
       </a>
 
-      <button
-      
-        role="button"
-        class="btn bg-transparent abc mr-4"
-        phx-click={"delete-incident"}
-      >
+      <button role="button" class="btn bg-transparent abc mr-4" phx-click="delete-incident">
         <span class="bi bi-trash"></span> Delete
       </button>
     </div>
@@ -81,6 +76,14 @@ defmodule PulsariusWeb.MonitorLive.IncidentsComponents do
     """
   end
 
+  def incident_icon(assigns) do
+    fs = Map.get(assigns, :fs, "fs-6")
+
+    ~H"""
+    <span class={incident_icon_class(@incident, fs)}></span>
+    """
+  end
+
   defp detail(assigns) do
     ~H"""
     <p class="abc"><%= @title %></p>
@@ -90,9 +93,9 @@ defmodule PulsariusWeb.MonitorLive.IncidentsComponents do
     """
   end
 
-  defp incident_icon_class(incident) do
+  defp incident_icon_class(incident, fs) do
     if incident.status == :active,
-      do: "bi bi-shield-fill-exclamation font-size-3-rem text-danger mt-1",
-      else: "bi bi-shield-fill-check font-size-3-rem text-success mt-1"
+      do: "bi bi-shield-fill-exclamation #{fs}  text-danger mt-1",
+      else: "bi bi-shield-fill-check #{fs} text-success mt-1"
   end
 end
