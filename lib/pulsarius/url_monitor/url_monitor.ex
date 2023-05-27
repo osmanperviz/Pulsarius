@@ -7,6 +7,7 @@ defmodule Pulsarius.UrlMonitor do
   alias Pulsarius.Monitoring
   alias Pulsarius.Monitoring.Monitor
   alias Pulsarius.Incidents
+  alias Pulsarius.Incidents.Screenshot
   alias Pulsarius.UrlMonitor.{HttpResponseHandler, UrlMonitorApi}
 
   require Logger
@@ -160,13 +161,14 @@ defmodule Pulsarius.UrlMonitor do
 
   ## Parameters
   - `state`: A map representing the state of the bot.
+  - `response`: A HTTPoison.Response struct, representing response returned from monitored URL
 
   ## Returns
   - The updated state.
 
   ## Examples
 
-      iex> handle_unavailable(%{in_incident_mode: false, monitor: %{id: 1, status: :active}})
+      iex> handle_unavailable(%{in_incident_mode: false, monitor: %{id: 1, status: :active}}, response)
       %{in_incident_mode: true,
         incident: %{id: 2, monitor_id: 1, status: :created},
         monitor: %{id: 1, status: :inactive},
@@ -183,6 +185,7 @@ defmodule Pulsarius.UrlMonitor do
 
   ## Parameters
   - `state`: A map representing the state of the bot.
+  - `response`: A HTTPoison.Response struct, representing response returned from monitored URL
 
   ## Returns
   - The current state.
@@ -192,7 +195,7 @@ defmodule Pulsarius.UrlMonitor do
       iex> handle_unavailable(%{in_incident_mode: true})
       %{in_incident_mode: true, ...}
   """
-  def handle_unavailable(%{in_incident_mode: true, monitor: monitor} = state) do
+  def handle_unavailable(%{in_incident_mode: true, monitor: monitor} = state, _response) do
     state = %{state | start_measuring_response_time: nil}
 
     Pulsarius.broadcast(@monitor_topic <> monitor.id, monitor)
@@ -278,6 +281,10 @@ defmodule Pulsarius.UrlMonitor do
 
       Pulsarius.broadcast(@incidents_topic, {:incident_created, incident})
       Pulsarius.broadcast(@monitor_topic <> monitor.id, monitor)
+
+      Task.start(fn ->
+        Incidents.make_and_save_screenshot(monitor.configuration.url_to_monitor, incident)
+      end)
 
       %{
         state

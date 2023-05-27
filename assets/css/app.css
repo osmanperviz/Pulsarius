@@ -551,6 +551,20 @@ ul.list-group {
   margin-right: 2px;
 }
 
+.orange-dot {
+    height: 8px;
+  width: 8px;
+  background-color: orange;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 2px;
+  margin-right: 2px;
+}
+
+.text-orange {
+  color: orange;
+}
+
 .table>:not(caption)>*>* {
   padding: 1rem;
 }

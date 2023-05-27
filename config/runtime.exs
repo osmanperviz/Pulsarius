@@ -102,4 +102,13 @@ if config_env() == :prod do
   config :stripity_stripe,
     api_key: stripe_api_key,
     signing_secret: stripe_webhook_key
+
+  config :ex_aws,
+    access_key_id: System.get_env("AWS_ACCESS_KEY_ID"),
+    secret_access_key: System.get_env("AWS_SECRET_ACCESS_KEY"),
+    s3: [
+      scheme: "https://",
+      host: "pulsarius-dev.s3.amazonaws.com",
+      region: "EU (Frankfurt) eu-central-1"
+    ]
 end

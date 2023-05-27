@@ -7,6 +7,7 @@ defmodule Pulsarius.Incidents do
   alias Pulsarius.Repo
 
   alias Pulsarius.Incidents.Incident
+  alias Pulsarius.Incidents.Screenshot
 
   @doc """
   Returns the list of incidents for given monitoring.
@@ -123,7 +124,53 @@ defmodule Pulsarius.Incidents do
     update_incident(incident, %{status: :resolved, resolved_at: NaiveDateTime.utc_now()})
   end
 
+  @doc """
+  Manually reolve incident(set status to :resolved).
+
+  ## Examples
+
+      iex> resolve_incident(incident)
+      {:ok, %Incident{}}
+
+      iex> resolve_incident(incident)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def resolve_incident(%Incident{} = incident) do
+    update_incident(incident, %{status: :resolved, resolved_at: NaiveDateTime.utc_now()})
+  end
+
+  @doc """
+  Acknowledge Incident, confirm and mark incident as valid .
+
+  ## Examples
+
+      iex> acknowledge_incident(incident, email)
+      {:ok, %Incident{}}
+
+      iex> auto_resolve(incident, email)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def acknowledge_incident(%Incident{} = incident, acknowledge_by) do
+    update_incident(incident, %{
+      acknowledge_at: NaiveDateTime.utc_now(),
+      acknowledge_by: acknowledge_by,
+      status: :acknowledged
+    })
+  end
+
   def get_most_recent_incident!(monitor_id) do
     Incident |> where(monitor_id: ^monitor_id) |> last(:inserted_at) |> Repo.one()
+  end
+
+  def make_and_save_screenshot(url, incident) do
+    case Screenshot.take_screenshot(url, incident.id) do
+      {:ok, image_url} ->
+        update_incident(incident, %{screenshot_url: image_url})
+
+      {:error, error} ->
+        Logger.error("Not able to take a screenshot, reason: #{inspect(error)}")
+    end
   end
 end

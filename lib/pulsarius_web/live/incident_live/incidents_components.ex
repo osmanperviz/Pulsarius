@@ -14,38 +14,38 @@ defmodule PulsariusWeb.MonitorLive.IncidentsComponents do
         <.incident_icon incident={@incident} fs="font-size-3-rem" />
         <div class="m-2">
           <h5 class="mt-2"><%= @monitor.name %></h5>
-          <%= if @incident.status == :active do %>
-            <p>
-              <span class="text-danger">Ongoing</span>
-              <span class="abc">
-                · <%= Timex.format!(
-                  @incident.occured_at,
-                  "{WDshort}, {D} {Mshort} at {h24}:{0m}:{0s}"
-                ) %>
-              </span>
-            </p>
-          <% else %>
-            <p>
-              <span class="text-success">Resolved</span>
-              <span class="abc">
-                · <%= Timex.format!(
-                  @incident.occured_at,
-                  "{WDshort}, {D} {Mshort} at {h24}:{0m}:{0s}"
-                ) %>
-              </span>
-            </p>
+          <%= cond do %>
+            <% @incident.status == :active -> %>
+              <p>
+                <span class="text-danger">Ongoing</span>
+                <span class="abc">
+                  · <%= format_time(@incident.occured_at) %>
+                </span>
+              </p>
+            <% @incident.status == :resolved -> %>
+              <p>
+                <span class="text-success">Resolved</span>
+                <span class="abc">
+                  · <%= format_time(@incident.resolved_at) %>
+                </span>
+              </p>
+            <% @incident.status == :acknowledged -> %>
+              <p>
+                <span class="text-orange">Acknowledged</span>
+                <span class="abc">
+                  · <%= format_time(@incident.acknowledge_at) %>
+                </span>
+              </p>
           <% end %>
         </div>
       </div>
     </div>
     <div class="col-lg-12 mt-3">
-      <a
-        href={Routes.incidents_index_path(PulsariusWeb.Endpoint, :index, @monitor.id)}
-        role="button"
-        class="btn bg-transparent abc mr-5"
-      >
-        <span class="bi bi-image"></span> Screenshot
-      </a>
+      <%= if @incident.screenshot_url != nil do %>
+        <a href={@incident.screenshot_url} role="button" class="btn bg-transparent abc mr-5">
+          <span class="bi bi-image"></span> Screenshot
+        </a>
+      <% end %>
 
       <a
         href={Routes.monitor_show_path(PulsariusWeb.Endpoint, :show, @monitor.id)}
@@ -94,8 +94,22 @@ defmodule PulsariusWeb.MonitorLive.IncidentsComponents do
   end
 
   defp incident_icon_class(incident, fs) do
-    if incident.status == :active,
-      do: "bi bi-shield-fill-exclamation #{fs}  text-danger mt-1",
-      else: "bi bi-shield-fill-check #{fs} text-success mt-1"
+    cond do
+      incident.status == :active ->
+        "bi bi-shield-fill-exclamation #{fs}  text-danger mt-1"
+
+      incident.status == :resolved ->
+        "bi bi-shield-fill-check #{fs} text-success mt-1"
+
+      incident.status == :acknowledged ->
+        "bi bi-shield-fill-exclamation #{fs} text-orange mt-1"
+    end
+  end
+
+  defp format_time(date) do
+    Timex.format!(
+      date,
+      "{WDshort}, {D} {Mshort} at {h24}:{0m}:{0s}"
+    )
   end
 end

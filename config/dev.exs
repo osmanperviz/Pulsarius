@@ -88,3 +88,13 @@ config :stripity_stripe,
   api_key: "sk_test_OiDc9MlITvMIbP8owSzIFEdX",
   signing_secret: "whsec_d2a82c11224e8f58fb3df1dc685b10b360646395bdb6a9fd159346fe43f84ee3",
   public_key: "pk_test_PExnBBWOVfYS4dz43A4SuLL9"
+
+config :ex_aws,
+  access_key_id: "AKIAX2SE3I2SX4W6YLEX",
+  secret_access_key: "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",
+  bucket_name: "pulsarius-dev",
+  s3: [
+    scheme: "https://",
+    host: "pulsarius-dev.s3.amazonaws.com",
+    region: "eu-central-1"
+  ]

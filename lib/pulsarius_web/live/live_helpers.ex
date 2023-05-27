@@ -48,7 +48,7 @@ defmodule PulsariusWeb.LiveHelpers do
     cond do
       Interval.duration(interval, :days) > 0 ->
         Interval.duration(interval, :days)
-        |> Duration.from_days(interval)
+        |> Duration.from_days()
         |> Formatter.format(:humanized)
 
       Interval.duration(interval, :hours) > 0 ->

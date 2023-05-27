@@ -34,6 +34,10 @@ defmodule PulsariusWeb.IncidentsLive.Show do
     "Ongoing"
   end
 
+  defp calculate_duration(%Incident{status: :acknowledged} = _incident) do
+    "Acknowledged"
+  end
+
   defp calculate_duration(%Incident{} = incident) do
     humanized_duration(incident.occured_at, incident.resolved_at)
   end

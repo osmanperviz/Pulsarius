@@ -56,7 +56,11 @@ defmodule Pulsarius.MixProject do
       {:x509, "~> 0.8.5"},
       {:timex, "~> 3.5"},
       {:whois, "~> 0.1.0"},
-      {:mox, "~> 1.0", only: :test}
+      {:mox, "~> 1.0", only: :test},
+      {:puppeteer_img, "~> 0.1.3"},
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:sweet_xml, "~> 0.7"}
     ]
   end
 

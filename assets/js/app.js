@@ -38,7 +38,6 @@ let Hooks = {
     DatailsChart: DatailsChartHook,
     TooltipInit: TooltipInit,
     UserInvitationLinkClipboard: UserInvitationLinkClipboardHook
-    
 };
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")

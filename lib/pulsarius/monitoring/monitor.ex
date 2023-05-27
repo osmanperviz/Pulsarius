@@ -27,7 +27,7 @@ defmodule Pulsarius.Monitoring.Monitor do
       default: :active
 
     has_one :configuration, Configuration, on_replace: :delete
-    has_one :active_incident, Incident, where: [status: :active]
+    has_one :active_incident, Incident, where: [status: {:in, [:active, :acknowledged]}]
 
     belongs_to :account, Account,
       foreign_key: :account_id,

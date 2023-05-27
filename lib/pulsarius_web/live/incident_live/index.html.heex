@@ -47,10 +47,13 @@
             </a>
           </td>
           <td>
-            <%= if incident.resolved_at == nil do %>
-              <span class="red-dot"></span> Ongoing
-            <% else %>
-              <%= humanized_duration(incident.occured_at, incident.resolved_at) %>
+            <%= cond do %>
+              <% incident.status == :acknowledged -> %>
+                <span class="orange-dot"></span> Acknowledged
+              <% incident.status == :active  -> %>
+                <span class="red-dot"></span> Ongoing
+              <% true -> %>
+                <%= humanized_duration(incident.occured_at, incident.resolved_at) %>
             <% end %>
           </td>
           <td>
@@ -66,15 +69,28 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby={incident.id}>
                 <li>
-                  <button
-                    class="dropdown-item"
-                    phx-value-id={incident.id}
-                    phx-click="promote-to-admin"
-                  >
-                    <i class="bi bi-eye-fill"></i>&nbsp; Acknowledge
-                  </button>
+                  <%= cond do %>
+                    <% incident.status == :active -> %>
+                      <button
+                        class="dropdown-item"
+                        phx-value-id={incident.id}
+                        phx-click="acknowledge-incident"
+                      >
+                        <i class="bi bi-eye-fill"></i>&nbsp; Acknowledge
+                      </button>
+                      <li><hr class="dropdown-divider" /></li>
+                    <% incident.status == :acknowledged -> %>
+                      <button
+                        class="dropdown-item"
+                        phx-value-id={incident.id}
+                        phx-click="resolve-incident"
+                      >
+                        <i class="bi bi-check-square-fill"></i>&nbsp; Resolve
+                      </button>
+                      <li><hr class="dropdown-divider" /></li>
+                    <% incident.status == :resolved -> %>
+                  <% end %>
                 </li>
-                <li><hr class="dropdown-divider" /></li>
                 <li>
                   <a
                     href={

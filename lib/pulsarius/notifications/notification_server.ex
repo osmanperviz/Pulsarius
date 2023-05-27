@@ -22,7 +22,19 @@ defmodule Pulsarius.Notifications.NotificationServer do
     {:noreply, socket}
   end
 
+  # TODO: write implementation
+  def handle_info({:incident_acknowledged, incident}, socket) do
+    {:noreply, socket}
+  end
+
   def handle_info({:incident_auto_resolved, incident}, socket) do
+    Task.start(fn -> Notifications.incident_auto_resolved(incident) end)
+
+    {:noreply, socket}
+  end
+
+  # TODO: MAnualy resolved incident, write implementation
+  def handle_info({:incident_resolved, incident}, socket) do
     Task.start(fn -> Notifications.incident_auto_resolved(incident) end)
 
     {:noreply, socket}
