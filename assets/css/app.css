@@ -575,3 +575,7 @@ ul.list-group {
 .table a:hover {
   color: white;
 }
+
+.line-height-5-rem {
+  line-height: 5rem
+}

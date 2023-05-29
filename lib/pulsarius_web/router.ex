@@ -54,13 +54,14 @@ defmodule PulsariusWeb.Router do
         live "/invitation/join/:account_id", PulsariusWeb.InvitationLive.Join, :join
       end
 
-      live_session :users, on_mount: [PulsariusWeb.RouteAssigns, PulsariusWeb.AuthAssigns] do
+      live_session :users, on_mount: [PulsariusWeb.AuthAssigns, PulsariusWeb.RouteAssigns] do
         live "/monitors", PulsariusWeb.MonitorLive.Index, :index
         live "/monitors/new", PulsariusWeb.MonitorLive.New, :new
         live "/monitors/:id/edit", PulsariusWeb.MonitorLive.Edit, :edit
         live "/monitors/:id", PulsariusWeb.MonitorLive.Show, :show
 
         live "/monitors/:id/incidents", PulsariusWeb.IncidentsLive.Index, :index
+        live "/account/:id/incidents", PulsariusWeb.IncidentsLive.Account, :index
 
         live "/monitors/:monitor_id/incidents/:incident_id",
              PulsariusWeb.IncidentsLive.Show,

@@ -1,31 +1,27 @@
-defmodule PulsariusWeb.IncidentsLive.Index do
+defmodule PulsariusWeb.IncidentsLive.Account do
   use PulsariusWeb, :live_view
 
   alias Pulsarius.Incidents
-  alias Pulsarius.Monitoring
 
   import PulsariusWeb.MonitorLive.IncidentsComponents
   import PulsariusWeb.CoreComponents
 
-  @impl true
-  def mount(%{"id" => monitor_id}, _session, socket) do
-    monitor = Monitoring.get_monitor!(monitor_id)
-
+  def mount(%{"id" => account_id}, _session, socket) do
     {:ok,
      socket
-     |> assign(:page_title, "#{monitor.name} Incidents")
-     |> assign(:incidents, Incidents.list_incidents(monitor_id))
-     |> assign(:monitor, monitor)}
+     |> assign(:incidents, Incidents.get_incidents_for_account(account_id))}
   end
 
-  def handle_event("delete-incident", %{"id" => incident_id, "monitor-id" => monitor_id}, socket) do
+  def handle_event("delete-incident", %{"id" => incident_id}, socket) do
     incident = Incidents.get_incident!(incident_id)
     {:ok, _incident} = Incidents.delete_incident(incident)
 
     {:noreply,
      socket
      |> put_flash(:info, "Incident deleted!")
-     |> push_redirect(to: Routes.incidents_index_path(PulsariusWeb.Endpoint, :index, monitor_id))}
+     |> push_redirect(
+       to: Routes.incidents_account_path(PulsariusWeb.Endpoint, :index, socket.assigns.account.id)
+     )}
   end
 
   def handle_event("acknowledge-incident", %{"id" => incident_id}, socket) do

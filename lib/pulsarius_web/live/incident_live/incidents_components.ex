@@ -8,7 +8,7 @@ defmodule PulsariusWeb.MonitorLive.IncidentsComponents do
         href={Routes.incidents_index_path(PulsariusWeb.Endpoint, :index, @monitor.id)}
         class="btn bg-transparent abc p-0"
       >
-        <span class="bi-chevron-left"></span> Incidents
+        <span class="bi-chevron-left"></span>Incidents
       </.link>
       <div class="col-lg-12 d-flex m-0 p-0">
         <.incident_icon incident={@incident} fs="font-size-3-rem" />

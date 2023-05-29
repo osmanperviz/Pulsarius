@@ -164,6 +164,19 @@ defmodule Pulsarius.Incidents do
     Incident |> where(monitor_id: ^monitor_id) |> last(:inserted_at) |> Repo.one()
   end
 
+  @doc """
+  Taking a screenshot for given URL, uploading to S3 and saving imagage_url to screenshot_url column.
+
+  ## Examples
+
+      iex> make_and_save_screenshot(url, incident)
+      {:ok, "some-img-url"}
+
+      iex> make_and_save_screenshot(url, incident)
+      {:error, error}
+
+  """
+
   def make_and_save_screenshot(url, incident) do
     case Screenshot.take_screenshot(url, incident.id) do
       {:ok, image_url} ->
@@ -172,5 +185,26 @@ defmodule Pulsarius.Incidents do
       {:error, error} ->
         Logger.error("Not able to take a screenshot, reason: #{inspect(error)}")
     end
+  end
+
+  @doc """
+  Retrieves all incidents associated with a specified account.
+
+  ## Examples
+
+      iex> get_incidents_for_account(account_id)
+      [%Incident{...}, %Incident{...}, ...]
+
+  """
+
+  def get_incidents_for_account(account_id) do
+    from(incident in Incident,
+      join: monitor in assoc(incident, :monitor),
+      join: account in assoc(monitor, :account),
+      where: account.id == ^account_id,
+      select: incident,
+      preload: [:monitor]
+    )
+    |> Repo.all()
   end
 end
