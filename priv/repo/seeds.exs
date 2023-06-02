@@ -30,7 +30,8 @@ if Mix.env() == :dev do
 
   free_plan = %{
     charging_interval: 1000,
-    description: "Free Plan",
+    benefits: ["5 min. monitoring interval", "Keyword monitor", "SSL monitor", "Single-user account"],
+    description: "Perfect for personal projects. No need for a credit card!",
     name: "Freelancer",
     price_in_cents: 10,
     stripe_price_id: "some stripe_price_id",
@@ -39,7 +40,8 @@ if Mix.env() == :dev do
 
   small_team_plan = %{
     charging_interval: 12,
-    description: "Small Team",
+    description: "Ideal for individuals running their own businesses and passionate hobbyists.",
+    benefits: ["5 min. monitoring interval", "Keyword monitor", "SSL monitor", "Single-user account"],
     name: "Small Team",
     price_in_cents: 1000,
     stripe_price_id: "price_1MW0ZxGzlqiGxcQvOecmXEDM",
@@ -48,7 +50,8 @@ if Mix.env() == :dev do
 
   bussiness_plan = %{
     charging_interval: 12,
-    description: "Bussiness Plan",
+    description: "Designed for compact teams seeking seamless collaboration.",
+    benefits: ["5 min. monitoring interval", "Keyword monitor", "SSL monitor", "Single-user account"],
     name: "Bussiness",
     price_in_cents: 10000,
     stripe_price_id: "price_1MVJnGGzlqiGxcQvvte35iVf",

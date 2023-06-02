@@ -13,15 +13,16 @@ defmodule PulsariusWeb.SubscriptionLive.Pricing do
      socket
      |> assign(:page_title, "Pricing Page")
      |> assign(:plans, plans)
-     |> assign(:current_plan, current_plan)}
-  end
-
-  defp apply_action(socket, :pricing, params) do
-    {:ok}
+     |> assign(:current_plan, current_plan)
+     |> assign(:montly_subscription, true)}
   end
 
   def button_title(current_plan_id, plan_id) do
     if current_plan_id == plan_id, do: "Your Plan", else: "Select Plan"
+  end
+
+  def handle_event("toggle-subscription", _params, socket) do
+    {:noreply, assign(socket, :montly_subscription, !socket.assigns.montly_subscription)}
   end
 
   defp get_plan_from_account(account, plans) do

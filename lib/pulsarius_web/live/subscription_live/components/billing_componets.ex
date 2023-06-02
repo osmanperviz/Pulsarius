@@ -3,25 +3,26 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
 
   def price_box(assigns) do
     ~H"""
-    <div class="card mb-4 rounded-3 shadow-sm text-bg-light">
-      <div class="card-header py-3">
+    <div class="card mb-4 box rounded-3 p-5">
+      <div class="py-3 h-2">
         <h4 class="my-0 fw-normal"><%= @plan.name %></h4>
+        <p class="count-down mt-2"><%= @plan.description %></p>
+        <div class="border-bottom price-border"></div>
       </div>
-      <div class="card-body">
+      <div class="card-body p-0 pt-3 pb-3 ">
         <h1 class="card-title pricing-card-title">
-          $<%= @plan.price_in_cents %><small class="text-muted fw-light">/mo</small>
+          <span class="fs-1">$</span><%= format_price(price: @plan.price_in_cents, montly_subscription: @montly_subscription) %><small class="text-muted fw-light fs-6">   /month</small>
         </h1>
-        <ul class="list-unstyled mt-3 mb-4">
-          <li>10 users included</li>
-          <li>2 GB of storage</li>
-          <li>Email support</li>
-          <li>Help center access</li>
+        <ul class="list-unstyled mt-3 mb-4 pull-right">
+         <%= for benefit <- @plan.benefits do %>
+          <li class="abc text-left"><span class="bi bi-check-lg text-success"></span>&nbsp;<%= benefit %></li>
+          <% end %>
         </ul>
         <.link
           href={
             if @current_plan.name == "Freelancer",
-              do: Routes.subscription_new_path(@socket, :new, %{plan_id: @plan.id}),
-              else: Routes.subscription_edit_path(@socket, :edit, %{plan_id: @plan.id})
+              do: Routes.subscription_new_path(@socket, :new, %{plan_id: @plan.id, discount: !@montly_subscription}),
+              else: Routes.subscription_edit_path(@socket, :edit, %{plan_id: @plan.id, discount: !@montly_subscription})
           }
           class={"w-100 btn btn-lg btn-outline-primary #{if @current_plan.id == @plan.id, do: "disabled"}"}
         >
@@ -136,5 +137,20 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
       </form>
     </div>
     """
+  end
+
+  defp to_dolars(cents) do
+    cents / 100 |> Decimal.from_float |> Decimal.round()
+  end
+
+  def format_price(price: price_in_cents, montly_subscription: true) do
+    to_dolars(price_in_cents)
+  end
+
+  def format_price(price: price_in_cents, montly_subscription: false) do
+    original_price = to_dolars(price_in_cents)
+    discounted_price = Decimal.div(Decimal.mult(original_price, 20), 100)
+
+    Decimal.sub(original_price, discounted_price)
   end
 end

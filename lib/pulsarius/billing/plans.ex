@@ -13,6 +13,7 @@ defmodule Pulsarius.Billing.Plans do
     field :name, :string
     field :price_in_cents, :integer
     field :stripe_price_id, :string
+    field :benefits, {:array, :string}
     field :type, Ecto.Enum, values: [:freelancer, :small_team, :bussines]
 
     timestamps()
@@ -21,7 +22,7 @@ defmodule Pulsarius.Billing.Plans do
   @doc false
   def changeset(plans, attrs) do
     plans
-    |> cast(attrs, [:name, :description, :charging_interval, :price_in_cents, :stripe_price_id])
-    |> validate_required([:name, :price_in_cents, :stripe_price_id])
+    |> cast(attrs, [:name, :description, :charging_interval, :price_in_cents, :stripe_price_id, :benefits])
+    |> validate_required([:name, :price_in_cents, :stripe_price_id, :benefits])
   end
 end
