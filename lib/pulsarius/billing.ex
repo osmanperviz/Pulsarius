@@ -19,7 +19,7 @@ defmodule Pulsarius.Billing do
 
   """
   def list_plans do
-    Repo.all(Plans)
+    Repo.all(Plans, order_by: [{:asd, :inserted_at}])
   end
 
   @doc """

@@ -5,7 +5,7 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
     ~H"""
     <div class="card mb-4 box rounded-3 p-5">
       <div class="py-3 h-2">
-        <h4 class="my-0 fw-normal"><%= @plan.name %></h4>
+        <.display_name name={@plan.name} />
         <p class="count-down mt-2"><%= @plan.description %></p>
         <div class="border-bottom price-border"></div>
       </div>
@@ -152,5 +152,15 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
     discounted_price = Decimal.div(Decimal.mult(original_price, 20), 100)
 
     Decimal.sub(original_price, discounted_price)
+  end
+
+  def display_name(assigns) do
+    ~H"""
+      <%= if @name == "Bussiness" do %>
+          <h4 class="my-0 fw-normal"><%= @name %> &nbsp; <span class="badge bg-primary">Most Popular</span></h4>
+      <% else %>
+        <h4 class="my-0 fw-normal"><%= @name %></h4>
+      <% end %>
+    """
   end
 end
