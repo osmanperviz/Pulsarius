@@ -11,18 +11,31 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
       </div>
       <div class="card-body p-0 pt-3 pb-3 ">
         <h1 class="card-title pricing-card-title">
-          <span class="fs-1">$</span><%= format_price(price: @plan.price_in_cents, montly_subscription: @montly_subscription) %><small class="text-muted fw-light fs-6">   /month</small>
+          <span class="fs-1">$</span><%= format_price(
+            price: @plan.price_in_cents,
+            montly_subscription: @montly_subscription
+          ) %><small class="text-muted fw-light fs-6">   /month</small>
         </h1>
         <ul class="list-unstyled mt-3 mb-4 pull-right">
-         <%= for benefit <- @plan.benefits do %>
-          <li class="abc text-left"><span class="bi bi-check-lg text-success"></span>&nbsp;<%= benefit %></li>
+          <%= for benefit <- @plan.benefits do %>
+            <li class="abc text-left">
+              <span class="bi bi-check-lg text-success"></span>&nbsp;<%= benefit %>
+            </li>
           <% end %>
         </ul>
         <.link
           href={
             if @current_plan.name == "Freelancer",
-              do: Routes.subscription_new_path(@socket, :new, %{plan_id: @plan.id, discount: !@montly_subscription}),
-              else: Routes.subscription_edit_path(@socket, :edit, %{plan_id: @plan.id, discount: !@montly_subscription})
+              do:
+                Routes.subscription_new_path(@socket, :new, %{
+                  plan_id: @plan.id,
+                  discount: !@montly_subscription
+                }),
+              else:
+                Routes.subscription_edit_path(@socket, :edit, %{
+                  plan_id: @plan.id,
+                  discount: !@montly_subscription
+                })
           }
           class={"w-100 btn btn-lg btn-outline-primary #{if @current_plan.id == @plan.id, do: "disabled"}"}
         >
@@ -140,7 +153,7 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
   end
 
   defp to_dolars(cents) do
-    cents / 100 |> Decimal.from_float |> Decimal.round()
+    (cents / 100) |> Decimal.from_float() |> Decimal.round()
   end
 
   def format_price(price: price_in_cents, montly_subscription: true) do
@@ -156,11 +169,13 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
 
   def display_name(assigns) do
     ~H"""
-      <%= if @name == "Bussiness" do %>
-          <h4 class="my-0 fw-normal"><%= @name %> &nbsp; <span class="badge bg-primary">Most Popular</span></h4>
-      <% else %>
-        <h4 class="my-0 fw-normal"><%= @name %></h4>
-      <% end %>
+    <%= if @name == "Bussiness" do %>
+      <h4 class="my-0 fw-normal">
+        <%= @name %> &nbsp; <span class="badge bg-primary">Most Popular</span>
+      </h4>
+    <% else %>
+      <h4 class="my-0 fw-normal"><%= @name %></h4>
+    <% end %>
     """
   end
 end

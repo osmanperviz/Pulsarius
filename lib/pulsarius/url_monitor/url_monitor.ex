@@ -53,7 +53,7 @@ defmodule Pulsarius.UrlMonitor do
   ## Callbacks
 
   def handle_call({:update_state, updated_monitor}, _params, state) do
-    state = %{state | monitor: updated_monitor}
+    state = %{state | monitor: updated_monitor, strategy: build_strategy(updated_monitor)}
 
     schedule_check(state)
 
@@ -91,7 +91,7 @@ defmodule Pulsarius.UrlMonitor do
   defp schedule_check(state) do
     frequency_check_in_ms = convert_to_ms(state.monitor.configuration.frequency_check_in_seconds)
 
-    Process.send_after(self(), :check, frequency_check_in_ms)
+    Process.send_after(self(), :check, 30000)
 
     state
   end
@@ -319,10 +319,7 @@ defmodule Pulsarius.UrlMonitor do
       number_of_success_retry: 0,
       retries: 0,
       start_measuring_response_time: nil,
-      strategy: %{
-        alert_rule: monitor.configuration.alert_rule,
-        alert_condition: monitor.configuration.alert_condition
-      }
+      strategy: build_strategy(monitor)
     }
   end
 
@@ -335,10 +332,7 @@ defmodule Pulsarius.UrlMonitor do
       retry_limit: 3,
       retries: 0,
       start_measuring_response_time: nil,
-      strategy: %{
-        alert_rule: monitor.configuration.alert_rule,
-        alert_condition: monitor.configuration.alert_condition
-      }
+      strategy: build_strategy(monitor)
     }
   end
 
@@ -371,5 +365,12 @@ defmodule Pulsarius.UrlMonitor do
 
   defp measure_response_time(start_time) do
     System.monotonic_time(:millisecond) - start_time
+  end
+
+  defp build_strategy(monitor) do
+    %{
+      alert_rule: monitor.configuration.alert_rule,
+      alert_condition: monitor.configuration.alert_condition
+    }
   end
 end

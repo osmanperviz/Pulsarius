@@ -40,7 +40,7 @@ defmodule Pulsarius.UrlMonitor.HttpResponseHandler do
         alert_rule: :does_not_contain_keyword,
         alert_condition: keyword
       }) do
-    if body != keyword, do: :available, else: :unavailable
+    if body == keyword, do: :available, else: :unavailable
   end
 
   def handle_response(

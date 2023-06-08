@@ -149,16 +149,19 @@ defmodule PulsariusWeb.MonitorLive.Index do
   def handle_info(%StatusResponse{} = status_response, %{assigns: assigns} = socket) do
     monitor = assigns.monitoring |> Enum.find(&(&1.id == status_response.monitoring.id))
 
+    status_response =
+      Monitoring.list_status_responses(
+        monitor.id,
+        Timex.now() |> Timex.shift(hours: -1),
+        Timex.now()
+      )
+
     {:noreply,
      socket
      |> push_event("response_time:#{monitor.id}", %{
-       response_time: build_response_time(monitor.status_response ++ [status_response])
+       response_time: build_response_time(status_response)
      })}
   end
-
-  # monitor:f744567e-dfbb-487b-acb8-3fb90a401ce2
-  #  monitor = Pulsarius.Repo.get!(Pulsarius.Monitoring.Monitor, "f744567e-dfbb-487b-acb8-3fb90a401ce2")
-  #  Pulsarius.broadcast("monitor:" <> monitor.id, monitor)
 
   def replace_monitoring(list, id, to) do
     list
@@ -210,21 +213,10 @@ defmodule PulsariusWeb.MonitorLive.Index do
   end
 
   def build_response_time(response_time) do
-    Enum.filter(response_time, fn rt ->
-      rt.occured_at in todays_range()
-    end)
-    |> Enum.sort_by(&Map.fetch!(&1, :inserted_at), :desc)
-    |> Enum.take(80)
-    |> Enum.reverse()
+    response_time
     |> Enum.map(fn a ->
       %{x: NaiveDateTime.to_time(a.occured_at) |> Time.to_string(), y: a.response_time_in_ms}
     end)
   end
 
-  defp todays_range() do
-    from = Timex.now() |> Timex.beginning_of_day()
-    until = Timex.now() |> Timex.end_of_day()
-
-    Interval.new(from: from, until: until)
-  end
 end
