@@ -1,11 +1,16 @@
-defmodule PulsariusWeb.WebhookView do
+defmodule PulsariusWeb.SlackView do
   use Phoenix.View,
     root: "lib/pulsarius_web/notifications"
 
   alias PulsariusWeb.Router.Helpers, as: Routes
   import PulsariusWeb.LiveHelpers, only: [humanized_duration: 2]
 
-  def render("incident_created.json", incident) do
+  def render_body(template, args) do
+    render_json(template, args)
+    |> Jason.encode!()
+  end
+
+  defp render_json("incident_created.json", incident) do
     %{
       "text" => "New incident for *#{incident.monitor.name}*",
       "attachments" => [
@@ -55,7 +60,7 @@ defmodule PulsariusWeb.WebhookView do
     }
   end
 
-  def render("incident_auto_resolved.json", incident) do
+  defp render_json("incident_auto_resolved.json", incident) do
     %{
       "text" => "Automatically resolved *#{incident.monitor.name}* incident",
       "attachments" => [
@@ -96,7 +101,89 @@ defmodule PulsariusWeb.WebhookView do
     }
   end
 
-  def render("monitor_paused.json", %{monitor: monitor, user: user}) do
+    defp render_json("incident_resolved.json", %{incident: incident, user: user}) do
+    %{
+      "text" => "Incident manually resolved by #{Pulsarius.Accounts.User.full_name(user)}.",
+      "attachments" => [
+        %{
+          "color" => "#4BB543",
+          "blocks" => [
+            %{
+              "type" => "section",
+              "text" => %{
+                "type" => "mrkdwn",
+                "text" =>
+                  "*Monitor:* #{incident.monitor.name}\n *Cause:* Status #{incident.status_code} \n *Length:* #{humanized_duration(incident.occured_at, incident.resolved_at)}\n *Checked URL:*  `#{incident.monitor.configuration.url_to_monitor}` \n *Response:* \n ```#{incident.page_response}``` "
+              }
+            },
+            %{
+              "type" => "actions",
+              "elements" => [
+                %{
+                  "type" => "button",
+                  "text" => %{
+                    "type" => "plain_text",
+                    "emoji" => true,
+                    "text" => "View incident"
+                  },
+                  "url" =>
+                    Routes.incidents_show_url(
+                      PulsariusWeb.Endpoint,
+                      :show,
+                      incident.monitor_id,
+                      incident.id
+                    )
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  end
+
+  defp render_json("incident_acknowledged.json", %{incident: incident, user: user}) do
+    %{
+      "text" => "Incident acknowledged by #{Pulsarius.Accounts.User.full_name(user)}.",
+      "attachments" => [
+        %{
+          "color" => "#4BB543",
+          "blocks" => [
+            %{
+              "type" => "section",
+              "text" => %{
+                "type" => "mrkdwn",
+                "text" =>
+                  "*Monitor:* #{incident.monitor.name}\n *Cause:* Status #{incident.status_code} \n *Length:* #{humanized_duration(incident.occured_at, incident.resolved_at)}\n *Checked URL:*  `#{incident.monitor.configuration.url_to_monitor}` \n *Response:* \n ```#{incident.page_response}``` "
+              }
+            },
+            %{
+              "type" => "actions",
+              "elements" => [
+                %{
+                  "type" => "button",
+                  "text" => %{
+                    "type" => "plain_text",
+                    "emoji" => true,
+                    "text" => "View incident"
+                  },
+                  "url" =>
+                    Routes.incidents_show_url(
+                      PulsariusWeb.Endpoint,
+                      :show,
+                      incident.monitor_id,
+                      incident.id
+                    )
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  end
+
+  defp render_json("monitor_paused.json", %{monitor: monitor, user: user}) do
     %{
       "blocks" => [
         %{
@@ -140,7 +227,7 @@ defmodule PulsariusWeb.WebhookView do
     }
   end
 
-  def render("monitor_unpaused.json", %{monitor: monitor, user: user}) do
+  defp render_json("monitor_unpaused.json", %{monitor: monitor, user: user}) do
     %{
       "blocks" => [
         %{
@@ -183,4 +270,5 @@ defmodule PulsariusWeb.WebhookView do
       ]
     }
   end
+  
 end

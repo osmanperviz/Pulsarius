@@ -17,6 +17,11 @@ defmodule Pulsarius.Notifications.Email do
   @spec incident_auto_resolved(Incident.t()) :: [Email.t()]
   def incident_auto_resolved(incident),
     do: create_email(:incident_auto_resolved, incident)
+  
+    @spec incident_resolved(%{incident: Incident.t(), user: User.t()}) :: [Email.t()]
+  def incident_resolved(%{incident: _incident, user: _user} = args),
+    do: create_email(:incident_auto_resolved, args)
+
 
   @spec incident_created(UserInvitation.t()) :: Email.t()
   def user_invitation_created(invitation) do
@@ -40,12 +45,12 @@ defmodule Pulsarius.Notifications.Email do
     apply(@self, type, [args])
   end
 
-  defp create_email(type, incident) do
-    monitor = Pulsarius.Repo.preload(incident.monitor, [:users])
+  defp create_email(type, args) do
+    monitor = Pulsarius.Repo.preload(args.incident.monitor, [:users])
 
     monitor.users
     |> Enum.map(&format_recipient/1)
-    |> Enum.map(&%@self{type: type, args: %{incident: incident}, recipient: &1})
+    |> Enum.map(&%@self{type: type, args: args, recipient: &1})
   end
 
   defp format_recipient(user) do

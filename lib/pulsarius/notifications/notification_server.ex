@@ -24,6 +24,7 @@ defmodule Pulsarius.Notifications.NotificationServer do
 
   # TODO: write implementation
   def handle_info({:incident_acknowledged, incident}, socket) do
+  Task.start(fn -> Notifications.incident_acknowledged(incident) end)
     {:noreply, socket}
   end
 
@@ -33,21 +34,20 @@ defmodule Pulsarius.Notifications.NotificationServer do
     {:noreply, socket}
   end
 
-  # TODO: MAnualy resolved incident, write implementation
-  def handle_info({:incident_resolved, incident}, socket) do
-    Task.start(fn -> Notifications.incident_auto_resolved(incident) end)
+  def handle_info({:incident_resolved, args}, socket) do
+    Task.start(fn -> Notifications.incident_resolved(args) end)
 
     {:noreply, socket}
   end
 
-  def handle_info({:monitor_paused, monitor}, socket) do
-    Task.start(fn -> Notifications.monitor_paused(monitor) end)
+  def handle_info({:monitor_paused, args}, socket) do
+    Task.start(fn -> Notifications.monitor_paused(args) end)
 
     {:noreply, socket}
   end
 
-  def handle_info({:monitor_unpaused, monitor}, socket) do
-    Task.start(fn -> Notifications.monitor_unpaused(monitor) end)
+  def handle_info({:monitor_unpaused, args}, socket) do
+    Task.start(fn -> Notifications.monitor_unpaused(args) end)
 
     {:noreply, socket}
   end

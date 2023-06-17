@@ -7,14 +7,14 @@ defmodule PulsariusWeb.RouteAssigns do
     socket =
       assign(socket,
         menus: [
-          {"Monitor", Routes.monitor_index_path(socket, :index), "bi bi-display"},
+          {"Monitor", Routes.monitor_index_path(socket, :index), "bi bi-display fs-6"},
           {"Incidents", Routes.incidents_account_path(socket, :index, socket.assigns.account.id),
-           "bi bi-shield-exclamation"},
-          {"Team", Routes.user_index_path(socket, :index), "bi bi-people"},
-          {"Integrations", Routes.integrations_index_path(socket, :index), "bi bi-globe"},
+           "bi bi-shield-exclamation fs-6"},
+          {"Team", Routes.user_index_path(socket, :index), "bi bi-people fs-6"},
+          {"Integrations", Routes.integrations_index_path(socket, :index), "bi bi-globe fs-6"},
           {"Status Page", Routes.integrations_index_path(socket, :index),
-           "bi bi-file-earmark-play"},
-          {"Pricing", Routes.subscription_pricing_path(socket, :pricing), "bi bi-bag"}
+           "bi bi-file-earmark-play fs-6"},
+          {"Pricing", Routes.subscription_pricing_path(socket, :pricing), "bi bi-bag fs-6"}
         ]
       )
 

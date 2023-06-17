@@ -1,4 +1,4 @@
-defmodule Pulsarius.Notifications.Webhooks do
+  defmodule Pulsarius.Notifications.Webhooks do
   alias Pulsarius.Notifications.Webhooks.Slack
   alias Pulsarius.Notifications.Webhooks.MsTeams
   alias Pulsarius.Incidents.Incident
@@ -8,44 +8,15 @@ defmodule Pulsarius.Notifications.Webhooks do
     HTTPoison.post(
       webhook_url,
       body,
-      [{"Content-Type", "application/x-www-form-urlencoded"}]
+      [{"Content-type", "application/json"}]
     )
   end
 
   def notifications_for(type, params) do
-    slack_notifications = apply(Slack, type, [params, get_webhook_urls(params, :slack)])
-    ms_tems_notifications = apply(MsTeams, type, [params, get_webhook_urls(params, :ms_teams)])
+    slack_notifications = apply(Slack, type, [params])
+    ms_tems_notifications = apply(MsTeams, type, [params])
 
     slack_notifications ++ ms_tems_notifications
-  end
-
-  def render_body(incident, template) do
-    message =
-      Phoenix.View.render_to_string(PulsariusWeb.WebhookView, template, incident: incident)
-
-    Jason.encode!(%{text: message, type: "mrkdwn"})
-  end
-
-  defp get_webhook_urls(%Incident{} = incident, :slack) do
-    extract_webhook_urls_from(incident.monitor, :slack_integrations)
-  end
-
-  defp get_webhook_urls(%Monitor{} = monitor, :slack) do
-    extract_webhook_urls_from(monitor, :slack_integrations)
-  end
-
-  defp get_webhook_urls(%Incident{} = incident, :ms_teams) do
-    extract_webhook_urls_from(incident.monitor, :ms_teams_integrations)
-  end
-
-  defp get_webhook_urls(%Monitor{} = monitor, :ms_teams) do
-    extract_webhook_urls_from(monitor, :ms_teams_integrations)
-  end
-
-  defp extract_webhook_urls_from(resource, integration_type) do
-    Pulsarius.Repo.preload(resource, integration_type)
-    |> Map.get(integration_type)
-    |> Enum.map(& &1.webhook_url)
   end
 end
 
@@ -57,5 +28,16 @@ end
 
 #  HTTPoison.post("https://slack.com/api/oauth.v2.access", body, [{"Content-Type", "application/x-www-form-urlencoded"}])  
 
-# i = Pulsarius.Repo.get(Pulsarius.Incidents.Incident, "2304d27f-29ad-4720-8615-8b401b247827") |> Pulsarius.Repo.preload(:monitor) 
-# Pulsarius.broadcast("incidents", {:incident_created, i}) 
+
+# i = Pulsarius.Repo.get(Pulsarius.Incidents.Incident, "bc57195f-c2ee-4905-a9e8-6e4be637d7d3") |> Pulsarius.Repo.preload([monitor: [:configuration]])
+# Pulsarius.Notifications.incident_created(i) 
+# incident_auto_resolved
+
+# PulsariusWeb.Router.Helpers.incidents_show_path(PulsariusWeb.Endpoint, :show, i.monitor_id, i.id)
+
+
+
+# m = Pulsarius.Repo.get(Pulsarius.Monitoring.Monitor, "d8aa7b6a-92f6-48ef-af1c-140be632187f")    
+# u = Pulsarius.Repo.get(Pulsarius.Accounts.User, "6bcd832c-68fc-4103-9f66-cc854736bab4") 
+# Pulsarius.broadcast("monitor", {:monitor_paused, %{monitor: m, user: u}})
+# Pulsarius.broadcast("incidents", {:incident_resolved, %{monitor: m, user: u}})

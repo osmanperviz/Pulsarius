@@ -1,0 +1,43 @@
+{
+      "blocks": [
+        {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "Monitor *#"<%= @monitor.name %>"* is paused by **",
+              }
+            },
+        {
+          "type": "actions",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "View monitor"
+              },
+              "url":
+                Routes.monitor_show_url(
+                  PulsariusWeb.Endpoint,
+                  :show,
+                  @monitor.id
+                )
+            }
+          ]
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "plain_text",
+              "text": "",
+              "emoji": true
+            }
+          ]
+        }
+      ]
+    }
+
+
+    a |> String.replace("\\n", "\n") |> String.replace("\\\"", "\"") |> String.replace("\\/", "/") |> String.replace("\\\\", "\\")
