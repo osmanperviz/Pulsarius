@@ -45,7 +45,10 @@ defmodule PulsariusWeb.IncidentsLive.Index do
     incident = Incidents.get_incident!(incident_id)
     {:ok, incident} = Incidents.resolve_incident(incident)
 
-    Pulsarius.broadcast("incidents", {:incident_resolved, %{incident: incident, user: socket.assigns.current_user}})
+    Pulsarius.broadcast(
+      "incidents",
+      {:incident_resolved, %{incident: incident, user: socket.assigns.current_user}}
+    )
 
     {:noreply,
      socket

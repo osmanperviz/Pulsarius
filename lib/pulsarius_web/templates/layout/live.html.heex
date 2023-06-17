@@ -20,8 +20,8 @@
 
       <ul class="nav container justify-content-start mb-md-0">
         <%= for {menu_name, path, icon} <- @menus do %>
-          <li class={"nav-item ml-2 text-center"}>
-          <i class={icon}></i> 
+          <li class="nav-item ml-2 text-center">
+            <i class={icon}></i>
             <a href={path} class="nav-link px-2 pt-0"><%= menu_name %></a>
           </li>
         <% end %>

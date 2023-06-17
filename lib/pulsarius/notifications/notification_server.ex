@@ -24,7 +24,7 @@ defmodule Pulsarius.Notifications.NotificationServer do
 
   # TODO: write implementation
   def handle_info({:incident_acknowledged, incident}, socket) do
-  Task.start(fn -> Notifications.incident_acknowledged(incident) end)
+    Task.start(fn -> Notifications.incident_acknowledged(incident) end)
     {:noreply, socket}
   end
 

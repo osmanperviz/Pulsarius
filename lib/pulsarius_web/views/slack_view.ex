@@ -101,7 +101,7 @@ defmodule PulsariusWeb.SlackView do
     }
   end
 
-    defp render_json("incident_resolved.json", %{incident: incident, user: user}) do
+  defp render_json("incident_resolved.json", %{incident: incident, user: user}) do
     %{
       "text" => "Incident manually resolved by #{Pulsarius.Accounts.User.full_name(user)}.",
       "attachments" => [
@@ -187,12 +187,13 @@ defmodule PulsariusWeb.SlackView do
     %{
       "blocks" => [
         %{
-              "type" => "section",
-              "text" => %{
-                "type" => "mrkdwn",
-                "text" => "Monitor *#{monitor.name}* is paused by *#{Pulsarius.Accounts.User.full_name(user)}*",
-              }
-            },
+          "type" => "section",
+          "text" => %{
+            "type" => "mrkdwn",
+            "text" =>
+              "Monitor *#{monitor.name}* is paused by *#{Pulsarius.Accounts.User.full_name(user)}*"
+          }
+        },
         %{
           "type" => "actions",
           "elements" => [
@@ -231,12 +232,13 @@ defmodule PulsariusWeb.SlackView do
     %{
       "blocks" => [
         %{
-              "type" => "section",
-              "text" => %{
-                "type" => "mrkdwn",
-                "text" => "Monitor *#{monitor.name}* was unpaused by *#{Pulsarius.Accounts.User.full_name(user)}*.",
-              }
-            },
+          "type" => "section",
+          "text" => %{
+            "type" => "mrkdwn",
+            "text" =>
+              "Monitor *#{monitor.name}* was unpaused by *#{Pulsarius.Accounts.User.full_name(user)}*."
+          }
+        },
         %{
           "type" => "actions",
           "elements" => [
@@ -270,5 +272,4 @@ defmodule PulsariusWeb.SlackView do
       ]
     }
   end
-  
 end

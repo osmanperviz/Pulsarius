@@ -125,9 +125,11 @@ defmodule PulsariusWeb.MonitorLive.Show do
     {:ok, monitor} = Monitoring.update_monitor(assigns.monitor, %{status: "paused"})
 
     :ok = Pulsarius.UrlMonitor.update_state(monitor)
-    
-    Pulsarius.broadcast(@topic, {:monitor_paused, %{monitor: monitor, user: assigns.current_user}})
 
+    Pulsarius.broadcast(
+      @topic,
+      {:monitor_paused, %{monitor: monitor, user: assigns.current_user}}
+    )
 
     {:noreply, assign(socket, :monitor, monitor)}
   end
@@ -137,7 +139,10 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
     :ok = Pulsarius.UrlMonitor.update_state(monitor)
 
-    Pulsarius.broadcast(@topic, {:monitor_unpaused, %{monitor: monitor, user: assigns.current_user}})
+    Pulsarius.broadcast(
+      @topic,
+      {:monitor_unpaused, %{monitor: monitor, user: assigns.current_user}}
+    )
 
     {:noreply, assign(socket, :monitor, monitor)}
   end

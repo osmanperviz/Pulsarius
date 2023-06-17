@@ -100,12 +100,13 @@ defmodule PulsariusWeb.WebhookView do
     %{
       "blocks" => [
         %{
-              "type" => "section",
-              "text" => %{
-                "type" => "mrkdwn",
-                "text" => "Monitor *#{monitor.name}* is paused by *#{Pulsarius.Accounts.User.full_name(user)}*",
-              }
-            },
+          "type" => "section",
+          "text" => %{
+            "type" => "mrkdwn",
+            "text" =>
+              "Monitor *#{monitor.name}* is paused by *#{Pulsarius.Accounts.User.full_name(user)}*"
+          }
+        },
         %{
           "type" => "actions",
           "elements" => [
@@ -144,12 +145,13 @@ defmodule PulsariusWeb.WebhookView do
     %{
       "blocks" => [
         %{
-              "type" => "section",
-              "text" => %{
-                "type" => "mrkdwn",
-                "text" => "Monitor *#{monitor.name}* was unpaused by *#{Pulsarius.Accounts.User.full_name(user)}*.",
-              }
-            },
+          "type" => "section",
+          "text" => %{
+            "type" => "mrkdwn",
+            "text" =>
+              "Monitor *#{monitor.name}* was unpaused by *#{Pulsarius.Accounts.User.full_name(user)}*."
+          }
+        },
         %{
           "type" => "actions",
           "elements" => [

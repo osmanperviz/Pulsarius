@@ -1,4 +1,4 @@
-  defmodule Pulsarius.Notifications.Webhooks do
+defmodule Pulsarius.Notifications.Webhooks do
   alias Pulsarius.Notifications.Webhooks.Slack
   alias Pulsarius.Notifications.Webhooks.MsTeams
   alias Pulsarius.Incidents.Incident
@@ -28,14 +28,11 @@ end
 
 #  HTTPoison.post("https://slack.com/api/oauth.v2.access", body, [{"Content-Type", "application/x-www-form-urlencoded"}])  
 
-
 # i = Pulsarius.Repo.get(Pulsarius.Incidents.Incident, "bc57195f-c2ee-4905-a9e8-6e4be637d7d3") |> Pulsarius.Repo.preload([monitor: [:configuration]])
 # Pulsarius.Notifications.incident_created(i) 
 # incident_auto_resolved
 
 # PulsariusWeb.Router.Helpers.incidents_show_path(PulsariusWeb.Endpoint, :show, i.monitor_id, i.id)
-
-
 
 # m = Pulsarius.Repo.get(Pulsarius.Monitoring.Monitor, "d8aa7b6a-92f6-48ef-af1c-140be632187f")    
 # u = Pulsarius.Repo.get(Pulsarius.Accounts.User, "6bcd832c-68fc-4103-9f66-cc854736bab4") 

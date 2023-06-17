@@ -49,7 +49,6 @@ defmodule Pulsarius.Notifications.Webhooks.MsTeams do
     build_notifications(:incident_acknowledged, webhook_urls, body)
   end
 
-
   @spec monitor_paused(%{monitor: Monitor.t(), user: User.t()}) :: [MsTeams.t()]
   def monitor_paused(%{monitor: monitor, user: _user} = args) do
     body = MsTeamsView.render_body("monitor_paused.json", args)
@@ -62,7 +61,7 @@ defmodule Pulsarius.Notifications.Webhooks.MsTeams do
   def monitor_unpaused(%{monitor: monitor, user: _user} = args) do
     body = MsTeamsView.render_body("monitor_unpaused.json", args)
     webhook_urls = get_webhook_urls(monitor)
-    
+
     build_notifications(:monitor_unpaused, webhook_urls, body)
   end
 

@@ -28,7 +28,7 @@ defmodule Pulsarius.Notifications do
     |> Enum.map(&Notification.send/1)
   end
 
-    @spec incident_auto_resolved(Incident.t()) :: :ok
+  @spec incident_auto_resolved(Incident.t()) :: :ok
   def incident_resolved(args) do
     webhook_notifications = Webhooks.notifications_for(:incident_resolved, args)
     email_notifications = Email.notifications_for(:incident_resolved, args)
@@ -53,7 +53,7 @@ defmodule Pulsarius.Notifications do
     |> Enum.map(&Notification.send/1)
   end
 
-    @spec monitor_unpaused(Monitor.t()) :: :ok
+  @spec monitor_unpaused(Monitor.t()) :: :ok
   def incident_acknowledged(args) do
     webhook_notifications = Webhooks.notifications_for(:incident_acknowledged, args)
 

@@ -79,7 +79,11 @@ defmodule PulsariusWeb.MonitorLive.Index do
 
     monitor = Pulsarius.Repo.preload(monitor, [:configuration])
     :ok = Pulsarius.UrlMonitor.update_state(monitor)
-    Pulsarius.broadcast(@topic, {:monitor_paused, %{monitor: monitor, user: assigns.current_user}})
+
+    Pulsarius.broadcast(
+      @topic,
+      {:monitor_paused, %{monitor: monitor, user: assigns.current_user}}
+    )
 
     monitoring = replace_monitoring(assigns.monitoring, monitor.id, monitor)
 
@@ -104,7 +108,11 @@ defmodule PulsariusWeb.MonitorLive.Index do
     monitor = Pulsarius.Repo.preload(monitor, [:configuration])
 
     :ok = Pulsarius.UrlMonitor.update_state(monitor)
-    Pulsarius.broadcast(@topic, {:monitor_unpaused, %{monitor: monitor, user: assigns.current_user}})
+
+    Pulsarius.broadcast(
+      @topic,
+      {:monitor_unpaused, %{monitor: monitor, user: assigns.current_user}}
+    )
 
     monitoring = replace_monitoring(assigns.monitoring, monitor.id, monitor)
 

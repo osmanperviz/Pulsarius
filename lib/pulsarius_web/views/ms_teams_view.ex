@@ -15,20 +15,19 @@ defmodule PulsariusWeb.MsTeamsView do
     %{}
   end
 
-   defp render_json("incident_acknowledged.json", incident) do
+  defp render_json("incident_acknowledged.json", incident) do
     %{}
   end
 
-     defp render_json("incident_resolved.json", incident) do
+  defp render_json("incident_resolved.json", incident) do
     %{}
   end
 
   defp render_json("monitor_paused.json", %{monitor: monitor, user: user}) do
-     %{}
+    %{}
   end
 
   defp render_json("monitor_unpaused.json", %{monitor: monitor, user: user}) do
-   %{}
+    %{}
   end
-
 end

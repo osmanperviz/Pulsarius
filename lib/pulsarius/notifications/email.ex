@@ -17,11 +17,10 @@ defmodule Pulsarius.Notifications.Email do
   @spec incident_auto_resolved(Incident.t()) :: [Email.t()]
   def incident_auto_resolved(incident),
     do: create_email(:incident_auto_resolved, incident)
-  
-    @spec incident_resolved(%{incident: Incident.t(), user: User.t()}) :: [Email.t()]
+
+  @spec incident_resolved(%{incident: Incident.t(), user: User.t()}) :: [Email.t()]
   def incident_resolved(%{incident: _incident, user: _user} = args),
     do: create_email(:incident_auto_resolved, args)
-
 
   @spec incident_created(UserInvitation.t()) :: Email.t()
   def user_invitation_created(invitation) do

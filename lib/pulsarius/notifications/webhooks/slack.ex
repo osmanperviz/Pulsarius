@@ -32,7 +32,6 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     build_notifications(:incident_auto_resolved, webhook_urls, body)
   end
 
-
   @spec incident_resolved(%{incident: Incident.t(), user: User.t()}) :: [Slack.t()]
   def incident_resolved(%{incident: incident, user: _user} = args) do
     body = SlackView.render_body("incident_resolved.json", args)
@@ -41,7 +40,7 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     build_notifications(:incident_resolved, webhook_urls, body)
   end
 
-    @spec incident_acknowledged(%{incident: Incident.t(), user: User.t()}) :: [Slack.t()]
+  @spec incident_acknowledged(%{incident: Incident.t(), user: User.t()}) :: [Slack.t()]
   def incident_acknowledged(%{incident: incident, user: _user} = args) do
     body = SlackView.render_body("incident_acknowledged.json", args)
     webhook_urls = get_webhook_urls(incident)
@@ -87,7 +86,6 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
     |> Map.get(:slack_integrations)
     |> Enum.map(& &1.webhook_url)
   end
-
 
   defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Webhooks.Slack do
     alias Pulsarius.Notifications.Webhooks
