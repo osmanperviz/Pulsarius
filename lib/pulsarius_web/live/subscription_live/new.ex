@@ -31,7 +31,7 @@ defmodule PulsariusWeb.SubscriptionLive.New do
     |> assign(:retry, false)
   end
 
-  defp apply_action(socket, :new, params) do
+  defp apply_action(socket, :new, _params) do
     socket
     |> assign(:page_title, "Checkout Page")
     |> assign(:plan, nil)

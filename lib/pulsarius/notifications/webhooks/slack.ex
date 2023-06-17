@@ -49,7 +49,7 @@ defmodule Pulsarius.Notifications.Webhooks.Slack do
   end
 
   @spec monitor_paused(%{monitor: Monitor.t(), user: User.t()}) :: [Slack.t()]
-  def monitor_paused(%{monitor: monitor, user: user} = args) do
+  def monitor_paused(%{monitor: monitor, user: _user} = args) do
     body = SlackView.render_body("monitor_paused.json", args)
     webhook_urls = get_webhook_urls(monitor)
 

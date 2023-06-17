@@ -18,6 +18,7 @@ defmodule PulsariusWeb.IncidentsLive.Index do
      |> assign(:monitor, monitor)}
   end
 
+  @impl true
   def handle_event("delete-incident", %{"id" => incident_id, "monitor-id" => monitor_id}, socket) do
     incident = Incidents.get_incident!(incident_id)
     {:ok, _incident} = Incidents.delete_incident(incident)

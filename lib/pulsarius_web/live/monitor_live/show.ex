@@ -6,7 +6,6 @@ defmodule PulsariusWeb.MonitorLive.Show do
   alias Pulsarius.Monitoring.AvalabilityStatistics
   alias PulsariusWeb.MonitorLive.{TotalAvailabilityWidget, CheckedAtWidget}
 
-  import PulsariusWeb.MonitorLive.AddSlackIntegrationComponent
   import PulsariusWeb.MonitorLive.MonitoringComponents
   import PulsariusWeb.CoreComponents
 

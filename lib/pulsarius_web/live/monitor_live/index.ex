@@ -7,7 +7,6 @@ defmodule PulsariusWeb.MonitorLive.Index do
   alias Pulsarius.Monitoring.{AvalabilityStatistics, StatusResponse}
   alias Pulsarius.Accounts
   alias Pulsarius.Monitoring.Monitor
-  alias Pulsarius.Repo
 
   import PulsariusWeb.MonitorLive.MonitoringComponents
 
@@ -132,6 +131,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
     {:noreply, socket}
   end
 
+  @impl true
   def handle_info(%Monitor{} = monitor, %{assigns: assigns} = socket) do
     monitor =
       Pulsarius.Repo.preload(monitor, [
@@ -179,7 +179,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
     end)
   end
 
-  def onboarding_progress([monitor | _rest], account) do
+  def onboarding_progress([_monitor | _rest], account) do
     %{
       create_monitoring: true,
       invite_colleagues: Accounts.has_team_member?(account),

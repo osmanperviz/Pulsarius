@@ -17,7 +17,7 @@ defmodule PulsariusWeb.SubscriptionLive.Edit do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"plan_id" => plan_id} = params) do
+  defp apply_action(socket, :edit, %{"plan_id" => plan_id} = _params) do
     choosen_plan = Pulsarius.Billing.get_plans!(plan_id)
     account = Pulsarius.Repo.preload(socket.assigns.account, [:subscription])
     changeset = Billing.change_subscriptions(account.subscription)
