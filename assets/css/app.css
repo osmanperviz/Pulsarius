@@ -430,19 +430,15 @@ select.search-monitors:focus {
 }
 .nav-item {
     margin-left: 50px;
- /* padding-left: 1.2rem;
-    padding-right: 1.2rem;
-    margin-bottom: 0.5rem;*/
      margin-top: 0.5rem; 
 }
 
 .nav-item:hover{
    color: white;
-    background-color: #222838;
-    border-radius: 2rem;
-    padding-left: 1.2rem;
-    padding-right: 1.2rem;
-    border: 1px solid #75787f;
+}
+
+.nav-item a:hover{
+   color: white;
 }
 
 .nav-link {
