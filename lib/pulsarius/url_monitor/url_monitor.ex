@@ -91,7 +91,7 @@ defmodule Pulsarius.UrlMonitor do
   defp schedule_check(state) do
     frequency_check_in_ms = convert_to_ms(state.monitor.configuration.frequency_check_in_seconds)
 
-    Process.send_after(self(), :check, 30000)
+    Process.send_after(self(), :check, frequency_check_in_ms)
 
     state
   end
@@ -357,6 +357,8 @@ defmodule Pulsarius.UrlMonitor do
     }
 
     {:ok, status_response} = Monitoring.create_status_response(state.monitor, params)
+
+    IO.inspect("SEND status response =================>")
 
     :ok = Pulsarius.broadcast(@monitor_topic <> state.monitor.id, status_response)
 

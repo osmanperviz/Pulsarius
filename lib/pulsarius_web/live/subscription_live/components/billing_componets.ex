@@ -171,7 +171,7 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
     ~H"""
     <%= if @name == "Bussiness" do %>
       <h4 class="my-0 fw-normal">
-        <%= @name %> &nbsp; <span class="badge bg-primary">Most Popular</span>
+        <%= @name %> <span class="badge bg-primary">Most Popular</span>
       </h4>
     <% else %>
       <h4 class="my-0 fw-normal"><%= @name %></h4>

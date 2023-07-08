@@ -121,6 +121,7 @@ body {
 
 .table-text {
   font-size: 1rem;
+  color: #939db8
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {

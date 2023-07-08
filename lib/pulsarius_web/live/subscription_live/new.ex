@@ -22,7 +22,7 @@ defmodule PulsariusWeb.SubscriptionLive.New do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :new, %{"plan_id" => plan_id} = params) do
+  defp apply_action(socket, :new, %{"plan_id" => plan_id} = _params) do
     plan = Pulsarius.Billing.get_plans!(plan_id)
 
     socket

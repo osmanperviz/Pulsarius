@@ -23,7 +23,7 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
     <div class="box-item flex-grow-100">
       <div class="card box pb-2 pt-2  w-100">
         <div class="card-body">
-          <h6><span class="abc"><%= @title %></span></h6>
+          <h6><span class="abc p-0"><%= @title %></span></h6>
           <h6><%= @humanized_time %></h6>
         </div>
       </div>
@@ -49,18 +49,18 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
         else: monitor.inserted_at
 
     from_time
-    |> humanized_duration_in_seconds()
+    |> humanized_duration()
   end
 
   defp time(%{active_incident: active_incident, monitor: monitor} = _assigns)
        when monitor.status == :inactive do
     active_incident.occured_at
-    |> humanized_duration_in_seconds()
+    |> humanized_duration()
   end
 
   defp time(%{monitor: monitor} = _assigns) when monitor.status == :paused do
     monitor.updated_at
-    |> humanized_duration_in_seconds()
+    |> humanized_duration()
   end
 
   defp time(_assigns), do: ""

@@ -23,8 +23,12 @@ defmodule PulsariusWeb.MonitorLive.CheckedAtWidget do
     <div class="box-item flex-grow-100">
       <div class="card box pb-2 pt-2  w-100">
         <div class="card-body">
-          <h6><span class="abc"><%= @title %></span></h6>
-          <h6><%= @humanized_time %> ago</h6>
+          <h6><span class="abc p-0"><%= @title %></span></h6>
+          <%= if @humanized_time != nil  do %>
+            <h6><%= @humanized_time %> ago</h6>
+          <% else %>
+            -
+          <% end %>
         </div>
       </div>
     </div>
@@ -37,7 +41,7 @@ defmodule PulsariusWeb.MonitorLive.CheckedAtWidget do
     |> humanized_duration_in_seconds
   end
 
-  defp time(_assings), do: ""
+  defp time(_assings), do: nil
 
   defp start_timer() do
     # :timer.send_interval(1000, self(), :tick)

@@ -3,7 +3,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
   alias Pulsarius.Monitoring
   alias Pulsarius.Incidents
-  alias Pulsarius.Monitoring.AvalabilityStatistics
+  alias Pulsarius.Monitoring.{AvalabilityStatistics, StatusResponse, Monitor}
   alias PulsariusWeb.MonitorLive.{TotalAvailabilityWidget, CheckedAtWidget}
 
   import PulsariusWeb.MonitorLive.MonitoringComponents
@@ -13,12 +13,12 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
   @impl true
   def mount(_params, _session, socket) do
-    Pulsarius.subscribe("incidents")
     {:ok, socket}
   end
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    :ok = Pulsarius.subscribe("monitor:" <> id)
     incidents = Incidents.list_incidents(id)
     period = dates_for_period("day")
     avalability_statistics = AvalabilityStatistics.calculate(incidents)
@@ -66,45 +66,33 @@ defmodule PulsariusWeb.MonitorLive.Show do
   # @doc """
   # Handle incoming events from endpoint_checker.
   # """
-  # @impl true
-  # def handle_info({:incident_created, payload}, %{assigns: %{monitor: monitor}} = socket) when payload.monitor_id == monitor.id do
-  #   incidents = Incidents.list_incidents(monitor.id)
-  #   monitor = Monitoring.get_monitor!(monitor.id) |> Pulsarius.Repo.preload(:active_incident)
-  #   most_recent_status_response = Monitoring.get_most_recent_status_response!(monitor.id)
+  def handle_info(%StatusResponse{} = status_response, %{assigns: assigns} = socket) do
+    IO.inspect("HIT status response =============>")
 
-  #   IO.inspect(monitor.status, label: "incident_created: =========================>")
-
-  #   {:noreply,
-  #    socket
-  #    |> assign(:monitor, monitor)
-  #    |> assign(:number_of_incidents, Enum.count(incidents))
-  #    |> assign(:last_incident, List.last(incidents))
-  #    |> assign(:active_incident, monitor.active_incident)
-  #    |> assign(:most_recent_status_response, most_recent_status_response)}
-
-  # end
+    {:noreply,
+     socket
+     |> assign(:most_recent_status_response, status_response)}
+  end
 
   # @doc """
   # Handle incoming events from endpoint_checker.
   # """
-  # @impl true
-  # def handle_info({:incident_auto_resolved, payload}, %{assigns: %{monitor: monitor}} = socket) when payload.monitor_id == monitor.id do
-  #   incidents = Incidents.list_incidents(monitor.id)
-  #   monitor = Monitoring.get_monitor!(monitor.id) |> Pulsarius.Repo.preload(:active_incident)
-  #   most_recent_status_response = Monitoring.get_most_recent_status_response!(monitor.id)
+  def handle_info(%Monitor{} = monitor, %{assigns: assigns} = socket) do
+    IO.inspect("HIT monitor =============>")
+    incidents = Incidents.list_incidents(monitor.id)
+    avalability_statistics = AvalabilityStatistics.calculate(incidents)
+    monitor = Pulsarius.Repo.preload(monitor, :active_incident)
+    most_recent_status_response = Monitoring.get_most_recent_status_response!(monitor.id)
 
-  #   IO.inspect(monitor.status, label: "incident_auto_resolved: =========================>")
-
-  #   socket = socket
-  #    |> assign(:monitor, monitor)
-  #   #  |> assign(:number_of_incidents, Enum.count(incidents))
-  #   #  |> assign(:last_incident, List.last(incidents))
-  #   #  |> assign(:active_incident, monitor.active_incident)
-  #   #  |> assign(:most_recent_status_response, most_recent_status_response)
-
-  #   {:noreply, socket}
-
-  # end
+    {:noreply,
+     socket
+     |> assign(:monitor, monitor)
+     |> assign(:number_of_incidents, Enum.count(incidents))
+     |> assign(:avalability_statistics, avalability_statistics)
+     |> assign(:last_incident, List.last(incidents))
+     |> assign(:active_incident, monitor.active_incident)
+     |> assign(:most_recent_status_response, most_recent_status_response)}
+  end
 
   def handle_event("change-date-range", %{"period" => period}, socket) do
     result = dates_for_period(period)
@@ -113,7 +101,8 @@ defmodule PulsariusWeb.MonitorLive.Show do
       socket
       |> assign(:selected_period, period)
       |> push_event("response_time", %{
-        response_time: response_time_for_chart(socket.assigns.monitor.id, result.from, result.to)
+        response_time:
+          response_time_for_chart(socket.assigns.monitor.id, result.from, result.to, period)
       })
 
     {:noreply, socket}
@@ -159,14 +148,91 @@ defmodule PulsariusWeb.MonitorLive.Show do
     {:noreply, socket}
   end
 
-  defp response_time_for_chart(monitor_id, from, to) do
-    Monitoring.list_status_responses(monitor_id, from, to)
-    |> Enum.map(fn status_response ->
-      %{
-        x: NaiveDateTime.to_time(status_response.occured_at),
-        y: status_response.response_time_in_ms
-      }
+  defp response_time_for_chart(monitor_id, from, to, period \\ "day") do
+    response_data = Monitoring.list_status_responses(monitor_id, from, to)
+
+    # Group the response data by week or month
+    grouped_data = group_data(response_data, period)
+
+    # Calculate aggregated values for each week or month
+    aggregated_data = calculate_aggregates(grouped_data)
+
+    # Transform the aggregated data for chart rendering
+    transform_data(aggregated_data)
+  end
+
+  defp group_by_two_hours(response_data) do
+    Enum.group_by(response_data, fn record ->
+      week_start = Timex.beginning_of_week(record.occured_at)
+      elapsed_hours = Timex.diff(record.occured_at, week_start, :hours)
+      grouped_hours = div(elapsed_hours, 2) * 2
+      Timex.shift(week_start, hours: grouped_hours)
     end)
+  end
+
+  defp group_by_two_minutes(response_data) do
+    Enum.group_by(response_data, fn record ->
+      day_start = Timex.beginning_of_day(record.occured_at)
+      elapsed_minutes = Timex.diff(record.occured_at, day_start, :minutes)
+      grouped_minutes = div(elapsed_minutes, 2) * 2
+      Timex.shift(day_start, minutes: grouped_minutes)
+    end)
+  end
+
+  defp group_by_twelve_hours(response_data) do
+    Enum.group_by(response_data, fn record ->
+      month_start = Timex.beginning_of_month(Timex.now())
+      elapsed_hours = Timex.diff(record.occured_at, month_start, :hours)
+      grouped_hours = div(elapsed_hours, 12) * 12
+      Timex.shift(month_start, hours: grouped_hours)
+    end)
+  end
+
+  defp transform_data(aggregated_data) do
+    transformed_data =
+      Enum.map(aggregated_data, fn {date, aggregated_values} ->
+        %{
+          x: date,
+          y: aggregated_values[:average_response_time]
+        }
+      end)
+
+    sorted_data = Enum.sort_by(transformed_data, & &1.x)
+
+    sorted_data
+  end
+
+  defp calculate_aggregates(grouped_data) do
+    Enum.reduce(grouped_data, %{}, fn {date, data}, acc ->
+      response_times = data |> Enum.map(& &1.response_time_in_ms)
+      average_response_time = calculate_average(response_times)
+
+      aggregated_values = %{average_response_time: average_response_time}
+
+      Map.put(acc, date, aggregated_values)
+    end)
+  end
+
+  defp group_data(response_data, range) do
+    case range do
+      "day" -> group_by_two_minutes(response_data)
+      "week" -> group_by_two_hours(response_data)
+      "month" -> group_by_twelve_hours(response_data)
+    end
+  end
+
+  defp calculate_average(data) do
+    case data do
+      [] ->
+        nil
+
+      _ ->
+        sum = Enum.sum(data)
+        length = length(data)
+        average = sum / length
+        rounded_average = Float.round(average, 2)
+        rounded_average
+    end
   end
 
   defp dates_for_period(period) do

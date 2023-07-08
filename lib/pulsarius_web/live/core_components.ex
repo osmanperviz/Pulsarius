@@ -10,8 +10,8 @@ defmodule PulsariusWeb.CoreComponents do
     <div class={box_item_css(@last_item)}>
       <div class="card box pb-2 pt-2 w-100">
         <div class="card-body">
-          <h6><span class="abc"><%= @title %></span></h6>
-          <h6><%= @value %></h6>
+          <h6><span class="abc p-0"><%= @title %></span></h6>
+          <span class="fs-6"><%= @value %></span>
         </div>
       </div>
     </div>

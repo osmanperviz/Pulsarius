@@ -11,7 +11,7 @@ defmodule Pulsarius.Monitoring.StatusResponse do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "status_responses" do
-    field :occured_at, :naive_datetime
+    field :occured_at, :utc_datetime
     field :response_time_in_ms, :integer
 
     belongs_to :monitoring, Monitor,
@@ -50,3 +50,8 @@ defmodule Pulsarius.Monitoring.StatusResponse do
     )
   end
 end
+
+# end_date = Timex.now()
+# start_date = Timex.now() |> Timex.beginning_of_day() |> Timex.shift(days: 29) 
+
+# a = Abc.generate_seed_data(start_date, end_date)

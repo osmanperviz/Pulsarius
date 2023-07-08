@@ -21,7 +21,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
         <span class="bi-chevron-left"></span> Monitors
       </.link>
       <div class="col-lg-12 d-flex m-0 p-0">
-        <div class="pulse-success mt-5"></div>
+        <div class={"#{get_class(@monitor)} mt-5"}></div>
         <div class="m-4">
           <h5 class="mt-2"><%= @monitor.name %></h5>
           <p>
@@ -100,8 +100,8 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
               Month
             </button>
           </div>
-          <canvas id="myChart" phx-hook="DatailsChart" phx-update="ignore" style="min-height: 300px">
-          </canvas>
+          <div id="myChart" phx-hook="DatailsChart" phx-update="ignore" style="min-height: 300px">
+          </div>
           <%!-- <div id={"123"} phx-hook="Chart" ></div>  --%>
           <script src="https://cdn.jsdelivr.net/npm/chart.js">
           </script>
@@ -211,6 +211,37 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
     """
   end
 
+  def incident_widget(assigns) do
+    ~H"""
+    <div class="box-item flex-grow-100">
+      <div class="card box pb-2 pt-2 w-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <h6><span class="abc p-0"><%= @title %></span></h6>
+            <%= if @active_incident do %>
+              <a
+                class="btn btn-sm bg-transparent gray-color p-0"
+                href={
+                  Routes.incidents_show_path(
+                    PulsariusWeb.Endpoint,
+                    :show,
+                    @active_incident.monitor_id,
+                    @active_incident.id
+                  )
+                }
+              >
+                <span class="bi bi-shield-fill-exclamation fs-6  text-danger p-0"></span>
+                Ongoing incident <span class="bi-chevron-right"></span>
+              </a>
+            <% end %>
+          </div>
+          <h6><%= @value %></h6>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
   defp box(assigns) do
     ~H"""
     <div class="card box pb-2 pt-2 w-100">
@@ -267,5 +298,14 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
 
     mark = if type == :question, do: "?", else: "!"
     "#{greeting} #{name}#{mark}"
+  end
+
+  defp get_class(monitor) do
+    cond do
+      monitor.status == :active -> "pulse-success"
+      monitor.status == :paused -> "pulse-paused"
+      monitor.status == :inactive -> "pulse-inactive"
+      true -> "pulse-inactive"
+    end
   end
 end

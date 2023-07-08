@@ -9,9 +9,12 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-
 if Mix.env() == :dev do
   alias Pulsarius.Accounts
+  alias Pulsarius.Monitoring
+
+  Code.require_file("spec/support/test_helpers.ex")
+
 
   params = %{
     "type" => "freelancer",
@@ -26,7 +29,36 @@ if Mix.env() == :dev do
     ]
   }
 
-  {:ok, _account} = Accounts.create_account(params)
+  {:ok, account} = Accounts.create_account(params)
+
+  monitor_params = %{
+    "name" => "Review",
+    "status" => :active,
+    "configuration" => %{
+      "frequency_check_in_seconds" => "60",
+      "url_to_monitor" => "https://www.review-app.gigalixirapp.com/health-check",
+      "email_notification" => true,
+      "sms_notification" => true,
+      "alert_rule" => :becomes_unavailable,
+      "alert_condition" => "",
+      "ssl_expiry_date" => DateTime.utc_now(),
+      "ssl_notify_before_in_days" => "30",
+      "domain_expiry_date" => DateTime.utc_now(),
+      "domain_notify_before_in_days" => "30"
+    }
+  }
+
+  {:ok, monitor} = Monitoring.create_monitor(account, monitor_params)
+
+  start_date = Timex.now() |> Timex.beginning_of_day() |> Timex.shift(days: -29)
+  end_date = Timex.now()
+  Pulsarius.Abc.generate_seed_data(monitor, start_date, end_date)
+
+  # monitor = Pulsarius.Monitoring.get_monitor!("bd273919-447c-4518-9d43-9f11a613f16f")
+  #     end_date = Timex.now()
+  #   start_date = Timex.now() |> Timex.beginning_of_day() |> Timex.shift(days: -29)
+  # Pulsarius.Abc.generate_seed_data(monitor, start_date, end_date)
+  #  monitor = Pulsarius.Monitoring.get_monitor!("bd273919-447c-4518-9d43-9f11a613f16f")
 
   free_plan = %{
     charging_interval: 1000,
@@ -74,6 +106,6 @@ if Mix.env() == :dev do
   }
 
   {:ok, _plan} = Pulsarius.Billing.create_plans(free_plan)
-  Pulsarius.Billing.create_plans(small_team_plan)
   Pulsarius.Billing.create_plans(bussiness_plan)
+  Pulsarius.Billing.create_plans(small_team_plan)
 end

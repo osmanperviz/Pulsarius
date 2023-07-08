@@ -1,34 +1,35 @@
-
 export const ChartHook = {
   mounted() {
     let graph = {
       chart: {
-        id: 'chart-index',
-        type: 'area',
+        id: "chart-index",
+        type: "area",
         height: 100,
         sparkline: {
-          enabled: true
+          enabled: true,
         },
       },
-      series: [{
-        data: []
-      }],
+      series: [
+        {
+          data: [],
+        },
+      ],
       stroke: {
         show: true,
         width: 1.5,
-        curve: 'smooth',
+        curve: "smooth",
       },
       noData: {
         text: "No response data available for last hour.",
-        align: 'center',
-        verticalAlign: 'top',
+        align: "center",
+        verticalAlign: "top",
         offsetX: 0,
         offsetY: 0,
         style: {
           color: "#fff",
-          fontSize: '14px',
-          fontFamily: undefined
-        }
+          fontSize: "14px",
+          fontFamily: undefined,
+        },
       },
       markers: {
         size: 0,
@@ -37,15 +38,15 @@ export const ChartHook = {
         strokeOpacity: 1,
         fillOpacity: 1,
         hover: {
-          size: 6
-        }
+          size: 6,
+        },
       },
       grid: {
         padding: {
           top: 20,
-        }
+        },
       },
-      colors: ['#939db8', '#939db8', '#939db8'],
+      colors: ["#939db8", "#939db8", "#939db8"],
       tooltip: {
         fillSeriesColor: true,
         theme: null,
@@ -54,32 +55,34 @@ export const ChartHook = {
           title: {
             formatter: function formatter(val, a) {
               return "Response time in ms:";
-            }
-          }
-        }
+            },
+          },
+        },
       },
       xaxis: {
         crosshairs: {
           width: 1,
-          type: 'datetime',
+          type: "datetime",
         },
         labels: {
           formatter: function (value) {
             return `Occured at: ${value}h`;
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    };
 
-    let chart = new ApexCharts(this.el, graph)
-    chart.render()
+    let chart = new ApexCharts(this.el, graph);
+    chart.render();
 
-    const event = `response_time:${this.el.id}`
+    const event = `response_time:${this.el.id}`;
 
     this.handleEvent(event, ({ response_time }) => {
-      chart.updateSeries([{
-        data: response_time
-      }])
-    })
-  }
-}
+      chart.updateSeries([
+        {
+          data: response_time,
+        },
+      ]);
+    });
+  },
+};
