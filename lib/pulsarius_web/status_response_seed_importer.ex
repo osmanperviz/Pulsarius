@@ -1,4 +1,4 @@
-defmodule Pulsarius.Abc do
+defmodule Pulsarius.StatusResponseSeedImporter do
   alias Pulsarius.Monitoring.StatusResponse
   alias Pulsarius.Monitoring
 
