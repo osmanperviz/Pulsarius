@@ -67,9 +67,9 @@ defmodule Pulsarius.Notifications do
     |> Notification.send()
   end
 
-  @spec send_test_alert(User.t()) :: :ok
-  def send_test_alert(user) do
-    Email.notifications_for(:send_test_alert, user)
+  @spec send_test_alert(%{user: User.t(), monitor: Monitor.t()}) :: :ok
+  def send_test_alert(args) do
+    Email.notifications_for(:send_test_alert, args)
     |> Notification.send()
   end
 end

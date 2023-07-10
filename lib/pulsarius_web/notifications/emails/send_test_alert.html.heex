@@ -1,1 +1,30 @@
-<h1>Test Alert!</h1>
+<PulsariusWeb.EmailComponents.email_box open_in_browser_url="#">
+  <:title>
+    <span style="height: 20px; width: 20px; background-color: red; border-radius: 50%; display: inline-block;">
+    </span>
+    New test incident alert
+  </:title>
+  <div style="max-width: 500px; padding: 0px 32px; padding-bottom: 40px;  ">
+    <p style="font-weight: 500; color: #000">Hello <%= @user.first_name %>,</p>
+    <p style="padding-bottom: 20px">
+      This is a test incident alert, <b>don't worry, everything is fine.</b>
+    </p>
+    <a
+      href="#"
+      style="white-space: nowrap; color: #fff; background-color: #0d6efd; border-color: #47d7ac; padding: 14px 28px; font-size: 14px; line-height: 24px; border-radius: 4px; text-decoration: none; margin-right: 20px;"
+    >
+      Acknowlage the incident
+    </a>
+    <a
+      href="#"
+      style="white-space: nowrap; color: #06038d; background-color: #fff; border: 1px solid #cdced0; padding: 14px 28px; font-size: 14px; line-height: 24px; border-radius: 4px; text-decoration: none;"
+    >
+      View incident
+    </a>
+  </div>
+  <:footer>
+    <span style="margin-bottom: 32px;display:block;line-height:1.8;padding: 32px;background-color: #f7f8fa;border-top: 2px solid #f1f2f8; border-left: 3px solid red;">
+      Monitor: <%= @monitor.name %><br /> Couse: Testing alert<br /> Started at: <br />
+    </span>
+  </:footer>
+</PulsariusWeb.EmailComponents.email_box>

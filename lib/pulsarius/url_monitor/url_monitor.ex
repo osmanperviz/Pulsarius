@@ -240,6 +240,8 @@ defmodule Pulsarius.UrlMonitor do
           start_measuring_response_time: nil
       }
 
+      incident = Pulsarius.Repo.preload(incident, [:monitor])
+
       Pulsarius.broadcast(@incidents_topic, {:incident_auto_resolved, incident})
       Pulsarius.broadcast(@monitor_topic <> monitor.id, monitor)
 

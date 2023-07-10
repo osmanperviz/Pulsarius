@@ -15,7 +15,6 @@ if Mix.env() == :dev do
 
   Code.require_file("spec/support/test_helpers.ex")
 
-
   params = %{
     "type" => "freelancer",
     "users" => [

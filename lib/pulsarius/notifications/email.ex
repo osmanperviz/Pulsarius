@@ -12,11 +12,11 @@ defmodule Pulsarius.Notifications.Email do
 
   @spec incident_created(Incident.t()) :: [Email.t()]
   def incident_created(incident),
-    do: create_email(:incident_created, incident)
+    do: create_email(:incident_created, %{incident: incident})
 
   @spec incident_auto_resolved(Incident.t()) :: [Email.t()]
   def incident_auto_resolved(incident),
-    do: create_email(:incident_auto_resolved, incident)
+    do: create_email(:incident_auto_resolved, %{incident: incident})
 
   @spec incident_resolved(%{incident: Incident.t(), user: User.t()}) :: [Email.t()]
   def incident_resolved(%{incident: _incident, user: _user} = args),
@@ -31,12 +31,12 @@ defmodule Pulsarius.Notifications.Email do
     }
   end
 
-  @spec send_test_alert(User.t()) :: Email.t()
-  def send_test_alert(user) do
+  @spec send_test_alert(%{user: User.t(), monitor: Monitor.t()}) :: Email.t()
+  def send_test_alert(args) do
     %@self{
       type: :send_test_alert,
-      args: %{user: user},
-      recipient: user.email
+      args: args,
+      recipient: args.user.email
     }
   end
 
@@ -49,11 +49,13 @@ defmodule Pulsarius.Notifications.Email do
 
     monitor.users
     |> Enum.map(&format_recipient/1)
-    |> Enum.map(&%@self{type: type, args: args, recipient: &1})
+    |> Enum.map(
+      &%@self{type: type, args: Map.merge(args, %{user: &1.user}), recipient: &1.recipient}
+    )
   end
 
   defp format_recipient(user) do
-    {User.full_name(user), user.email}
+    %{recipient: {User.full_name(user), user.email}, user: user}
   end
 
   defimpl Pulsarius.Notifications.Notification, for: Pulsarius.Notifications.Email do

@@ -118,8 +118,15 @@ defmodule PulsariusWeb.MonitorLive.Index do
     {:noreply, assign(socket, :monitoring, monitoring)}
   end
 
-  def handle_event("send-test-alert", _params, %{assigns: assigns} = socket) do
-    Pulsarius.broadcast("monitor", {:send_test_alert, assigns.current_user})
+  def handle_event("send-test-alert", %{"monitor_id" => monitor_id}, %{assigns: assigns} = socket) do
+    current_monitor = Enum.find(assigns.monitoring, & &1.id == monitor_id)
+
+    IO.inspect(current_monitor, label: "current_monitor====>")
+
+    Pulsarius.broadcast(
+      "monitor",
+      {:send_test_alert, %{user: assigns.current_user, monitor: current_monitor}}
+    )
 
     socket =
       put_flash(

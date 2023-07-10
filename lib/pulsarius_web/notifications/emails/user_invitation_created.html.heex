@@ -1,2 +1,23 @@
-<h1>User Invitation</h1>
-<.link href={user_invitation_url(@invitation.token)}>Accept the invitation</.link>
+
+<PulsariusWeb.EmailComponents.email_box open_in_browser_url="#">
+  <:title>
+      <span style="height: 10px; width: 10px; margin-bottom: 4px; background-color: #0d6efd; border-radius: 50%; display: inline-block;">
+    </span>
+     Join Pulsarius!
+  </:title>
+  <div style="max-width: 500px; padding: 0px 32px;">
+    <p style="font-weight: 500; color: #000">Hello there,</p>
+    <p>Ready to embrace your inner web monitoring superhero? Pulsarius is here to save the day!</p>
+    <p style="padding-bottom: 20px">
+      Join us and unlock the power to protect your website with real-time alerts, bug-busting abilities, and a dash of humor. <br/><br/>Click below to activate your superpowers:
+    </p>
+    <a
+      href={user_invitation_url(@invitation.token)}
+      style="white-space: nowrap; color: #fff; background-color: #0d6efd; border-color: #47d7ac; padding: 14px 28px; font-size: 14px; line-height: 24px; border-radius: 4px; text-decoration: none; margin-right: 20px;"
+    >
+      Accept the invitation
+    </a>
+    <p style="padding-top: 20px">Unleash the hero within you!</p>
+  </div>
+  <:footer></:footer>
+</PulsariusWeb.EmailComponents.email_box>

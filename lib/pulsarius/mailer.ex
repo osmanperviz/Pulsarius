@@ -10,17 +10,17 @@ defmodule Pulsarius.Mailer do
 
   alias Pulsarius.Notifications.Email
 
-  def get_subject(%Email{type: :incident_created, args: %{incident: incident}}),
-    do: "Incident occured!"
+  def get_subject(%Email{type: :incident_created, args: _args}),
+    do: "Pulsarius ALERT"
 
-  def get_subject(%Email{type: :incident_auto_resolved, args: %{incident: incident}}),
-    do: "Incident Auto Resolved!"
+  def get_subject(%Email{type: :incident_auto_resolved, args: _args}),
+    do: "Pulsarius RESOLVED"
 
-  def get_subject(%Email{type: :user_invitation_created, args: %{invitation: invitation}}),
-    do: "Osman invited you!"
+  def get_subject(%Email{type: :user_invitation_created, args: _args}),
+    do: "You have been invited to join Pulsarius. "
 
-  def get_subject(%Email{type: :send_test_alert, args: %{user: user}}),
-    do: "Test alert!"
+  def get_subject(%Email{type: :send_test_alert, args: _args}),
+    do: "Pulsarius ALERT"
 
   def get_template(%Email{type: type}), do: "#{type}.html"
 
