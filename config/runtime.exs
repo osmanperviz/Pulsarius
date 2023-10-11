@@ -114,7 +114,7 @@ if config_env() == :prod do
       region: "EU (Frankfurt) eu-central-1"
     ]
 
-  config :pulsarius, Cafu.Mailer,
+  config :pulsarius, Pulsarius.Mailer,
     adapter: Swoosh.Adapters.Mailjet,
     api_key:
       System.get_env("MAILJET_API_KEY") ||

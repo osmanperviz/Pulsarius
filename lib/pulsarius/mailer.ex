@@ -1,5 +1,5 @@
 defmodule Pulsarius.Mailer do
-  use Swoosh.Mailer, otp_app: :pulsarius, adapter: Swoosh.Adapters.Mailjet
+  use Swoosh.Mailer, otp_app: :pulsarius
   use Phoenix.Swoosh, view: PulsariusWeb.EmailsView, layout: {PulsariusWeb.EmailsView, :layout}
 
   @type incident :: Incident.t()
