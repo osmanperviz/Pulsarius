@@ -9,7 +9,7 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-if Mix.env() == :dev do
+# if Mix.env() == :dev do
   alias Pulsarius.Accounts
   alias Pulsarius.Monitoring
 
@@ -107,4 +107,4 @@ if Mix.env() == :dev do
   {:ok, _plan} = Pulsarius.Billing.create_plans(free_plan)
   Pulsarius.Billing.create_plans(bussiness_plan)
   Pulsarius.Billing.create_plans(small_team_plan)
-end
+# end
