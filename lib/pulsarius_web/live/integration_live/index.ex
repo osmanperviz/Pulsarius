@@ -130,6 +130,9 @@ defmodule PulsariusWeb.IntegrationsLive.Index do
   defp slack_link() do
     client_id = Application.get_env(:pulsarius, :slack_integration)[:client_id]
 
-    "https://slack.com/oauth/v2/authorize?client_id=#{client_id}&scope=users:read,users:read.email,incoming-webhook&user_scope="
+    redirect_url =
+      "https://pulsarius-staging.gigalixirapp.com/account/c9e22aee-00da-4233-9081-4a0c0db32279/integrations/slack"
+
+    "https://slack.com/oauth/v2/authorize?client_id=#{client_id}&redirect_uri=#{redirect_url}&scope=users:read,users:read.email,incoming-webhook&user_scope="
   end
 end
