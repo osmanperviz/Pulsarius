@@ -102,7 +102,6 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
           </div>
           <div id="myChart" phx-hook="DatailsChart" phx-update="ignore" style="min-height: 300px">
           </div>
-          <%!-- <div id={"123"} phx-hook="Chart" ></div>  --%>
           <script src="https://cdn.jsdelivr.net/npm/chart.js">
           </script>
         </div>
