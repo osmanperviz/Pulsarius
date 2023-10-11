@@ -9,6 +9,8 @@ defmodule Pulsarius.Incidents do
   alias Pulsarius.Incidents.Incident
   alias Pulsarius.Incidents.Screenshot
 
+  require Logger
+
   @doc """
   Returns the list of incidents for given monitoring.
 

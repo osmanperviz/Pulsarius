@@ -6,6 +6,8 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
   alias Pulsarius.Accounts
   alias Ueberauth.Strategy.Passwordless
 
+  require Logger
+
   @topic "invitations"
 
   def handle_event(
