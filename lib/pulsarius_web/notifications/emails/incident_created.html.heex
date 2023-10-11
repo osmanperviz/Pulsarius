@@ -22,7 +22,8 @@
   </div>
   <:footer>
     <span style="margin-bottom: 32px;display:block;line-height:1.8;padding: 32px;background-color: #f7f8fa;border-top: 2px solid #f1f2f8; border-left: 3px solid red;">
-      Monitor: <%= @incident.monitor.name %><br /> Couse: Status <%= @incident.status_code %><br />
+      Monitor: <%= @incident.monitor.name %><br />
+      Couse: Status <%= @incident.status_code %><br />
       Started at: <%= @incident.occured_at %><br /> Response: <br />
       <span style="display: block; width: 400px; padding: 5px; background-color: #ffffff; border: 1px solid #e4e6eb; border-radius: 3px; margin-top: 5px;">
         <%= @incident.page_response %>

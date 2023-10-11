@@ -145,7 +145,12 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
           <.pause_link monitor={@monitor} />
         </li>
         <li>
-          <a class="dropdown-item pb-1" href="#" phx-click="send-test-alert" phx-value-monitor_id={@monitor.id}>
+          <a
+            class="dropdown-item pb-1"
+            href="#"
+            phx-click="send-test-alert"
+            phx-value-monitor_id={@monitor.id}
+          >
             <i class="bi-exclamation-triangle bi-lg"></i>&nbsp; Send a test alert
           </a>
         </li>

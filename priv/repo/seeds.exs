@@ -13,7 +13,7 @@ if Mix.env() == :dev do
   alias Pulsarius.Accounts
   alias Pulsarius.Monitoring
 
-  Code.require_file("spec/support/test_helpers.ex")
+  # Code.require_file("spec/support/test_helpers.ex")
 
   params = %{
     "type" => "freelancer",
@@ -35,7 +35,7 @@ if Mix.env() == :dev do
     "status" => :active,
     "configuration" => %{
       "frequency_check_in_seconds" => "60",
-      "url_to_monitor" => "https://www.review-app.gigalixirapp.com/health-check",
+      "url_to_monitor" => "https://portal.jobvalley.tech/kandidaten/health-check",
       "email_notification" => true,
       "sms_notification" => true,
       "alert_rule" => :becomes_unavailable,
@@ -51,7 +51,7 @@ if Mix.env() == :dev do
 
   start_date = Timex.now() |> Timex.beginning_of_day() |> Timex.shift(days: -29)
   end_date = Timex.now()
-  Pulsarius.Abc.generate_seed_data(monitor, start_date, end_date)
+  Pulsarius.StatusResponseSeedImporter.generate_seed_data(monitor, start_date, end_date)
 
   # monitor = Pulsarius.Monitoring.get_monitor!("bd273919-447c-4518-9d43-9f11a613f16f")
   #     end_date = Timex.now()

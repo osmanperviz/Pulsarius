@@ -37,6 +37,6 @@ defmodule Pulsarius.Mailer do
 
   defp base_email do
     new()
-    |> from({"Pulsarius", "info@pulsarius.com"})
+    |> from({"Pulsarius", "osmanperviz@gmail.com"})
   end
 end

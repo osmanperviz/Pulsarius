@@ -60,7 +60,8 @@ defmodule Pulsarius.MixProject do
       {:puppeteer_img, "~> 0.1.3"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
-      {:sweet_xml, "~> 0.7"}
+      {:sweet_xml, "~> 0.7"},
+      {:rollbax, ">= 0.0.0"}
     ]
   end
 

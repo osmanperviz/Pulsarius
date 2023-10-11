@@ -281,8 +281,8 @@ defmodule Pulsarius.UrlMonitor do
           page_response: response.body
         })
 
-      Pulsarius.broadcast(@incidents_topic, {:incident_created, incident})
-      Pulsarius.broadcast(@monitor_topic <> monitor.id, monitor)
+      broadcast_message(@incidents_topic, {:incident_created, incident})
+      broadcast_message(@monitor_topic <> monitor.id, monitor)
 
       Task.start(fn ->
         Incidents.make_and_save_screenshot(monitor.configuration.url_to_monitor, incident)
@@ -360,7 +360,7 @@ defmodule Pulsarius.UrlMonitor do
 
     {:ok, status_response} = Monitoring.create_status_response(state.monitor, params)
 
-    IO.inspect("SEND status response =================>")
+    broadcast_message(@monitor_topic <> state.monitor.id, status_response)
 
     :ok = Pulsarius.broadcast(@monitor_topic <> state.monitor.id, status_response)
 
@@ -376,5 +376,9 @@ defmodule Pulsarius.UrlMonitor do
       alert_rule: monitor.configuration.alert_rule,
       alert_condition: monitor.configuration.alert_condition
     }
+  end
+
+  defp broadcast_message(topic, payload) do
+    :ok = Pulsarius.broadcast(topic, payload)
   end
 end

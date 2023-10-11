@@ -111,4 +111,17 @@ if config_env() == :prod do
       host: "pulsarius-dev.s3.amazonaws.com",
       region: "EU (Frankfurt) eu-central-1"
     ]
+
+  config :pulsarius, Cafu.Mailer,
+    adapter: Swoosh.Adapters.Mailjet,
+    api_key:
+      System.get_env("MAILJET_API_KEY") ||
+        raise("YOU SHALL NOT PASS! Set the MAILJET_API_KEY first."),
+    secret:
+      System.get_env("MAILJET_SECRET") ||
+        raise("YOU SHALL NOT PASS! Set the MAILJET_SECRET first.")
+
+  config :rollbax,
+    access_token: System.fetch_env!("ROLLBAR_ACCESS_TOKEN"),
+    environment: System.fetch_env!("ROLLBAR_ENVIRONMENT")
 end

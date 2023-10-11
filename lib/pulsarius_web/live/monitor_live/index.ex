@@ -119,9 +119,9 @@ defmodule PulsariusWeb.MonitorLive.Index do
   end
 
   def handle_event("send-test-alert", %{"monitor_id" => monitor_id}, %{assigns: assigns} = socket) do
-    current_monitor = Enum.find(assigns.monitoring, & &1.id == monitor_id)
+    current_monitor = Enum.find(assigns.monitoring, &(&1.id == monitor_id))
 
-    IO.inspect(current_monitor, label: "current_monitor====>")
+    # IO.inspect(current_monitor, label: "current_monitor====>")
 
     Pulsarius.broadcast(
       "monitor",
