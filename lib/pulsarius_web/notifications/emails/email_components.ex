@@ -23,11 +23,6 @@ defmodule PulsariusWeb.EmailComponents do
     <div style="height: 100%;">
       <div style="margin: 0 auto; max-width: 620px; height: 100%; font-family: Helvetica, Arial; font-size: 16px; line-height: 1.5; color: #374151">
         <div style="padding: 32px; border-radius-top: 3px; background-color: #fff; margin-top: 50px">
-          <%!-- <div style="margin-bottom: 40px; font-size: 14px">
-            <span style="display:inline-block; ">Probleme beim Anzeigen der Nachricht?</span>
-            <%!-- <a href={@open_in_browser_url} style="color: #374151; text-decoration: underline;">Im Browser öffnen</a>.
-          </div> --%>
-          <%!-- <%= img_tag(external_static_files_url("/images/emails/jobvalley-logo-64.png"), width: 184, height: 32, alt: "jobvalley logo") %> --%>
           <h2 style="margin: 40px 0 24px 0; color: #000; font-weight: 500;  bordertop: 2px solid red;">
             <%= render_slot(@title) %>
           </h2>

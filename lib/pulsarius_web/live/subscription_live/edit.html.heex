@@ -7,17 +7,6 @@
       </p>
     </div>
 
-    <%!-- <.form :let={f} for={:billing} id="user-form" phx-submit="save">
-      <div class="row g-5">
-        <div class="col-md-6 col-lg-5 order-md-last">
-          <.payment_form current_user={@current_user} plan={@plan} form={f} />
-        </div>
-        <div class="col-md-6 col-lg-7">
-          <.billing_info_form current_user={@current_user} plan={@plan} form={f} />
-        </div>
-      </div>
-    </.form> --%>
-
     <.form :let={f} for={@changeset} id="user-form" phx-submit="save">
       <div class="row g-5">
         <div class="col-md-6 col-lg-5 order-md-last"></div>
@@ -33,7 +22,6 @@
             <hr class="my-4" />
             <button class="w-100 btn btn-primary btn-lg" type="submit">Go to Pay</button>
           <% end %>
-          <%!-- <.billing_info_form current_user={@current_user} plan={@plan} form={f} /> --%>
         </div>
       </div>
     </.form>
