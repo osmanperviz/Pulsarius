@@ -3,5 +3,8 @@
     "@stripe/stripe-js": "^1.23.0"
   },
   "devDependencies": {
+  },
+  "scripts": {
+    "deploy": "cd .. && mix assets.deploy && rm -f _build/esbuild"
   }
 }
