@@ -48,7 +48,7 @@ defmodule PulsariusWeb.Router do
 
     live_dashboard "/dashboard", metrics: PulsariusWeb.Telemetry
 
-    live_session :invite, root_layout: {PulsariusWeb.LayoutView, :invite} do
+    live_session :invite, layout: {PulsariusWeb.LayoutView, :invite} do
       live "/invitation/:id", PulsariusWeb.InvitationLive.New, :new
       live "/invitation/join/:account_id", PulsariusWeb.InvitationLive.Join, :join
     end
