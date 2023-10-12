@@ -13,7 +13,7 @@ defmodule PulsariusWeb.StripeWebhookController do
   Construct a stripe event, if it is valid we notify subscribers.
   """
   def create(conn, _params) do
-    Logger.warn("Stripe Webhook Controller triggered!")
+    Logger.info("Stripe Webhook Controller triggered!")
 
     case Stripe.Webhook.construct_event(
            conn.assigns[:raw_body],
@@ -21,7 +21,7 @@ defmodule PulsariusWeb.StripeWebhookController do
            "whsec_d2a82c11224e8f58fb3df1dc685b10b360646395bdb6a9fd159346fe43f84ee3"
          ) do
       {:ok, %{} = event} ->
-        Logger.warn("Notifying subcribers about Event: #{IO.inspect(event)}")
+        Logger.info("Notifying subcribers about Event: #{IO.inspect(event)}")
         notify_subscribers(event)
 
       {:error, reason} ->
