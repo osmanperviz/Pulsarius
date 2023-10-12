@@ -7,7 +7,7 @@ defmodule PulsariusWeb.StripeWebhookController do
   @webhook_signing_key Application.get_env(:stripity_stripe, :webhook_signing_key)
   @stripe_service Application.get_env(:live_view_stripe, :stripe_service)
 
-  plug(:assert_body_and_signature)
+  # plug(:assert_body_and_signature)
 
   @doc """
   Construct a stripe event, if it is valid we notify subscribers.
@@ -36,6 +36,7 @@ defmodule PulsariusWeb.StripeWebhookController do
   # Confirm assigns has a raw_body and stripe_signature key of stype string,
   # otherwise halt execution.
   defp assert_body_and_signature(conn, _opts) do
+  dbg()
     case {conn.assigns[:raw_body], conn.assigns[:stripe_signature]} do
       {"" <> _, "" <> _} ->
         conn
