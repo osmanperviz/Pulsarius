@@ -28,15 +28,22 @@ defmodule Pulsarius.Mailer do
     do: Map.merge(%{email_type: type, support_email: @support_email}, args)
 
   def to_swoosh_email(%Email{recipient: recipient} = email) do
-    base_email()
+    new()
+    |> from({"Pulsarius", get_sender(email)})
     |> to(recipient)
     |> reply_to(@support_email)
     |> subject(get_subject(email))
     |> render_body(get_template(email), get_template_assigns(email))
   end
 
-  defp base_email do
-    new()
-    |> from({"Pulsarius", "osmanperviz@gmail.com"})
+  defp get_sender(%Email{type: type, args: _args}) do
+    alert_email_types = Application.get_env(:pulsarius, :email)[:alert_email_types]
+    notification_emails_types = Application.get_env(:pulsarius, :email)[:notification_types]
+
+    cond do
+      type in alert_email_types -> "alert@pulsarius.com"
+      type in notification_emails_types -> "notification@pulsarius.com"
+      true -> "info@pulsarius.com"
+    end
   end
 end

@@ -53,6 +53,10 @@ config :pulsarius, :frequency_check_in_seconds_allowed_values, [60, 120, 180, 24
 
 config :pulsarius, :api, url_monitor_api: Pulsarius.UrlMonitor.UrlMonitorClient
 
+config :pulsarius, :email,
+  alert_email_types: [:incident_created, :send_test_alert, :incident_auto_resolved],
+  notification_types:  [:user_invitation_created]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
