@@ -102,9 +102,17 @@ if config_env() == :prod do
       You can obtain it from the stripe dashboard: https://dashboard.stripe.com/account/webhooks
       """
 
+  stripe_public_key =
+    System.get_env("STRIPE_PUBLIC_KEY") ||
+      raise """
+      environment variable STRIPE_PUBLIC_KEY is missing.
+      You can obtain it from the stripe dashboard: https://dashboard.stripe.com/account/webhooks
+      """
+
   config :stripity_stripe,
     api_key: stripe_api_key,
-    signing_secret: stripe_webhook_key
+    signing_secret: stripe_webhook_key,
+    public_key: stripe_public_key
 
   config :ex_aws,
     access_key_id: System.get_env("AWS_ACCESS_KEY_ID"),
