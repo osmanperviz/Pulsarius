@@ -36,7 +36,6 @@ defmodule PulsariusWeb.StripeWebhookController do
   # Confirm assigns has a raw_body and stripe_signature key of stype string,
   # otherwise halt execution.
   defp assert_body_and_signature(conn, _opts) do
-  dbg()
     case {conn.assigns[:raw_body], conn.assigns[:stripe_signature]} do
       {"" <> _, "" <> _} ->
         conn
