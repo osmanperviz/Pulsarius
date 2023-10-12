@@ -258,17 +258,21 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
     expiration_date = monitor.configuration.ssl_expiry_date
     from = Timex.now() |> Timex.beginning_of_day()
 
-    Interval.new(from: from, until: expiration_date)
-    |> Interval.duration(:months)
-    |> case do
-      0 ->
-        "Less than an month (#{Calendar.strftime(expiration_date, "%A.%m.%Y")})"
+    if Timex.compare(expiration_date, from) == :lt do
+      "Expired (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
+    else
+      Interval.new(from: from, until: expiration_date)
+      |> Interval.duration(:months)
+      |> case do
+        0 ->
+          "Less than a month (#{Calendar.strftime(expiration_date, "%A, %b %d, %Y")})"
 
-      1 ->
-        "1 month (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
+        1 ->
+          "1 month (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
 
-      result ->
-        "#{result} months (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
+        result ->
+          "#{result} months (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
+      end
     end
   end
 
