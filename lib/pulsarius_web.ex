@@ -24,6 +24,8 @@ defmodule PulsariusWeb do
       import Plug.Conn
       import PulsariusWeb.Gettext
       alias PulsariusWeb.Router.Helpers, as: Routes
+      
+      require Logger
     end
   end
 
