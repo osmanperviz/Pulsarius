@@ -4,7 +4,7 @@ defmodule PulsariusWeb.StripeWebhookController do
   """
   use PulsariusWeb, :controller
 
-  @webhook_signing_key Application.get_env(:stripity_stripe, :webhook_signing_key)
+  @webhook_signing_key Application.get_env(:stripity_stripe, :signing_secret)
   @stripe_service Application.get_env(:live_view_stripe, :stripe_service)
 
   plug(:assert_body_and_signature)
@@ -18,14 +18,16 @@ defmodule PulsariusWeb.StripeWebhookController do
     case Stripe.Webhook.construct_event(
            conn.assigns[:raw_body],
            conn.assigns[:stripe_signature],
-           "whsec_d2a82c11224e8f58fb3df1dc685b10b360646395bdb6a9fd159346fe43f84ee3"
+          @webhook_signing_key
+          
          ) do
       {:ok, %{} = event} ->
-        Logger.info("Notifying subcribers about Event: #{IO.inspect(event)}")
+        IO.inspect(event, label: "EVENT  ===============>")
         notify_subscribers(event)
 
       {:error, reason} ->
-        Logger.error("Error occured in Strip WebHook: #{IO.inspect(reason)}")
+       IO.inspect(reason, label: "Reason  ===============>")
+        # Logger.error("Error occured in Strip WebHook: #{IO.inspect(reason)}")
         reason
     end
 
@@ -42,7 +44,7 @@ defmodule PulsariusWeb.StripeWebhookController do
 
       _ ->
         conn
-        |> put_status(500)
+        |> send_resp(:created, "")
         |> halt()
     end
   end

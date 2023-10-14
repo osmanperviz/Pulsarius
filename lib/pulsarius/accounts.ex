@@ -263,7 +263,7 @@ defmodule Pulsarius.Accounts do
 
   """
   @spec fetch_invitation_from_token(String.t()) :: [UserInvitation.t()] | nil
-  def fetch_invitation_by_type(account_id, type, status \\ "pending") do
+  def fetch_invitation_by_type(_account_id, type, status \\ "pending") do
     UserInvitation.by_type_and_status(type, status)
     |> Repo.all()
   end
@@ -311,5 +311,24 @@ defmodule Pulsarius.Accounts do
     |> Repo.preload(:integrations)
     |> Map.get(:integrations)
     |> Enum.any?()
+  end
+
+    @doc """
+  Checks if account any integrations set (Slack, MSTeams...)
+
+  ## Examples
+
+      iex> has_any_integration_set?(%Account{})
+      [%User{}, %User{} ....]
+
+      iex> has_any_integration_set?(%Account{})
+      []
+
+  """
+
+  @spec update_plan(Account.t(), map()) :: {:ok, Account.t()} | {:error, Ecto.Changeset.t()}
+  def update_plan(account, params) do
+    Account.changeset(account, params)
+    |> Repo.update()
   end
 end

@@ -85,9 +85,9 @@ config :ueberauth, Ueberauth.Strategy.Passwordless,
 
 # test stripe credentials
 config :stripity_stripe,
-  api_key: "sk_test_OiDc9MlITvMIbP8owSzIFEdX",
+  api_key: "sk_test_514sdHiGzlqiGxcQvOaknYH11VBfTiViebON9ePyEzfGPxCC0aK0zKor9LB4tsj20Q6G6KbIma4pgzPqvooWl2btD003HVYyUNn",
   signing_secret: "whsec_d2a82c11224e8f58fb3df1dc685b10b360646395bdb6a9fd159346fe43f84ee3",
-  public_key: "pk_test_PExnBBWOVfYS4dz43A4SuLL9"
+  public_key: "pk_test_514sdHiGzlqiGxcQvFCNI4UCe557cUsgDVIsy81M39VNlCzkQh7KcfIFb6OZdnIiaJkaw5xrtj5HgPPvFgQgYarDE00CzG1sEDk"
 
 # config :ex_aws,
 #   access_key_id: "AKIAX2SE3I2SX4W6YLEX",

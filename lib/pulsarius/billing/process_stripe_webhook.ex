@@ -59,14 +59,17 @@ defmodule Pulsarius.Billing.ProcessWebhook do
   defp create_subscription(
          %{customer: customer_stripe_id, plan: %{id: plan_stripe_id}} = stripe_subscription
        ) do
-    account = Accounts.fetch_account_by_stripe_id!(customer_stripe_id)
     plan = Billing.fetch_plan_by_stripe_id!(plan_stripe_id)
 
-    Billing.create_subscriptions(account, plan, %{
+    account = Accounts.fetch_account_by_stripe_id!(customer_stripe_id)
+
+    {:ok, _subscription} = Billing.create_subscriptions(account, plan, %{
       stripe_id: stripe_subscription.id,
       status: stripe_subscription.status,
       current_period_end_at: unix_to_naive_datetime(stripe_subscription.current_period_end)
     })
+
+    Accounts.update_plan(account, %{"type" => plan.type})
   end
 
   # Convert unix to naive datetime.
