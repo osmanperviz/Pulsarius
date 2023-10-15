@@ -18,7 +18,8 @@ defmodule PulsariusWeb.StripeWebhookController do
     case Stripe.Webhook.construct_event(
            conn.assigns[:raw_body],
            conn.assigns[:stripe_signature],
-          @webhook_signing_key
+           "whsec_RXmak4kvwYK34ThAXXJc3GAA2MOXIigB"
+          # @webhook_signing_key
           
          ) do
       {:ok, %{} = event} ->
