@@ -80,8 +80,7 @@ defmodule Pulsarius.UrlMonitor do
         end
 
       {:error, reason} ->
-        Logger.error("Something went wrong with HTTTP request: #{inspect(reason)}")
-        {:norenply, schedule_check(state)}
+        {:norenply, handle_error(state, reason)}
     end
   end
 
@@ -200,6 +199,53 @@ defmodule Pulsarius.UrlMonitor do
 
     Pulsarius.broadcast(@monitor_topic <> monitor.id, monitor)
 
+    schedule_check(state)
+  end
+
+  @doc """
+  if the bot receives an error response %HTTPoison.Error{} and he is not already in incident mode, 
+  it will set monitor to :inactive, create incident, broadcast message and schedule next check.
+
+   ## Parameters
+  - `state`: A map representing the state of the bot.
+  - `error`: A HTTPoison.Error struct, representing response returned from monitored URL, reasons could be :timeout or ::nxdomain
+
+  ## Returns
+  - The current state.
+  """
+
+  def handle_error(
+        %{in_incident_mode: false, monitor: monitor} = state,
+        %HTTPoison.Error{reason: reason} = error
+      ) do
+    Logger.error("Something went wrong with HTTTP request: #{inspect(error)}")
+    {:ok, monitor} = Monitoring.update_monitor(monitor, %{status: :inactive})
+
+    {:ok, incident} =
+      Incidents.create_incident(monitor, %{
+        status_code: 500,
+        page_response:  Atom.to_string(reason)
+      })
+
+    broadcast_message(@incidents_topic, {:incident_created, incident})
+    broadcast_message(@monitor_topic <> monitor.id, monitor)
+
+    schedule_check(state)
+  end
+
+  @doc """
+  if the bot receives an error response %HTTPoison.Error{} and he is already in incident mode, 
+  it will just schedule next check.
+
+   ## Parameters
+  - `state`: A map representing the state of the bot.
+  - `error`: A HTTPoison.Error struct, representing response returned from monitored URL, reasons could be :timeout or ::nxdomain
+
+  ## Returns
+  - The current state.
+  """
+  def handle_error(%{in_incident_mode: true, monitor: monitor} = state, reason) do
+    Logger.error("Something went wrong with HTTTP request: #{inspect(reason)}")
     schedule_check(state)
   end
 
