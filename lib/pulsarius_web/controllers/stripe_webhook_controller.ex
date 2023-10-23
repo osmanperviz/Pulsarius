@@ -19,15 +19,14 @@ defmodule PulsariusWeb.StripeWebhookController do
            conn.assigns[:raw_body],
            conn.assigns[:stripe_signature],
            "whsec_RXmak4kvwYK34ThAXXJc3GAA2MOXIigB"
-          # @webhook_signing_key
-          
+           # @webhook_signing_key
          ) do
       {:ok, %{} = event} ->
         IO.inspect(event, label: "EVENT  ===============>")
         notify_subscribers(event)
 
       {:error, reason} ->
-       IO.inspect(reason, label: "Reason  ===============>")
+        IO.inspect(reason, label: "Reason  ===============>")
         # Logger.error("Error occured in Strip WebHook: #{IO.inspect(reason)}")
         reason
     end

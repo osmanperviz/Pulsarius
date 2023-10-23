@@ -1,0 +1,17 @@
+<PulsariusWeb.EmailComponents.email_box open_in_browser_url="#">
+  <:title>
+    Your magic link is ready
+  </:title>
+  <div style="max-width: 500px; padding-bottom: 40px;  ">
+    <p style="margin-top: 50px; margin-bottom: 50px">
+      If you didn't request this email, there's nothing to worry about — you can safely ignore it.
+    </p>
+    <a
+      href={login_link(@token)}
+      style="white-space: nowrap; color: #fff; background-color: #117bff; border: 1px solid #cdced0; padding: 14px 28px; font-size: 14px; line-height: 24px; border-radius: 4px; text-decoration: none;"
+    >
+      Sign in now
+    </a>
+  </div>
+  <:footer></:footer>
+</PulsariusWeb.EmailComponents.email_box>

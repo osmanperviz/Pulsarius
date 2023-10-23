@@ -17,7 +17,10 @@ defmodule Pulsarius.Mailer do
     do: "Pulsarius RESOLVED"
 
   def get_subject(%Email{type: :user_invitation_created, args: _args}),
-    do: "You have been invited to join Pulsarius. "
+    do: "You have been invited to join Pulsarius."
+
+  def get_subject(%Email{type: :send_magic_link, args: _args}),
+    do: "Sign in to Pulsarius "
 
   def get_subject(%Email{type: :send_test_alert, args: _args}),
     do: "Pulsarius ALERT"

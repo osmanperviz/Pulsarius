@@ -72,4 +72,10 @@ defmodule Pulsarius.Notifications do
     Email.notifications_for(:send_test_alert, args)
     |> Notification.send()
   end
+
+  @spec send_magic_link(%{email: String.t(), link: String.t()}) :: :ok
+  def send_magic_link(args) do
+    Email.notifications_for(:send_magic_link, args)
+    |> Notification.send()
+  end
 end

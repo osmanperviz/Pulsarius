@@ -258,7 +258,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
     expiration_date = monitor.configuration.ssl_expiry_date
     from = Timex.now() |> Timex.beginning_of_day()
 
-    if Timex.compare(expiration_date, from) == :lt do
+    if Timex.compare(expiration_date, from) == -1 do
       "Expired (#{Calendar.strftime(expiration_date, "%b %d, %Y")})"
     else
       Interval.new(from: from, until: expiration_date)

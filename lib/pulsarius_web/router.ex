@@ -14,6 +14,12 @@ defmodule PulsariusWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/", PulsariusWeb do
+    pipe_through :api
+
+    post "/send-magic-link", UserSessionController, :create
+  end
+
   scope "/webhooks", PulsariusWeb do
     pipe_through :api
     post "/stripe", StripeWebhookController, :create
@@ -43,6 +49,15 @@ defmodule PulsariusWeb.Router do
   # as long as you are also using SSL (which you should anyway).
   import Phoenix.LiveDashboard.Router
 
+  scope "/", PulsariusWeb do
+    pipe_through [:browser]
+
+    live_session :current_user,
+      on_mount: [{PulsariusWeb.AuthAssigns, :mount_current_user}] do
+      get "/log-in", UserSessionController, :log_in
+    end
+  end
+
   scope "/" do
     pipe_through :browser
 
@@ -53,7 +68,8 @@ defmodule PulsariusWeb.Router do
       live "/invitation/join/:account_id", PulsariusWeb.InvitationLive.Join, :join
     end
 
-    live_session :users, on_mount: [PulsariusWeb.AuthAssigns, PulsariusWeb.RouteAssigns] do
+    live_session :users,
+      on_mount: [{PulsariusWeb.AuthAssigns, :ensure_authenticated}, PulsariusWeb.UserAssigns, PulsariusWeb.RouteAssigns] do
       live "/monitors", PulsariusWeb.MonitorLive.Index, :index
       live "/monitors/new", PulsariusWeb.MonitorLive.New, :new
       live "/monitors/:id/edit", PulsariusWeb.MonitorLive.Edit, :edit

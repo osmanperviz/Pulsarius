@@ -80,7 +80,7 @@ defmodule Pulsarius.UrlMonitor do
         end
 
       {:error, reason} ->
-        {:norenply, handle_error(state, reason)}
+        {:noreply, handle_error(state, reason)}
     end
   end
 
@@ -224,7 +224,7 @@ defmodule Pulsarius.UrlMonitor do
     {:ok, incident} =
       Incidents.create_incident(monitor, %{
         status_code: 500,
-        page_response:  Atom.to_string(reason)
+        page_response: Atom.to_string(reason)
       })
 
     broadcast_message(@incidents_topic, {:incident_created, incident})

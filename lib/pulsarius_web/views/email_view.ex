@@ -19,6 +19,11 @@ defmodule PulsariusWeb.EmailsView do
     )
   end
 
+  def login_link(token) do
+    Routes.user_session_path(PulsariusWeb.Endpoint, :log_in, token: token
+    )
+  end
+
   def calculate_length(incident) do
     PulsariusWeb.LiveHelpers.humanized_duration(incident.occured_at, incident.resolved_at)
   end

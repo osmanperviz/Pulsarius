@@ -7,7 +7,7 @@ defmodule Pulsarius.Accounts do
   alias Pulsarius.Repo
   alias Ecto.Multi
 
-  alias Pulsarius.Accounts.{User, Account, UserInvitation}
+  alias Pulsarius.Accounts.{User, Account, UserInvitation, UserToken}
 
   @doc """
   Returns the list of all users.
@@ -50,6 +50,10 @@ defmodule Pulsarius.Accounts do
 
   """
   def get_user!(id), do: Repo.get!(User, id)
+
+  def get_user_by_email(email) when is_binary(email) do
+    Repo.get_by(User, email: email)
+  end
 
   @doc """
   Creates a user.
@@ -313,7 +317,7 @@ defmodule Pulsarius.Accounts do
     |> Enum.any?()
   end
 
-    @doc """
+  @doc """
   Checks if account any integrations set (Slack, MSTeams...)
 
   ## Examples
@@ -330,5 +334,28 @@ defmodule Pulsarius.Accounts do
   def update_plan(account, params) do
     Account.changeset(account, params)
     |> Repo.update()
+  end
+
+  @doc """
+  Delivers a "magic" sign in link to a user's email
+  """
+  def deliver_magic_link(user) do
+    {email_token, token} = UserToken.build_email_token(user)
+    Repo.insert!(token)
+
+    Pulsarius.broadcast(
+      "deliver_magic_link",
+      {:send_magic_link, %{user: user, token: email_token}}
+    )
+  end
+
+
+  def get_user_by_email_token(token) do
+    with {:ok, query} <- UserToken.verify_email_token_query(token),
+         %User{} = user <- Repo.one(query) do
+      user
+    else
+      _ -> nil
+    end
   end
 end

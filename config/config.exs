@@ -27,7 +27,6 @@ config :pulsarius, PulsariusWeb.Endpoint,
 
 # config :pulsarius, Pulsarius.Mailer, adapter: Swoosh.Adapters.Local
 
-
 # Swoosh API client is needed for adapters other than SMTP.
 # config :swoosh, :api_client, false
 
@@ -53,9 +52,12 @@ config :pulsarius, :frequency_check_in_seconds_allowed_values, [60, 120, 180, 24
 
 config :pulsarius, :api, url_monitor_api: Pulsarius.UrlMonitor.UrlMonitorClient
 
+config :pulsarius, Pulsarius.Mailer, adapter: Swoosh.Adapters.Local
+
+
 config :pulsarius, :email,
   alert_email_types: [:incident_created, :send_test_alert, :incident_auto_resolved],
-  notification_types:  [:user_invitation_created]
+  notification_types: [:user_invitation_created]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

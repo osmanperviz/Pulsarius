@@ -8,27 +8,36 @@ defmodule PulsariusWeb.AuthAssigns do
   alias Phoenix.Component
   alias Pulsarius.Accounts
 
-  def on_mount(_name, params, session, socket) do
-    {:cont,
-     socket
-     |> assign_current_user()
-     |> assign_account()}
+  def on_mount(:mount_current_user, _params, session, socket) do
+    {:cont, mount_current_user(socket, session)}
   end
 
-  defp assign_current_user(socket) do
-    # for development we will just fetch default user which we have in DB
-    # in reality we will check if exists in session
-    # since we don't have log in functionality yet we will just assign first user from DB
+  def on_mount(:ensure_authenticated, _params, session, socket) do
+    socket = mount_current_user(socket, session)
+
+    if socket.assigns.current_user do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
+        |> Phoenix.LiveView.redirect(to: "/")
+
+      {:halt, socket}
+    end
+  end
+
+  defp assign_current_user(socket, user_token) do
     Component.assign_new(socket, :current_user, fn ->
-      Accounts.list_users() |> List.first()
+      Accounts.get_user_by_email_token("user_token")
     end)
   end
 
-  defp assign_account(socket) do
-    user = socket.assigns.current_user |> Pulsarius.Repo.preload([:account])
-
-    Component.assign_new(socket, :account, fn ->
-      user.account
+  defp mount_current_user(socket, session) do
+    Phoenix.Component.assign_new(socket, :current_user, fn ->
+      if user_token = session["user_token"] do
+        Accounts.get_user_by_email_token(user_token)
+      end
     end)
   end
 end

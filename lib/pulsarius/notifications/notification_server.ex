@@ -8,7 +8,7 @@ defmodule Pulsarius.Notifications.NotificationServer do
   end
 
   def init(state) do
-    topics_to_subscribe = ["incidents", "invitations", "monitor"]
+    topics_to_subscribe = ["incidents", "invitations", "monitor", "deliver_magic_link"]
 
     topics_to_subscribe
     |> Enum.map(&Pulsarius.subscribe/1)
@@ -60,6 +60,12 @@ defmodule Pulsarius.Notifications.NotificationServer do
 
   def handle_info({:user_invitation_created, invitation}, socket) do
     Task.start(fn -> Notifications.user_invitation_created(invitation) end)
+
+    {:noreply, socket}
+  end
+
+  def handle_info({:send_magic_link, args}, socket) do
+    Task.start(fn -> Notifications.send_magic_link(args) end)
 
     {:noreply, socket}
   end
