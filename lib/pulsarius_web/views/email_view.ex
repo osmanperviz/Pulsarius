@@ -20,8 +20,7 @@ defmodule PulsariusWeb.EmailsView do
   end
 
   def login_link(token) do
-    Routes.user_session_path(PulsariusWeb.Endpoint, :log_in, token: token
-    )
+    Routes.user_session_path(PulsariusWeb.Endpoint, :new, token: token)
   end
 
   def calculate_length(incident) do

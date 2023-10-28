@@ -135,8 +135,4 @@ if config_env() == :prod do
   config :rollbax,
     access_token: System.fetch_env!("ROLLBAR_ACCESS_TOKEN"),
     environment: System.fetch_env!("ROLLBAR_ENVIRONMENT")
-
-  config :ueberauth, Ueberauth.Strategy.Passwordless,
-    token_secret: "MK5izBztrRZoUmfc8P/XwoBXmOKzEE8o",
-    mailer: MyApp.MyMailer
 end

@@ -52,9 +52,13 @@ defmodule PulsariusWeb.Router do
   scope "/", PulsariusWeb do
     pipe_through [:browser]
 
-    live_session :current_user,
-      on_mount: [{PulsariusWeb.AuthAssigns, :mount_current_user}] do
-      get "/log-in", UserSessionController, :log_in
+    live_session :redirect_if_user_is_authenticated,
+      on_mount: [{PulsariusWeb.AuthAssigns, :redirect_if_user_is_authenticated}], layout: {PulsariusWeb.LayoutView, :invite} do
+      live "/sign-up", RegistrationLive.New, :new
+      live "/sign-in", LoginLive.New, :new
+      live "/sign-up/success", RegistrationLive.Success, :success
+
+      get "/session/new", UserSessionController, :new
     end
   end
 

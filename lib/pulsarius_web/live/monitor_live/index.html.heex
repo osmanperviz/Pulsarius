@@ -1,5 +1,5 @@
 <div class="col-lg-12 d-flex justify-content-between mt-3">
-  <.greetings name="Osman" />
+  <.greetings name={String.capitalize(@current_user.first_name)} />
   <div class="col-lg-6 d-flex gap-4">
     <div class="search flex-grow-50">
       <form phx-change="search-monitor">

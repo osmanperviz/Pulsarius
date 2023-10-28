@@ -78,7 +78,6 @@ defmodule PulsariusWeb.MonitorLive.Show do
   # Handle incoming events from endpoint_checker.
   # """
   def handle_info(%Monitor{} = monitor, %{assigns: assigns} = socket) do
-    IO.inspect("HIT monitor =============>")
     incidents = Incidents.list_incidents(monitor.id)
     avalability_statistics = AvalabilityStatistics.calculate(incidents)
     monitor = Pulsarius.Repo.preload(monitor, :active_incident)

@@ -3,10 +3,10 @@ defmodule PulsariusWeb.AuthAssigns do
   Ensures all data related to user authentication and
   authorisation are correctly added to the assigns.
   """
-
-  alias Phoenix.LiveView
   alias Phoenix.Component
   alias Pulsarius.Accounts
+
+  import Phoenix.LiveView
 
   def on_mount(:mount_current_user, _params, session, socket) do
     {:cont, mount_current_user(socket, session)}
@@ -20,11 +20,23 @@ defmodule PulsariusWeb.AuthAssigns do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
-        |> Phoenix.LiveView.redirect(to: "/")
+        |> put_flash(:error, "You must log in to access this page.")
+        |> redirect(to: "/")
 
       {:halt, socket}
     end
+  end
+
+  def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
+    # socket = mount_current_user(socket, session)
+
+    # if socket.assigns.current_user do
+    #   {:halt, redirect(socket, to: Routes.monitor_index_path(socket, :index))}
+    # else
+    #   {:cont, socket}
+    # end
+
+    {:cont, socket}
   end
 
   defp assign_current_user(socket, user_token) do

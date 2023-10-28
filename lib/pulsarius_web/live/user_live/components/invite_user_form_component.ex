@@ -4,7 +4,6 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
   """
   use PulsariusWeb, :live_component
   alias Pulsarius.Accounts
-  alias Ueberauth.Strategy.Passwordless
 
   require Logger
 

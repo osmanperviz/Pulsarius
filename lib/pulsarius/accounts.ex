@@ -196,6 +196,19 @@ defmodule Pulsarius.Accounts do
   end
 
   @doc """
+  Returns an `%Ecto.Changeset{}` for tracking account changes.
+
+  ## Examples
+
+      iex> change_user(user)
+      %Ecto.Changeset{data: %User{}}
+
+  """
+  def change_account(%Account{} = account, attrs \\ %{}) do
+    Account.changeset(account, attrs)
+  end
+
+  @doc """
   Assign stripe id to  Account.
 
   ## Examples
@@ -336,6 +349,17 @@ defmodule Pulsarius.Accounts do
     |> Repo.update()
   end
 
+  def register_organization(%{"account" => account_params} = params) do
+    Ecto.Multi.new()
+    |> Multi.run(:account, fn _repo, %{} ->
+      create_account(account_params)
+    end)
+    |> Multi.run(:user, fn _repo, %{account: account} ->
+      create_user(account, params)
+    end)
+    |> Repo.transaction()
+  end
+
   @doc """
   Delivers a "magic" sign in link to a user's email
   """
@@ -346,6 +370,19 @@ defmodule Pulsarius.Accounts do
     Pulsarius.broadcast(
       "deliver_magic_link",
       {:send_magic_link, %{user: user, token: email_token}}
+    )
+  end
+
+    @doc """
+  Delivers a welcome & confirmation email to a user's email
+  """
+  def deliver_welcome_email(user) do
+    {email_token, token} = UserToken.build_email_token(user)
+    Repo.insert!(token)
+
+    Pulsarius.broadcast(
+      "deliver_welcome_email",
+      {:send_welcome_email, %{user: user, token: email_token}}
     )
   end
 

@@ -49,6 +49,15 @@ defmodule Pulsarius.Notifications.Email do
     }
   end
 
+  @spec send_welcome_email(%{email: String.t(), token: Binary.t()}) :: Email.t()
+  def send_welcome_email(args) do
+    %@self{
+      type: :send_welcome_email,
+      args: args,
+      recipient: args.user.email
+    }
+  end
+
   def notifications_for(type, args) do
     apply(@self, type, [args])
   end

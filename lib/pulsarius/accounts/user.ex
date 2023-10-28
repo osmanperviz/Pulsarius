@@ -18,6 +18,7 @@ defmodule Pulsarius.Accounts.User do
     field :email, :string
     field :first_name, :string
     field :last_name, :string
+    field :phone_number, :string
     field :status, Ecto.Enum, values: [:pending, :registered], default: :pending
     field :show_onboard_progress_wizard, :boolean, default: true
     field :admin, :boolean, default: false
@@ -38,7 +39,8 @@ defmodule Pulsarius.Accounts.User do
       :email,
       :status,
       :show_onboard_progress_wizard,
-      :admin
+      :admin,
+      :phone_number
     ])
     |> validate_required([:first_name, :last_name, :email, :status])
   end

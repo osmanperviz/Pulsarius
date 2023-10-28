@@ -15,7 +15,7 @@ defmodule PulsariusWeb.UserSessionController do
     end
   end
 
-  def log_in(conn, %{"token" => token} = params) do
+  def new(conn, %{"token" => token} = params) do
     case Accounts.get_user_by_email_token(token) do
       %User{} = user ->
         conn

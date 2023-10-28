@@ -79,10 +79,6 @@ config :pulsarius, :slack_integration,
   client_secret: "d4b34882b201055a88253f44980b7e1c",
   oauth_endpoint: "https://slack.com/api/oauth.v2.access"
 
-config :ueberauth, Ueberauth.Strategy.Passwordless,
-  token_secret: "MK5izBztrRZoUmfc8P/XwoBXmOKzEE8o",
-  mailer: MyApp.MyMailer
-
 # test stripe credentials
 config :stripity_stripe,
   api_key:

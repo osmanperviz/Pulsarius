@@ -17,6 +17,7 @@ defmodule Pulsarius.Accounts.Account do
     field :type, Ecto.Enum, values: [:freelancer, :small_team, :bussines], default: :freelancer
     field :stripe_id, :string
     field :invitation_token, :string
+    field :organization_name, :string
 
     has_many :users, User, on_replace: :delete
     has_many :monitors, Monitor, on_replace: :delete
@@ -33,8 +34,8 @@ defmodule Pulsarius.Accounts.Account do
   @doc false
   def changeset(account, attrs) do
     account
-    |> cast(attrs, [:type, :stripe_id, :invitation_token])
-    |> validate_required([:type, :invitation_token])
+    |> cast(attrs, [:type, :stripe_id, :invitation_token, :organization_name])
+    |> validate_required([:type, :invitation_token, :organization_name])
     |> cast_assoc(:users)
   end
 

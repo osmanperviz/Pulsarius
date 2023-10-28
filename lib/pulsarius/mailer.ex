@@ -22,6 +22,9 @@ defmodule Pulsarius.Mailer do
   def get_subject(%Email{type: :send_magic_link, args: _args}),
     do: "Sign in to Pulsarius "
 
+  def get_subject(%Email{type: :send_welcome_email, args: _args}),
+    do: "Welcome to Pulsarius"
+
   def get_subject(%Email{type: :send_test_alert, args: _args}),
     do: "Pulsarius ALERT"
 

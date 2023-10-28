@@ -51,7 +51,6 @@ defmodule Pulsarius.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:httpoison, "~> 1.8"},
       {:phoenix_swoosh, "~> 1.0"},
-      {:ueberauth_passwordless, github: "STUDITEMPS/ueberauth_passwordless", branch: "master"},
       {:stripity_stripe, "~> 2.0"},
       {:x509, "~> 0.8.5"},
       {:timex, "~> 3.5"},
