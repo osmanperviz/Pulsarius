@@ -11,6 +11,7 @@ defmodule Pulsarius.Repo.Migrations.AddUserInvitationEntity do
       timestamps()
     end
 
-    create index(:user_invitations, [:token])
+    create index(:user_invitations, [:token, :email])
+    create unique_index(:user_invitations, [:email])
   end
 end

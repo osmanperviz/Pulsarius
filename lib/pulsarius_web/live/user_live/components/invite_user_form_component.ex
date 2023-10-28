@@ -3,15 +3,20 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
   Component responsible for taking emails from user to invite.
   """
   use PulsariusWeb, :live_component
+  alias Pulsarius.Accounts.UserInvitation
   alias Pulsarius.Accounts
 
   require Logger
 
   @topic "invitations"
 
+  def mount( socket) do
+    {:ok, assign(socket, form: UserInvitation.changeset(%UserInvitation{}))}
+  end
+
   def handle_event(
         "send-invite",
-        %{"invite_user" => %{"email" => email} = invite_user_params},
+        %{"user_invitation" => %{"email" => email} = invite_user_params},
         socket
       ) do
     case Accounts.invite_user_via_email(socket.assigns.account, email) do
@@ -27,13 +32,14 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
          |> put_flash(:info, "Invite sent!")
          |> push_redirect(to: Routes.user_index_path(socket, :index))}
 
-      {:error, error} ->
-        Logger.error(error)
+      {:error, changeset} ->
+        Logger.error(changeset)
 
         {:noreply,
          socket
-         |> put_flash(:info, "Something went wrong!")
-         |> push_redirect(to: Routes.user_index_path(socket, :index))}
+         |> assign(form: changeset)}
+        #  |> put_flash(:info, "Something went wrong!")
+        #  |> push_redirect(to: Routes.user_index_path(socket, :index))}
     end
   end
 
@@ -52,7 +58,7 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
           <div class="card-body pt-4 pb-4">
             <.form
               :let={f}
-              as={:invite_user}
+              for={@form}
               id="user-invite-form"
               phx-submit="send-invite"
               phx-target={@myself}
