@@ -5,8 +5,7 @@ defmodule Pulsarius.Monitoring do
 
   import Ecto.Query, warn: false
   alias Pulsarius.Repo
-
-  alias Pulsarius.Monitoring.{Monitor, StatusResponse, AvalabilityStatistics}
+  alias Pulsarius.Monitoring.{Monitor, StatusResponse, AvailabilityStatistics}
 
   @doc """
   Returns the list of monitoring for given account.
@@ -29,9 +28,9 @@ defmodule Pulsarius.Monitoring do
     list_monitoring(account_id)
     |> Enum.map(fn monitor ->
       statistics =
-        Map.merge(AvalabilityStatistics.calculate_todays_stats(monitor.incidents), %{
+        Map.merge(AvailabilityStatistics.calculate(monitor.incidents), %{
           average_response_time:
-            AvalabilityStatistics.calculate_average_response_time(monitor.status_response)
+            AvailabilityStatistics.calculate_average_response_time(monitor.status_response)
         })
 
       Monitor.cast_statistics(monitor, statistics)

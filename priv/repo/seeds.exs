@@ -53,7 +53,7 @@ start_date = Timex.now() |> Timex.beginning_of_day() |> Timex.shift(days: -29)
 end_date = Timex.now()
 Pulsarius.StatusResponseSeedImporter.generate_seed_data(monitor, start_date, end_date)
 
-# monitor = Pulsarius.Monitoring.get_monitor!("bd273919-447c-4518-9d43-9f11a613f16f")
+# monitor = Pulsarius.Monitoring.get_monitor!("c0542da4-e5e0-476e-94ce-aed0a791a0ff")
 #     end_date = Timex.now()
 #   start_date = Timex.now() |> Timex.beginning_of_day() |> Timex.shift(days: -29)
 # Pulsarius.Abc.generate_seed_data(monitor, start_date, end_date)
@@ -85,7 +85,7 @@ small_team_plan = %{
   ],
   name: "Small Team",
   price_in_cents: 1000,
-  stripe_price_id: "price_1MW0ZxGzlqiGxcQvOecmXEDM",
+  stripe_price_id: "",
   type: :small_team
 }
 

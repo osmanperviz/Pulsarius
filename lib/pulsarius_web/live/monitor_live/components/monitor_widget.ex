@@ -37,12 +37,12 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
             tooltip_text="Today's average response time in miliseconds"
           />
           <.statistics_info
-            value={"#{@monitor.statistics.total_avalability_in_percentage}%"}
+            value={"#{@monitor.statistics.today.availability_percentage}%"}
             title="Availability"
             tooltip_text="Today's availability"
           />
           <.statistics_info
-            value={"#{@monitor.statistics.total_down_time_in_minutes}m"}
+            value={"#{@monitor.statistics.today.downtime_minutes}m"}
             title="Downtime"
             tooltip_text="Today's downtime in minutes"
           />

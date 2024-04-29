@@ -50,7 +50,7 @@ export const StripeHook = {
       buttonText = document.getElementById('button-text');
       buttonText.textContent = "Processing...";
 
-       topbar.show();
+      topbar.show();
       const { setup_error } = await stripe.confirmSetup({
         // Wait for stripe confirmation
         elements,

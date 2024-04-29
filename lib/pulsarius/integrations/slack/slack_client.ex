@@ -1,34 +1,50 @@
 defmodule Pulsarius.Integrations.Slack.SlackClient do
+  @moduledoc """
+  Handles communication with the Slack API for OAuth token fetching.
+  """
+  
+  alias HTTPoison
+  alias HTTPoison.Response
+  alias HTTPoison.Error
+  alias Jason, warn: false
+
+  @slack_config Application.fetch_env!(:pulsarius, :slack_integration)
+
+  @spec fetch_data(String.t()) :: {:ok, map()} | {:error, term()}
   def fetch_data(code) do
-    case HTTPoison.post(endpoint(), encode_body(code), headers()) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        Jason.decode(body)
-
-      {:ok, %HTTPoison.Response{status_code: status_code}} ->
-        {:error, status_code}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    HTTPoison.post(endpoint(), encode_body(code), headers())
+    |> handle_response()
   end
 
   defp encode_body(code) do
-    slack_integration = Application.get_env(:pulsarius, :slack_integration)
-
     URI.encode_query(%{
       "code" => code,
-      "client_id" => slack_integration[:client_id],
-      "client_secret" => slack_integration[:client_secret]
+      "client_id" => @slack_config[:client_id],
+      "client_secret" => @slack_config[:client_secret]
     })
   end
 
-  defp endpoint() do
-    Application.get_env(:pulsarius, :slack_integration)[:oauth_endpoint]
+  defp endpoint(), do: @slack_config[:oauth_endpoint]
+
+  defp headers(), do: [{"Content-Type", "application/x-www-form-urlencoded"}]
+
+  defp handle_response({:ok, %Response{status_code: 200, body: body}}) do
+    case Jason.decode(body) do
+      {:ok, decoded} -> 
+        {:ok, decoded}
+      error ->
+        Logger.error("Failed to parse JSON: #{inspect(error)}")
+        {:error, :invalid_json}
+    end
   end
 
-  defp headers() do
-    [
-      {"Content-Type", "application/x-www-form-urlencoded"}
-    ]
+  defp handle_response({:ok, %Response{status_code: status_code}}) do
+    Logger.warn("Received non-200 status code: #{status_code}")
+    {:error, status_code}
+  end
+
+  defp handle_response({:error, %Error{reason: reason}}) do
+    Logger.error("HTTP request failed: #{inspect(reason)}")
+    {:error, reason}
   end
 end

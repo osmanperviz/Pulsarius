@@ -12,6 +12,7 @@ defmodule PulsariusWeb.IntegrationController do
     IO.inspect(incoming_webhook, label: "incoming_webhook =====>")
 
     params = %{
+      "name" => Map.get(incoming_webhook, "channel"),
       "channel_name" => Map.get(incoming_webhook, "channel"),
       "webhook_url" => Map.get(incoming_webhook, "url"),
       "channel_id" => Map.get(incoming_webhook, "channel_id"),
