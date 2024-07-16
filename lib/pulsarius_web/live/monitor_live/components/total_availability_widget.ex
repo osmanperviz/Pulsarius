@@ -18,6 +18,7 @@ defmodule PulsariusWeb.MonitorLive.TotalAvailabilityWidget do
      |> assign(:ticker_scheduled, true)}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="box-item flex-grow-100">

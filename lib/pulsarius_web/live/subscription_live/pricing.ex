@@ -21,6 +21,7 @@ defmodule PulsariusWeb.SubscriptionLive.Pricing do
     if current_plan_id == plan_id, do: "Your Plan", else: "Select Plan"
   end
 
+  @impl true
   def handle_event("toggle-subscription", _params, socket) do
     {:noreply, assign(socket, :montly_subscription, !socket.assigns.montly_subscription)}
   end

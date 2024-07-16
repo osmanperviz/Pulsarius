@@ -191,7 +191,7 @@ defmodule Pulsarius.Monitoring do
   defp check_ssl_expiry(url) do
     uri = URI.parse(url)
 
-    with {:ok, sock} <- :ssl.connect('#{uri.host}', 443, []),
+    with {:ok, sock} <- :ssl.connect("#{uri.host}", 443, []),
          {:ok, der} <- :ssl.peercert(sock),
          :ssl.close(sock),
          {:ok, cert} <- X509.Certificate.from_der(der),

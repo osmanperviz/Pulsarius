@@ -2,10 +2,8 @@ defmodule PulsariusWeb.SubscriptionLive.New do
   use PulsariusWeb, :live_view
 
   import PulsariusWeb.SubscriptionLive.BillingComponents
-  alias Pulsarius.Accounts.{User, Account}
   alias Pulsarius.Billing
   alias Pulsarius.Accounts
-  alias Pulsarius.Billing.Subscriptions
 
   @impl true
   def mount(_params, _session, socket) do
@@ -23,7 +21,7 @@ defmodule PulsariusWeb.SubscriptionLive.New do
   end
 
   defp apply_action(socket, :new, %{"plan_id" => plan_id} = _params) do
-    plan = Pulsarius.Billing.get_plans!(plan_id)
+    plan = Billing.get_plans!(plan_id)
 
     socket
     |> assign(:page_title, "Checkout Page")
@@ -58,6 +56,7 @@ defmodule PulsariusWeb.SubscriptionLive.New do
     end
   end
 
+  @impl true
   def handle_event(
         "payment-confirmed",
         _params,
@@ -73,7 +72,7 @@ defmodule PulsariusWeb.SubscriptionLive.New do
         name: User.full_name(current_user)
       })
 
-    {:ok, account} = Accounts.assign_stripe_id(account, stripe_customer.id)
+    {:ok, _account} = Accounts.assign_stripe_id(account, stripe_customer.id)
 
     stripe_customer.id
   end
@@ -85,7 +84,7 @@ defmodule PulsariusWeb.SubscriptionLive.New do
   defp create_subscription(socket, payment_method_id) do
     %{account: account, choosen_plan: choosen_plan} = socket.assigns
 
-    {:ok, subscription} =
+    {:ok, _subscription} =
       Stripe.Subscription.create(%{
         customer: account.stripe_id,
         items: [%{price: choosen_plan.stripe_price_id}],

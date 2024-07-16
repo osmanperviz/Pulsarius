@@ -15,9 +15,9 @@ defmodule PulsariusWeb.UserSessionController do
     end
   end
 
-  def new(conn, %{"token" => token} = params) do
+  def new(conn, %{"token" => token} = _params) do
     case Accounts.get_user_by_email_token(token) do
-      %User{} = user ->
+      %User{} = _user ->
         conn
         |> put_session(:user_token, token)
         |> redirect(to: Routes.monitor_index_path(conn, :index))

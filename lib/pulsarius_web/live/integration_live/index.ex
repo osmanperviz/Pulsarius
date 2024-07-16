@@ -19,6 +19,7 @@ defmodule PulsariusWeb.IntegrationsLive.Index do
      |> assign(:has_ms_teams_integrated?, has_ms_teams_integrated?)}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="col-lg-12 mb-5">

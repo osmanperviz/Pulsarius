@@ -1,6 +1,5 @@
 defmodule Pulsarius.StatusResponseSeedImporter do
   alias Pulsarius.Monitoring
-  alias Pulsarius.Monitoring.StatusResponse
 
   def generate_seed_data(monitor_id, start_date, end_date) do
     Enum.reduce_while(

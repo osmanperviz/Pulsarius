@@ -10,6 +10,7 @@ defmodule PulsariusWeb.IntegrationsLive.Slack.Index do
     {:ok, assign(socket, :integrations, account.slack_integrations)}
   end
 
+  @impl true
   def handle_event("remove-channel", %{"id" => id}, socket) do
     integration = Integrations.get_integration!(id)
 
@@ -26,6 +27,7 @@ defmodule PulsariusWeb.IntegrationsLive.Slack.Index do
      |> put_flash(:info, "You have successfully removed the slack channel integration")}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="col-lg-12">

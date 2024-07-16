@@ -17,7 +17,7 @@ defmodule PulsariusWeb.MonitorLive.AddSlackIntegrationComponent do
     """
   end
 
-  defp link_to_slack(monitor_id) do
+  defp link_to_slack(_monitor_id) do
     client_id = Application.get_env(:pulsarius, :slack_integration)[:client_id]
     # it's not working locally!
     # redirect_url = "localhost:4000/monitor/#{monitor_id}/integrations/slack"

@@ -1,8 +1,6 @@
 defmodule Pulsarius.Notifications.Webhooks do
   alias Pulsarius.Notifications.Webhooks.Slack
   alias Pulsarius.Notifications.Webhooks.MsTeams
-  alias Pulsarius.Incidents.Incident
-  alias Pulsarius.Monitoring.Monitor
 
   def deliver(%{webhook_url: webhook_url, body: body}) do
     HTTPoison.post(

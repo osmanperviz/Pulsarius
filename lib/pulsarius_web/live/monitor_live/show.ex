@@ -3,7 +3,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
 
   alias Pulsarius.Monitoring
   alias Pulsarius.Incidents
-  alias Pulsarius.Monitoring.{AvalabilityStatistics, StatusResponse, Monitor}
+  alias Pulsarius.Monitoring.{AvailabilityStatistics, StatusResponse, Monitor}
   alias PulsariusWeb.MonitorLive.{TotalAvailabilityWidget, CheckedAtWidget}
 
   import PulsariusWeb.MonitorLive.MonitoringComponents
@@ -21,7 +21,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
     :ok = Pulsarius.subscribe("monitor:" <> id)
     incidents = Incidents.list_incidents(id)
     period = dates_for_period("day")
-    avalability_statistics = AvalabilityStatistics.calculate(incidents)
+    avalability_statistics = Pulsarius.Monitoring.AvailabilityStatistics.calculate(incidents)
     monitor = Monitoring.get_monitor!(id) |> Pulsarius.Repo.preload(:active_incident)
     most_recent_status_response = Monitoring.get_most_recent_status_response!(id)
 
@@ -66,7 +66,9 @@ defmodule PulsariusWeb.MonitorLive.Show do
   # @doc """
   # Handle incoming events from endpoint_checker.
   # """
-  def handle_info(%StatusResponse{} = status_response, %{assigns: assigns} = socket) do
+  
+  @impl true
+  def handle_info(%StatusResponse{} = status_response, socket) do
     IO.inspect("HIT status response =============>")
 
     {:noreply,
@@ -77,9 +79,10 @@ defmodule PulsariusWeb.MonitorLive.Show do
   # @doc """
   # Handle incoming events from endpoint_checker.
   # """
-  def handle_info(%Monitor{} = monitor, %{assigns: assigns} = socket) do
+   @impl true
+  def handle_info(%Monitor{} = monitor, socket) do
     incidents = Incidents.list_incidents(monitor.id)
-    avalability_statistics = AvalabilityStatistics.calculate(incidents)
+    avalability_statistics = AvailabilityStatistics.calculate(incidents)
     monitor = Pulsarius.Repo.preload(monitor, :active_incident)
     most_recent_status_response = Monitoring.get_most_recent_status_response!(monitor.id)
 
@@ -93,6 +96,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
      |> assign(:most_recent_status_response, most_recent_status_response)}
   end
 
+  @impl true
   def handle_event("change-date-range", %{"period" => period}, socket) do
     result = dates_for_period(period)
 
@@ -121,6 +125,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
     {:noreply, assign(socket, :monitor, monitor)}
   end
 
+  @impl true
   def handle_event("unpause-monitoring", _params, %{assigns: assigns} = socket) do
     {:ok, monitor} = Monitoring.update_monitor(assigns.monitor, %{status: "active"})
 
@@ -134,6 +139,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
     {:noreply, assign(socket, :monitor, monitor)}
   end
 
+  @impl true
   def handle_event("send-test-alert", _params, %{assigns: assigns} = socket) do
     Pulsarius.broadcast(
       @topic,
@@ -251,3 +257,5 @@ defmodule PulsariusWeb.MonitorLive.Show do
     end
   end
 end
+
+

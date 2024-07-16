@@ -7,27 +7,27 @@ defmodule PulsariusWeb.MsTeamsView do
     |> Jason.encode!()
   end
 
-  defp render_json("incident_created.json", incident) do
+  defp render_json("incident_created.json", _incident) do
     %{}
   end
 
-  defp render_json("incident_auto_resolved.json", incident) do
+  defp render_json("incident_auto_resolved.json", _incident) do
     %{}
   end
 
-  defp render_json("incident_acknowledged.json", incident) do
+  defp render_json("incident_acknowledged.json", _incident) do
     %{}
   end
 
-  defp render_json("incident_resolved.json", incident) do
+  defp render_json("incident_resolved.json", _incident) do
     %{}
   end
 
-  defp render_json("monitor_paused.json", %{monitor: monitor, user: user}) do
+  defp render_json("monitor_paused.json", %{monitor: _monitor, user: _user}) do
     %{}
   end
 
-  defp render_json("monitor_unpaused.json", %{monitor: monitor, user: user}) do
+  defp render_json("monitor_unpaused.json", %{monitor: _monitor, user: _user}) do
     %{}
   end
 end

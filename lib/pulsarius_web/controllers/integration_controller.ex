@@ -19,7 +19,7 @@ defmodule PulsariusWeb.IntegrationController do
       "type" => "slack"
     }
 
-    {:ok, integration} = Integrations.create_integration(account, params)
+    {:ok, _integration} = Integrations.create_integration(account, params)
 
     conn
     |> put_flash(:success, "You have successfully added slack integration.")

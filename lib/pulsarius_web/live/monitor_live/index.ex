@@ -4,7 +4,7 @@ defmodule PulsariusWeb.MonitorLive.Index do
   alias Pulsarius.Monitoring
   alias PulsariusWeb.MonitorLive.MonitorWidget
   alias PulsariusWeb.MonitorLive.ConfigurationProgressComponent
-  alias Pulsarius.Monitoring.{AvalabilityStatistics, StatusResponse}
+  alias Pulsarius.Monitoring.{AvailabilityStatistics, StatusResponse}
   alias Pulsarius.Accounts
   alias Pulsarius.Monitoring.Monitor
 
@@ -149,14 +149,15 @@ defmodule PulsariusWeb.MonitorLive.Index do
       ])
 
     statistics =
-      Map.merge(AvalabilityStatistics.calculate_todays_stats(monitor.incidents), %{
+      Map.merge(AvailabilityStatistics.calculate(monitor.incidents), %{
         average_response_time:
-          AvalabilityStatistics.calculate_average_response_time(monitor.status_response)
+          AvailabilityStatistics.calculate_average_response_time(monitor.status_response)
       })
 
     monitor = Monitor.cast_statistics(monitor, statistics)
 
-    monitoring_list = Enum.filter(assigns.monitoring, &(&1.id != monitor.id)) ++ [monitor]
+    monitoring_list = 
+      Enum.filter(assigns.monitoring, &(&1.id != monitor.id)) ++ [monitor]
 
     {:noreply, assign(socket, :monitoring, monitoring_list)}
   end

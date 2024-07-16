@@ -245,30 +245,30 @@ defmodule Pulsarius.Configurations.Configuration do
     end
   end
 
-  defp validate_alert_condition(changeset) do
-    alert_rule = get_field(changeset, :alert_rule)
+  # defp validate_alert_condition(changeset) do
+  #   alert_rule = get_field(changeset, :alert_rule)
 
-    case alert_rule do
-      :becomes_unavailable ->
-        changeset
+  #   case alert_rule do
+  #     :becomes_unavailable ->
+  #       changeset
 
-      :does_not_contain_keyword ->
-        changeset
-        |> validate_required(:alert_condition)
+  #     :does_not_contain_keyword ->
+  #       changeset
+  #       |> validate_required(:alert_condition)
 
-      :contain_keyword ->
-        changeset
-        |> validate_required(:alert_condition)
+  #     :contain_keyword ->
+  #       changeset
+  #       |> validate_required(:alert_condition)
 
-      :http_status_other_than ->
-        changeset
-        |> validate_required(:alert_condition)
-        |> validate_inclusion(
-          :alert_condition,
-          status_codes()
-        )
-    end
-  end
+  #     :http_status_other_than ->
+  #       changeset
+  #       |> validate_required(:alert_condition)
+  #       |> validate_inclusion(
+  #         :alert_condition,
+  #         status_codes()
+  #       )
+  #   end
+  # end
 
   defp validate_alert_condition_and_rule(changeset) do
     alert_rule = get_field(changeset, :alert_rule)

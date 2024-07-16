@@ -10,6 +10,7 @@ defmodule PulsariusWeb.IntegrationsLive.Teams.Index do
     {:ok, assign(socket, :integrations, account.ms_teams_integrations)}
   end
 
+  @impl true
   def handle_event("remove-channel", %{"id" => id}, socket) do
     integration = Integrations.get_integration!(id)
 
@@ -26,6 +27,7 @@ defmodule PulsariusWeb.IntegrationsLive.Teams.Index do
      |> put_flash(:info, "You have successfully removed the MSTeams channel integration")}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="col-lg-12">

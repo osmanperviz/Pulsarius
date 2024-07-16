@@ -7,7 +7,7 @@ defmodule Pulsarius.Monitoring.AvailabilityStatistics do
 
   defstruct [:today, :weekly, :monthly, :annual]
 
-  @day_ranges %{today: 0,weekly: -7,monthly: -30,annual: -365}
+  @day_ranges %{today: 0, weekly: -7, monthly: -30, annual: -365}
 
   @type t :: %__MODULE__{
           today: map(),
@@ -81,6 +81,7 @@ defmodule Pulsarius.Monitoring.AvailabilityStatistics do
   defp longest_incident_duration(incidents) do
     incidents
     |> Enum.map(&Timex.diff(&1.resolved_at || Timex.now(), &1.occured_at, :minutes))
-    # |> Enum.max()
+    # |> IO.inspect()
+    |> Enum.max(fn -> 0 end)
   end
 end

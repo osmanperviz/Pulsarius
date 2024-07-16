@@ -265,7 +265,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
   end
 
   defp active_item(current_item, progress) do
-    {key, value} = Enum.find(progress, fn {k, v} -> v == false end)
+    {key, _value} = Enum.find(progress, fn {_k, v} -> v == false end)
     if key == current_item, do: "active show", else: ""
   end
 
@@ -278,7 +278,7 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
   defp icon_for(_step, _accoplished), do: "bi bi-check-circle-fill text-success"
 
   defp calculate_success_steps(progress) do
-    Enum.filter(progress, fn {k, v} -> v == true end)
+    Enum.filter(progress, fn {_k, v} -> v == true end)
     |> Enum.count()
   end
 

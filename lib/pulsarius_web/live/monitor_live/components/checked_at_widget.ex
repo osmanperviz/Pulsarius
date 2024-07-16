@@ -18,6 +18,7 @@ defmodule PulsariusWeb.MonitorLive.CheckedAtWidget do
      |> assign(:humanized_time, time(assigns))}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="box-item flex-grow-100">

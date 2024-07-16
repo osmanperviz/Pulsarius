@@ -8,6 +8,8 @@ defmodule Pulsarius.Integrations.Slack.SlackClient do
   alias HTTPoison.Error
   alias Jason, warn: false
 
+  require Logger
+
   @slack_config Application.fetch_env!(:pulsarius, :slack_integration)
 
   @spec fetch_data(String.t()) :: {:ok, map()} | {:error, term()}
@@ -39,7 +41,7 @@ defmodule Pulsarius.Integrations.Slack.SlackClient do
   end
 
   defp handle_response({:ok, %Response{status_code: status_code}}) do
-    Logger.warn("Received non-200 status code: #{status_code}")
+    Logger.warning("Received non-200 status code: #{status_code}")
     {:error, status_code}
   end
 

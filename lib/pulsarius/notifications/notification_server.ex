@@ -3,7 +3,7 @@ defmodule Pulsarius.Notifications.NotificationServer do
 
   alias Pulsarius.Notifications
 
-  def start_link(monitor) do
+  def start_link(_monitor) do
     GenServer.start_link(__MODULE__, %{}, name: :notification_server)
   end
 

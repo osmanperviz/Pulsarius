@@ -10,6 +10,7 @@ defmodule PulsariusWeb.IntegrationsLive.Teams.New do
     {:ok, assign(socket, :changeset, changeset)}
   end
 
+  @impl true
   def handle_event("save", %{"integration" => integration_params}, socket) do
     case Integrations.create_integration(socket.assigns.account, integration_params) do
       {:ok, integration} ->
@@ -23,6 +24,7 @@ defmodule PulsariusWeb.IntegrationsLive.Teams.New do
     end
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="">

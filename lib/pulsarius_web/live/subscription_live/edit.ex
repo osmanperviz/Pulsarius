@@ -2,7 +2,6 @@ defmodule PulsariusWeb.SubscriptionLive.Edit do
   use PulsariusWeb, :live_view
 
   import PulsariusWeb.SubscriptionLive.BillingComponents
-  alias Pulsarius.Accounts.Account
   alias Pulsarius.Billing
 
   @impl true

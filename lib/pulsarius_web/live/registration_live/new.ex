@@ -88,7 +88,7 @@ defmodule PulsariusWeb.RegistrationLive.New do
          |> redirect(to: Routes.registration_success_path(socket, :success))}
 
       {:error, :account, changeset} ->
-        {:noreply, assign(socket, :form. changeset)}
+        {:noreply, assign(socket, :form, changeset)}
     end
   end
 

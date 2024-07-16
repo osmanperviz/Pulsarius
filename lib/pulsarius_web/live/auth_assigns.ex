@@ -3,7 +3,6 @@ defmodule PulsariusWeb.AuthAssigns do
   Ensures all data related to user authentication and
   authorisation are correctly added to the assigns.
   """
-  alias Phoenix.Component
   alias Pulsarius.Accounts
 
   import Phoenix.LiveView
@@ -27,7 +26,7 @@ defmodule PulsariusWeb.AuthAssigns do
     end
   end
 
-  def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
+  def on_mount(:redirect_if_user_is_authenticated, _params, _session, socket) do
     # socket = mount_current_user(socket, session)
 
     # if socket.assigns.current_user do
@@ -39,11 +38,11 @@ defmodule PulsariusWeb.AuthAssigns do
     {:cont, socket}
   end
 
-  defp assign_current_user(socket, user_token) do
-    Component.assign_new(socket, :current_user, fn ->
-      Accounts.get_user_by_email_token("user_token")
-    end)
-  end
+  # defp assign_current_user(socket, _user_token) do
+  #   Component.assign_new(socket, :current_user, fn ->
+  #     Accounts.get_user_by_email_token("user_token")
+  #   end)
+  # end
 
   defp mount_current_user(socket, session) do
     Phoenix.Component.assign_new(socket, :current_user, fn ->

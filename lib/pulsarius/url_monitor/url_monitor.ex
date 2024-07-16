@@ -7,7 +7,6 @@ defmodule Pulsarius.UrlMonitor do
   alias Pulsarius.Monitoring
   alias Pulsarius.Monitoring.Monitor
   alias Pulsarius.Incidents
-  alias Pulsarius.Incidents.Screenshot
   alias Pulsarius.UrlMonitor.{HttpResponseHandler, UrlMonitorApi}
 
   require Logger
@@ -173,7 +172,7 @@ defmodule Pulsarius.UrlMonitor do
         monitor: %{id: 1, status: :inactive},
         start_measuring_response_time: nil}
   """
-  def handle_unavailable(%{in_incident_mode: false, monitor: monitor} = state, response) do
+  def handle_unavailable(%{in_incident_mode: false} = state, response) do
     state
     |> retry_or_notify_unavailable(response)
   end
@@ -244,7 +243,7 @@ defmodule Pulsarius.UrlMonitor do
   ## Returns
   - The current state.
   """
-  def handle_error(%{in_incident_mode: true, monitor: monitor} = state, reason) do
+  def handle_error(%{in_incident_mode: true} = state, reason) do
     Logger.error("Something went wrong with HTTTP request: #{inspect(reason)}")
     schedule_check(state)
   end
@@ -353,7 +352,7 @@ defmodule Pulsarius.UrlMonitor do
         GenServer.call(pid, action)
 
       _ ->
-        Logger.warn("Unable to locate endpoint checker assigned to #{monitor.id}")
+        Logger.warning("Unable to locate endpoint checker assigned to #{monitor.id}")
         {:error, :unable_to_locate_endpoint_checker}
     end
   end

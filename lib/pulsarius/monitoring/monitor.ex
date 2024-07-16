@@ -10,7 +10,6 @@ defmodule Pulsarius.Monitoring.Monitor do
   alias Pulsarius.Incidents.Incident
   alias Pulsarius.Accounts.Account
   alias Pulsarius.Monitoring.StatusResponse
-  alias Pulsarius.Integrations.Integration
 
   @type t :: %__MODULE__{
           name: String.t(),

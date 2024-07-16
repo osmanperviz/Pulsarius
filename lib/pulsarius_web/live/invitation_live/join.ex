@@ -3,7 +3,6 @@ defmodule PulsariusWeb.InvitationLive.Join do
 
   alias Pulsarius.Accounts
   alias Pulsarius.Accounts.Account
-  alias Pulsarius.Repo
 
   @impl true
   def mount(_params, _session, socket) do
@@ -20,6 +19,7 @@ defmodule PulsariusWeb.InvitationLive.Join do
      |> assign(:account, account)}
   end
 
+  @impl true
   def handle_event("send-invite", %{"invite_user" => %{"email" => email}}, socket) do
     case Accounts.invite_user_via_email(socket.assigns.account, email) do
       {:ok, invitation} ->
@@ -32,6 +32,7 @@ defmodule PulsariusWeb.InvitationLive.Join do
     end
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <.live_component

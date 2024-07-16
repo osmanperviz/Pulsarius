@@ -33,7 +33,7 @@ defmodule Pulsarius.EndpointDynamicSupervisor do
   """
   @spec start_monitoring(Monitor.t()) :: :ok
   def start_monitoring(monitor) do
-    {:ok, pid} =
+    {:ok, _pid} =
       DynamicSupervisor.start_child(
         __MODULE__,
         {Pulsarius.UrlMonitor, monitor}

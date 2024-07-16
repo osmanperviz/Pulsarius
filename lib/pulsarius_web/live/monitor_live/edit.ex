@@ -2,7 +2,6 @@ defmodule PulsariusWeb.MonitorLive.Edit do
   use PulsariusWeb, :live_view
 
   alias Pulsarius.Monitoring
-  alias Pulsarius.Configurations.Configuration
 
   @impl true
   def mount(params, _session, socket) do

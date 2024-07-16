@@ -22,6 +22,7 @@ defmodule PulsariusWeb.InvitationLive.New do
      |> assign(:user, %User{email: invitation.email})}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="col-lg-12 d-flex h-100 align-items-center justify-content-center">

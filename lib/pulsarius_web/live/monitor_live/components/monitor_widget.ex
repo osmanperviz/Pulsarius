@@ -2,8 +2,6 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
   use PulsariusWeb, :live_component
   use Timex
 
-  alias Pulsarius.Monitoring.StatusResponse
-
   @impl true
   def update(assigns, socket) do
     {:ok,
@@ -14,6 +12,7 @@ defmodule PulsariusWeb.MonitorLive.MonitorWidget do
      })}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="box-item flex-grow-20">
