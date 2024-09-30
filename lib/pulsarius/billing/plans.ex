@@ -14,6 +14,7 @@ defmodule Pulsarius.Billing.Plans do
     field :price_in_cents, :integer
     field :stripe_price_id, :string
     field :benefits, {:array, :string}
+    field :rules, :map
     field :type, Ecto.Enum, values: [:freelancer, :small_team, :bussines]
 
     timestamps()
@@ -28,7 +29,8 @@ defmodule Pulsarius.Billing.Plans do
       :charging_interval,
       :price_in_cents,
       :stripe_price_id,
-      :benefits
+      :benefits,
+      :rules
     ])
     |> validate_required([:name, :price_in_cents, :stripe_price_id, :benefits])
   end

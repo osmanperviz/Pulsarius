@@ -4,6 +4,7 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   alias Pulsarius.Monitoring
   alias Pulsarius.Monitoring.Monitor
   alias Pulsarius.Configurations.Configuration
+  alias Pulsarius.Accounts.Policy, as: AccountsPolicy
 
   @impl true
   def update(%{monitor: monitor} = assigns, socket) do
@@ -65,7 +66,13 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   end
 
   def handle_event("save", %{"monitor" => monitor_params}, socket) do
-    save_monitor(socket, socket.assigns.action, monitor_params)
+    case AccountsPolicy.can?(socket, :save_monitor) do
+      true ->
+        save_monitor(socket, socket.assigns.action, monitor_params)
+
+      false ->
+        {:noreply, socket |> put_flash(:error, "You have reached the maximum allowed monitors. Please update your plan.") }
+    end
   end
 
   defp save_monitor(socket, :edit, monitor_params) do
@@ -98,7 +105,8 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Monitor created successfully")
-         |> push_redirect(to: Routes.monitor_index_path(socket, :index))}
+         |> push_redirect(to: Routes.monitor_index_path(socket, :index))
+        }
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
