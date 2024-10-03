@@ -54,7 +54,6 @@ config :pulsarius, :api, url_monitor_api: Pulsarius.UrlMonitor.UrlMonitorClient
 
 config :pulsarius, Pulsarius.Mailer, adapter: Swoosh.Adapters.Local
 
-
 config :pulsarius, :email,
   alert_email_types: [:incident_created, :send_test_alert, :incident_auto_resolved],
   notification_types: [:user_invitation_created]
@@ -62,3 +61,30 @@ config :pulsarius, :email,
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :pulsarius, :feature_plans,
+  freelancer: %{
+    monitoring_limit: 10,
+    user_seats: 1,
+    sms_notifications: false,
+    monitoring_interval: 180,
+    ssl_monitor: false,
+    notification_types: 5,
+    keyword_monitor: true
+  },
+  small_team: %{
+    monitoring_limit: 50,
+    user_seats: 1,
+    monitoring_interval: 60,
+    sms_notifications: true,
+    keyword_monitor: true,
+    ssl_monitor: true
+  },
+  bussines: %{
+    monitoring_limit: 500,
+    user_seats: 5,
+    sms_notifications: true,
+    monitoring_interval: 30,
+    keyword_monitor: true,
+    ssl_monitor: true
+  }

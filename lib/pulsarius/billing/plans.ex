@@ -8,30 +8,32 @@ defmodule Pulsarius.Billing.Plans do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "plans" do
-    field :charging_interval, :integer
     field :description, :string
     field :name, :string
-    field :price_in_cents, :integer
-    field :stripe_price_id, :string
-    field :benefits, {:array, :string}
-    field :rules, :map
     field :type, Ecto.Enum, values: [:freelancer, :small_team, :bussines]
+    field :monthly_price_in_cents, :integer
+    field :yearly_price_in_cents, :integer
+    field :monthly_stripe_price_id, :string
+    field :yearly_stripe_price_id, :string
+    field :benefits, {:array, :string}
 
     timestamps()
   end
 
+  @attrs [
+    :name,
+    :description,
+    :monthly_price_in_cents,
+    :yearly_price_in_cents,
+    :monthly_stripe_price_id,
+    :yearly_stripe_price_id,
+    :benefits
+  ]
+
   @doc false
   def changeset(plans, attrs) do
     plans
-    |> cast(attrs, [
-      :name,
-      :description,
-      :charging_interval,
-      :price_in_cents,
-      :stripe_price_id,
-      :benefits,
-      :rules
-    ])
-    |> validate_required([:name, :price_in_cents, :stripe_price_id, :benefits])
+    |> cast(attrs, @attrs)
+    |> validate_required(@attrs)
   end
 end
