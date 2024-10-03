@@ -5,7 +5,7 @@ defmodule PulsariusWeb.MonitorLive.New do
   alias Pulsarius.Configurations.Configuration
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, _session, %{assigns: assigns} = socket) do
     monitor = %Monitor{configuration: %Configuration{}}
 
     socket =

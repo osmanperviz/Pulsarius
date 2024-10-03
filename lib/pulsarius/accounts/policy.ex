@@ -19,8 +19,9 @@ defmodule Pulsarius.Accounts.Policy do
   end
 
   defp get_max_monitors(account) do
-    account = Pulsarius.Repo.preload(account, subscription: [:plan])
-    account.subscription.plan.rules["max_monitors"]
+    config = Application.fetch_env!(:pulsarius, :feature_plans)
+
+    config[account.type][:monitoring_limit]
   end
 
   defp get_max_users(account) do

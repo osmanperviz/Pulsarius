@@ -29,7 +29,7 @@
                   <%= select(
                     c,
                     :frequency_check_in_seconds,
-                    Configuration.frequency_check_in_seconds_values(),
+                    @frequency_check_values,
                     "phx-throttle": "300",
                     class: "form-control search-monitors"
                   ) %>

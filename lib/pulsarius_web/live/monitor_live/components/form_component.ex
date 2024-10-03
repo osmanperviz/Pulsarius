@@ -9,20 +9,17 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   @impl true
   def update(%{monitor: monitor} = assigns, socket) do
     changeset = Monitoring.change_monitor(monitor)
-
-    show_keyword_input? =
-      monitor.configuration.alert_rule in [:does_not_contain_keyword, :contain_keyword]
-
-    show_http_status_code? = monitor.configuration.alert_rule == :http_status_other_than
+    frequency_check_values = frequency_check_values(assigns.account.type)
 
     socket =
       socket
       |> assign(assigns)
       |> assign(:changeset, changeset)
-      |> assign(:show_http_status_code, show_http_status_code?)
-      |> assign(:show_keyword_input, show_keyword_input?)
+      |> assign(:show_http_status_code, show_http_status_code(monitor))
+      |> assign(:show_keyword_input, show_keyword_input(monitor))
       |> assign(:show_domain_alert_configuration, false)
       |> assign(:show_ssl_alert_configuration, false)
+      |> assign(:frequency_check_values, frequency_check_values)
 
     {:ok, socket}
   end
@@ -42,20 +39,25 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
         %{"monitor" => %{"configuration" => %{"alert_rule" => alert_rule} = monitor_params}},
         socket
       ) do
-    changes =
+    show_config =
       case alert_rule do
         "does_not_contain_keyword" ->
-          %{show_http_status_code: false, show_keyword_input: true}
+          {:keyword_input, true}
 
         "contain_keyword" ->
-          %{show_http_status_code: false, show_keyword_input: true}
+          {:keyword_input, true}
 
         "http_status_other_than" ->
-          %{show_http_status_code: true, show_keyword_input: false}
+          {:http_status_code, true}
 
         _ ->
-          %{show_http_status_code: false, show_keyword_input: false}
+          :none
       end
+
+    changes = %{
+      show_http_status_code: show_config == {:http_status_code, true},
+      show_keyword_input: show_config == {:keyword_input, true}
+    }
 
     socket =
       socket
@@ -66,12 +68,18 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   end
 
   def handle_event("save", %{"monitor" => monitor_params}, socket) do
-    case AccountsPolicy.can?(socket, :save_monitor) do
+    case AccountsPolicy.can?(socket.assigns.account, :save_monitor) do
       true ->
         save_monitor(socket, socket.assigns.action, monitor_params)
 
       false ->
-        {:noreply, socket |> put_flash(:error, "You have reached the maximum allowed monitors. Please update your plan.") }
+        {:noreply,
+         socket
+         |> put_flash(
+           :error,
+           "You have reached the maximum allowed monitors. Please update your plan."
+         )
+         |> push_patch(to: Routes.monitor_new_path(socket, :new))}
     end
   end
 
@@ -105,8 +113,7 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
         {:noreply,
          socket
          |> put_flash(:info, "Monitor created successfully")
-         |> push_redirect(to: Routes.monitor_index_path(socket, :index))
-        }
+         |> push_redirect(to: Routes.monitor_index_path(socket, :index))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -127,5 +134,18 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
     end
+  end
+
+  defp frequency_check_values(account_type) do
+    frequency_check_policy = Application.get_env(:pulsarius, :frequency_check_policy)
+    frequency_check_policy[account_type]
+  end
+
+  defp show_http_status_code(monitor) do
+    monitor.configuration.alert_rule == :http_status_other_than
+  end
+
+  defp show_keyword_input(monitor) do
+    monitor.configuration.alert_rule in [:does_not_contain_keyword, :contain_keyword]
   end
 end

@@ -48,8 +48,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :pulsarius, :frequency_check_in_seconds_allowed_values, [60, 120, 180, 240, 300]
-
 config :pulsarius, :api, url_monitor_api: Pulsarius.UrlMonitor.UrlMonitorClient
 
 config :pulsarius, Pulsarius.Mailer, adapter: Swoosh.Adapters.Local
@@ -64,7 +62,7 @@ import_config "#{config_env()}.exs"
 
 config :pulsarius, :feature_plans,
   freelancer: %{
-    monitoring_limit: 10,
+    monitoring_limit: 1,
     user_seats: 1,
     sms_notifications: false,
     monitoring_interval: 180,
@@ -88,3 +86,36 @@ config :pulsarius, :feature_plans,
     keyword_monitor: true,
     ssl_monitor: true
   }
+
+config :pulsarius, :frequency_check_policy,
+  freelancer: [
+    "3 minutes": 180,
+    "4 minutes": 240,
+    "5 minutes": 300,
+    "10 minutes": 600,
+    "15 minutes": 900,
+    "30 minutes": 1800,
+    "1 hour": 3600
+  ],
+  small_team: [
+    "1 minute": 60,
+    "2 minutes": 120,
+    "3 minutes": 180,
+    "4 minutes": 240,
+    "5 minutes": 300,
+    "10 minutes": 600,
+    "15 minutes": 900,
+    "30 minutes": 1800,
+    "1 hour": 3600
+  ],
+  bussines: [
+    "30 seconds": 60,
+    "1 minute": 60,
+    "3 minutes": 180,
+    "4 minutes": 240,
+    "5 minutes": 300,
+    "10 minutes": 600,
+    "15 minutes": 900,
+    "30 minutes": 1800,
+    "1 hour": 3600
+  ]
