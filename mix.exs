@@ -7,6 +7,7 @@ defmodule Pulsarius.MixProject do
       version: "0.1.0",
       elixir: "~> 1.17",
       elixirc_paths: elixirc_paths(Mix.env()),
+      elixirc_options: [warnings_as_errors: false],
       compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -60,7 +61,8 @@ defmodule Pulsarius.MixProject do
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
       {:sweet_xml, "~> 0.7"},
-      {:rollbax, ">= 0.0.0"}
+      {:rollbax, ">= 0.0.0"},
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 

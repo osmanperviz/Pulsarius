@@ -3,12 +3,14 @@ defmodule PulsariusWeb.UserLive.Index do
 
   alias Pulsarius.Accounts
   alias Pulsarius.Accounts.User
+  alias Pulsarius.Accounts.Policy
 
   @impl true
   def mount(_params, _session, %{assigns: %{account: account}} = socket) do
     socket =
       socket
       |> assign(:users, list_users(account.id))
+      |> assign(:can_add_user?, Policy.can?(account, :add_user))
       |> assign(:pending_invitations, Accounts.fetch_invitation_by_type(account.id, :email))
 
     {:ok, socket}

@@ -48,12 +48,9 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :pulsarius, :frequency_check_in_seconds_allowed_values, [60, 120, 180, 240, 300]
-
 config :pulsarius, :api, url_monitor_api: Pulsarius.UrlMonitor.UrlMonitorClient
 
 config :pulsarius, Pulsarius.Mailer, adapter: Swoosh.Adapters.Local
-
 
 config :pulsarius, :email,
   alert_email_types: [:incident_created, :send_test_alert, :incident_auto_resolved],
@@ -62,3 +59,67 @@ config :pulsarius, :email,
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :pulsarius, :feature_plans,
+  freelancer: %{
+    monitoring_limit: 1,
+    user_seats: 1,
+    sms_notifications: false,
+    monitoring_interval: 180,
+    ssl_monitor: false,
+    notification_types: 5,
+    keyword_monitor: true,
+    domain_monitor: false,
+    ssl_monitor: false
+  },
+  small_team: %{
+    monitoring_limit: 50,
+    user_seats: 1,
+    monitoring_interval: 60,
+    sms_notifications: true,
+    keyword_monitor: true,
+    domain_monitor: true,
+    ssl_monitor: true
+  },
+  bussines: %{
+    monitoring_limit: 500,
+    user_seats: 5,
+    sms_notifications: true,
+    monitoring_interval: 30,
+    keyword_monitor: true,
+    domain_monitor: false,
+    ssl_monitor: false
+  }
+
+config :pulsarius, :frequency_check_policy,
+  freelancer: [
+    "3 minutes": 180,
+    "4 minutes": 240,
+    "5 minutes": 300,
+    "10 minutes": 600,
+    "15 minutes": 900,
+    "30 minutes": 1800,
+    "1 hour": 3600
+  ],
+  small_team: [
+    "1 minute": 60,
+    "2 minutes": 120,
+    "3 minutes": 180,
+    "4 minutes": 240,
+    "5 minutes": 300,
+    "10 minutes": 600,
+    "15 minutes": 900,
+    "30 minutes": 1800,
+    "1 hour": 3600
+  ],
+  bussines: [
+    "30 seconds": 60,
+    "1 minute": 60,
+    "3 minutes": 180,
+    "4 minutes": 240,
+    "5 minutes": 300,
+    "10 minutes": 600,
+    "15 minutes": 900,
+    "30 minutes": 1800,
+    "1 hour": 3600
+  ]

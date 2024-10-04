@@ -641,3 +641,9 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+
+.form-control:disabled{
+  background-color: #293040;
+  color: #939db8;
+}

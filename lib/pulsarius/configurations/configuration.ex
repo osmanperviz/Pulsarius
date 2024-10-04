@@ -1,6 +1,6 @@
 defmodule Pulsarius.Configurations.Configuration do
   @moduledoc """
-  This module holding configuration data 
+  This module holding configuration data
   """
   use Ecto.Schema
   import Ecto.Changeset
@@ -65,16 +65,6 @@ defmodule Pulsarius.Configurations.Configuration do
     |> validate_ssl_expiry_date_and_notify_before(attrs)
     |> validate_domain_expiry_date_and_notify_before(attrs)
     |> validate_alert_condition_and_rule()
-  end
-
-  def frequency_check_in_seconds_values do
-    [
-      "1 minute": 60,
-      "2 minutes": 120,
-      "3 minutes": 180,
-      "4 minutes": 240,
-      "5 minutes": 300
-    ]
   end
 
   def domain_and_ssl_notification_configuration do
@@ -180,16 +170,17 @@ defmodule Pulsarius.Configurations.Configuration do
   end
 
   defp validate_frequency_check_in_seconds_value(changeset) do
-    value = get_field(changeset, :frequency_check_in_seconds)
+    changeset
+    # value = get_field(changeset, :frequency_check_in_seconds)
 
-    # allowed_values = Keyword.values(frequency_check_in_seconds_values())
-    allowed_values = Application.get_env(:pulsarius, :frequency_check_in_seconds_allowed_values)
+    # # allowed_values = Keyword.values(frequency_check_in_seconds_values())
+    # allowed_values = Application.get_env(:pulsarius, :frequency_check_policy)
 
-    if value && !Enum.member?(allowed_values, String.to_integer(value)) do
-      add_error(changeset, :frequency_check_in_seconds, "invalid value")
-    else
-      changeset
-    end
+    # if value && !Enum.member?(allowed_values, String.to_integer(value)) do
+    #   add_error(changeset, :frequency_check_in_seconds, "invalid value")
+    # else
+    #   changeset
+    # end
   end
 
   defp validate_ssl_expiry_date_and_notify_before(changeset, attrs) do
@@ -244,31 +235,6 @@ defmodule Pulsarius.Configurations.Configuration do
       changeset
     end
   end
-
-  # defp validate_alert_condition(changeset) do
-  #   alert_rule = get_field(changeset, :alert_rule)
-
-  #   case alert_rule do
-  #     :becomes_unavailable ->
-  #       changeset
-
-  #     :does_not_contain_keyword ->
-  #       changeset
-  #       |> validate_required(:alert_condition)
-
-  #     :contain_keyword ->
-  #       changeset
-  #       |> validate_required(:alert_condition)
-
-  #     :http_status_other_than ->
-  #       changeset
-  #       |> validate_required(:alert_condition)
-  #       |> validate_inclusion(
-  #         :alert_condition,
-  #         status_codes()
-  #       )
-  #   end
-  # end
 
   defp validate_alert_condition_and_rule(changeset) do
     alert_rule = get_field(changeset, :alert_rule)

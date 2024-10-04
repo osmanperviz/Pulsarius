@@ -7,15 +7,18 @@ defmodule Pulsarius.AccountsFixtures do
   @doc """
   Generate a user.
   """
-  def user_fixture(attrs \\ %{}) do
-    {:ok, user} =
+  def user_fixture(account, attrs \\ %{}) do
+    attrs =
       attrs
       |> Enum.into(%{
-        email: "test@test.test",
-        first_name: "test",
-        last_name: "test"
+        "email" => "test@test.test",
+        "first_name" => "test",
+        "last_name" => "test",
+        "show_onboard_progress_wizard" => true,
+        "admin" => false
       })
-      |> Pulsarius.Accounts.create_user()
+
+    {:ok, user} = Pulsarius.Accounts.create_user(account, attrs)
 
     user
   end
@@ -24,7 +27,8 @@ defmodule Pulsarius.AccountsFixtures do
     {:ok, account} =
       attrs
       |> Enum.into(%{
-        "type" => "freelancer"
+        "type" => "freelancer",
+        "organization_name" => "test organisation"
       })
       |> Pulsarius.Accounts.create_account()
 

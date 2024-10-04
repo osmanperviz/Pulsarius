@@ -9,12 +9,15 @@ defmodule PulsariusWeb.SubscriptionLive.Pricing do
     plans = Pulsarius.Billing.list_plans()
     current_plan = get_plan_from_account(socket.assigns.account, plans)
 
+    feature_lists = Application.fetch_env!(:pulsarius, :feature_plans)
+
     {:ok,
      socket
      |> assign(:page_title, "Pricing Page")
      |> assign(:plans, plans)
      |> assign(:current_plan, current_plan)
-     |> assign(:montly_subscription, true)}
+     |> assign(:montly_subscription, true)
+     |> assign(:feature_list, feature_lists)}
   end
 
   def button_title(current_plan_id, plan_id) do

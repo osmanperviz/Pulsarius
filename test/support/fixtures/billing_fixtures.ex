@@ -11,11 +11,19 @@ defmodule Pulsarius.BillingFixtures do
     {:ok, plans} =
       attrs
       |> Enum.into(%{
-        charging_interval: 42,
         description: "some description",
         name: "some name",
-        price_in_cents: 42,
-        stripe_price_id: "some stripe_price_id"
+        monthly_price_in_cents: 1000,
+        yearly_price_in_cents: 10000,
+        monthly_stripe_price_id: "monthly_stripe_price_id",
+        yearly_stripe_price_id: "yearly_stripe_price_id",
+        rules: %{},
+        benefits: [
+          "5 min. monitoring interval",
+          "Keyword monitor",
+          "SSL monitor",
+          "Single-user account"
+        ]
       })
       |> Pulsarius.Billing.create_plans()
 
@@ -25,14 +33,16 @@ defmodule Pulsarius.BillingFixtures do
   @doc """
   Generate a subscriptions.
   """
-  def subscriptions_fixture(attrs \\ %{}) do
-    {:ok, subscriptions} =
+  def subscriptions_fixture(account, plan, attrs \\ %{}) do
+    attrs =
       attrs
       |> Enum.into(%{
         active: true,
-        stripe_id: "some stripe_id"
+        stripe_id: "some stripe_id",
+        current_period_end_at: Timex.now() |> Timex.shift(days: 30)
       })
-      |> Pulsarius.Billing.create_subscriptions()
+
+    {:ok, subscriptions} = Pulsarius.Billing.create_subscriptions(account, plan, attrs)
 
     subscriptions
   end

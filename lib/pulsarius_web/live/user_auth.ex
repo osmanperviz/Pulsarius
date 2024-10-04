@@ -1,9 +1,12 @@
-defmodule PulsariusWeb.AuthAssigns do
+defmodule PulsariusWeb.UserAuth do
   @moduledoc """
   Ensures all data related to user authentication and
   authorisation are correctly added to the assigns.
   """
+  alias Phoenix.LiveDashboard.Router
+  alias Timex.Parse.DateTime.Parsers.ISO8601Extended
   alias Pulsarius.Accounts
+  alias PulsariusWeb.Authorisation
 
   import Phoenix.LiveView
 
@@ -26,8 +29,32 @@ defmodule PulsariusWeb.AuthAssigns do
     end
   end
 
-  def on_mount(:redirect_if_user_is_authenticated, _params, _session, socket) do
-    # socket = mount_current_user(socket, session)
+  def on_mount(:ensure_authorized, params, session, socket) do
+    socket =
+      socket
+      |> Phoenix.LiveView.attach_hook(:auth_hook, :handle_params, fn params, url, socket ->
+        case Authorisation.authorized?(
+               socket.assigns.account,
+               url
+             ) do
+          true ->
+            {:cont, Phoenix.Component.assign(socket, :live_url, url)}
+
+          false ->
+            socket =
+              socket
+              |> Phoenix.LiveView.put_flash(:error, "Not Authorized")
+              |> Phoenix.LiveView.redirect(to: "/monitors")
+
+            {:halt, socket}
+        end
+      end)
+
+    {:cont, socket}
+  end
+
+  def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
+    socket = mount_current_user(socket, session)
 
     # if socket.assigns.current_user do
     #   {:halt, redirect(socket, to: Routes.monitor_index_path(socket, :index))}

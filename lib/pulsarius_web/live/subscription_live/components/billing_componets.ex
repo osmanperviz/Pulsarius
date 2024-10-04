@@ -12,17 +12,26 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
       <div class="card-body p-0 pt-3 pb-3 ">
         <h1 class="card-title pricing-card-title">
           <span class="fs-1">$</span><%= format_price(
-            price: @plan.price_in_cents,
+            plan: @plan,
             montly_subscription: @montly_subscription
           ) %><small class="text-muted fw-light fs-6">   /month</small>
         </h1>
-        <ul class="list-unstyled mt-3 mb-4 pull-right">
-          <%= for benefit <- @plan.benefits do %>
-            <li class="abc text-left">
-              <span class="bi bi-check-lg text-success"></span>&nbsp;<%= benefit %>
-            </li>
-          <% end %>
+        <ul class="list-unstyled mt-3 mb-4 pull-right fs-9 lh-lg">
+          <li>
+            <span class="bi bi-check-lg text-success"></span>&nbsp; <%= "#{format_interval(@feature_list[@plan.type][:monitoring_interval])} monitoring interval" %>
+          </li>
+          <li><span class={get_icon(true)}></span>&nbsp; HTTP, port & ping monitor</li>
+          <li><span class={get_icon(true)}></span>&nbsp; Keyword monitor</li>
+          <li>
+            <span class={get_icon(@feature_list[@plan.type][:ssl_monitor])}></span>&nbsp; SSL monitor
+          </li>
+          <li><span class={get_icon(true)}></span>&nbsp; Domain exp. monitor</li>
+          <li><span class="bi bi-x-circle text-danger"></span>&nbsp; Full-featured status pages</li>
+          <li>
+            <span class="bi bi-person-plus text-success fs-4"></span>&nbsp; <%= "#{@feature_list[@plan.type][:user_seats]} seats incl" %>
+          </li>
         </ul>
+        <%!-- TODO: set up Stripe Links HERE --%>
         <.link
           href={
             if @current_plan.name == "Freelancer",
@@ -156,12 +165,12 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
     (cents / 100) |> Decimal.from_float() |> Decimal.round()
   end
 
-  def format_price(price: price_in_cents, montly_subscription: true) do
-    to_dolars(price_in_cents)
+  def format_price(plan: plan, montly_subscription: true) do
+    to_dolars(plan.monthly_price_in_cents)
   end
 
-  def format_price(price: price_in_cents, montly_subscription: false) do
-    original_price = to_dolars(price_in_cents)
+  def format_price(plan: plan, montly_subscription: false) do
+    original_price = to_dolars(plan.yearly_price_in_cents)
     discounted_price = Decimal.div(Decimal.mult(original_price, 20), 100)
 
     Decimal.sub(original_price, discounted_price)
@@ -177,5 +186,20 @@ defmodule PulsariusWeb.SubscriptionLive.BillingComponents do
       <h4 class="my-0 fw-normal"><%= @name %></h4>
     <% end %>
     """
+  end
+
+  defp get_icon(value) do
+    if value,
+      do: "bi bi-check-lg text-success",
+      else: "bi bi-x-circle text-danger"
+  end
+
+  @spec format_interval(integer) :: String.t()
+  def format_interval(seconds) do
+    cond do
+      seconds < 60 -> "#{seconds} seconds"
+      seconds == 60 -> "1 minute"
+      seconds > 60 -> "#{div(seconds, 60)} minutes"
+    end
   end
 end

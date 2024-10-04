@@ -3,7 +3,6 @@ defmodule PulsariusWeb.UserAssigns do
   Ensures all data related to user like Account etc. correctly added to the assigns.
   """
 
-  alias Phoenix.LiveView
   alias Phoenix.Component
 
   def on_mount(_conn, _params, _session, socket) do

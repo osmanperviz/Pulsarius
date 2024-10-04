@@ -29,4 +29,11 @@ config :logger, level: :warn
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
 
+config :pulsarius, :slack_integration,
+  client_id: "test_client_id",
+  client_secret: "test_client_secret",
+  oauth_endpoint: "www.test.com"
+
 config :pulsarius, :frequency_check_in_seconds_allowed_values, [1]
+
+config :rollbax, enabled: false
