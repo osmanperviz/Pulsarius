@@ -29,10 +29,10 @@ defmodule PulsariusWeb.UserAuth do
     end
   end
 
-  def on_mount(:ensure_authorized, params, session, socket) do
+  def on_mount(:ensure_authorized, _params, _session, socket) do
     socket =
       socket
-      |> Phoenix.LiveView.attach_hook(:auth_hook, :handle_params, fn params, url, socket ->
+      |> Phoenix.LiveView.attach_hook(:auth_hook, :handle_params, fn _params, url, socket ->
         case Authorisation.authorized?(
                socket.assigns.account,
                url

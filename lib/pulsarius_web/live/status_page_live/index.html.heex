@@ -1,0 +1,45 @@
+<h1>Listing Status pages</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.status_page_index_path(@socket, :index)}>
+    <.live_component
+      module={PulsariusWeb.StatusPageLive.FormComponent}
+      id={@status_page.id || :new}
+      title={@page_title}
+      action={@live_action}
+      status_page={@status_page}
+      return_to={Routes.status_page_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Url</th>
+      <th>Is public</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="status_pages">
+    <%= for status_page <- @status_pages do %>
+      <tr id={"status_page-#{status_page.id}"}>
+        <td><%= status_page.name %></td>
+        <td><%= status_page.description %></td>
+        <td><%= status_page.url %></td>
+        <td><%= status_page.is_public %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.status_page_show_path(@socket, :show, status_page) %></span>
+          <span><%= live_patch "Edit", to: Routes.status_page_index_path(@socket, :edit, status_page) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: status_page.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Status page", to: Routes.status_page_index_path(@socket, :new) %></span>
