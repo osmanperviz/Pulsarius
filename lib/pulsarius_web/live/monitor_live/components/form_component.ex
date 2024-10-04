@@ -20,6 +20,11 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
       |> assign(:show_domain_alert_configuration, false)
       |> assign(:show_ssl_alert_configuration, false)
       |> assign(:frequency_check_values, frequency_check_values)
+      |> assign(:can_ssl_monitor?, AccountsPolicy.can?(assigns.account, :ssl_monitor))
+      |> assign(
+        :can_domain_monitor?,
+        AccountsPolicy.can?(assigns.account, :domain_monitor)
+      )
 
     {:ok, socket}
   end
@@ -68,7 +73,7 @@ defmodule PulsariusWeb.MonitorLive.FormComponent do
   end
 
   def handle_event("save", %{"monitor" => monitor_params}, socket) do
-    case AccountsPolicy.can?(socket.assigns.account, :save_monitor) do
+    case AccountsPolicy.can?(socket.assigns.account, :create_monitor) do
       true ->
         save_monitor(socket, socket.assigns.action, monitor_params)
 

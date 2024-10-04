@@ -126,9 +126,13 @@
                     :ssl_notify_before_in_days,
                     Configuration.domain_and_ssl_notification_configuration(),
                     "phx-throttle": "300",
+                    disabled: !@can_ssl_monitor?,
                     class: "form-control search-monitors"
                   ) %>
                   <%= error_tag(c, :ssl_notify_before_in_days) %>
+                 <%= if !@can_ssl_monitor? do %>
+                   <div class="form-text">Available only in Small team and Bussines plans. <a href={Routes.subscription_pricing_path(@socket, :pricing)}>Upgrade now</a></div>
+                  <% end %>
                 </div>
                 <div class="flex-grow-1">
                   <%= label(c, :domain_notify_before_in_days, "Domain expiration check",
@@ -139,9 +143,13 @@
                     :domain_notify_before_in_days,
                     Configuration.domain_and_ssl_notification_configuration(),
                     "phx-throttle": "300",
+                    disabled: !@can_domain_monitor?,
                     class: "form-control search-monitors"
                   ) %>
                   <%= error_tag(c, :domain_notify_before_in_days) %>
+                   <%= if !@can_domain_monitor? do %>
+                   <div class="form-text">Available only in Small Team and Bussines plans. <a href={Routes.subscription_pricing_path(@socket, :pricing)}>Upgrade now</a></div>
+                  <% end %>
                 </div>
               </div>
             </div>

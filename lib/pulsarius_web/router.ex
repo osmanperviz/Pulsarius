@@ -53,7 +53,8 @@ defmodule PulsariusWeb.Router do
     pipe_through [:browser]
 
     live_session :redirect_if_user_is_authenticated,
-      on_mount: [{PulsariusWeb.UserAuth, :redirect_if_user_is_authenticated}], layout: {PulsariusWeb.LayoutView, :invite} do
+      on_mount: [{PulsariusWeb.UserAuth, :redirect_if_user_is_authenticated}],
+      layout: {PulsariusWeb.LayoutView, :invite} do
       live "/sign-up", RegistrationLive.New, :new
       live "/sign-in", LoginLive.New, :new
       live "/sign-up/success", RegistrationLive.Success, :success
@@ -75,7 +76,7 @@ defmodule PulsariusWeb.Router do
     live_session :users,
       on_mount: [
         {PulsariusWeb.UserAuth, :ensure_authenticated},
-        # {PulsariusWeb.UserAuth, :ensure_authorized},
+        {PulsariusWeb.UserAuth, :ensure_authorized},
         PulsariusWeb.UserAssigns,
         PulsariusWeb.RouteAssigns
       ] do

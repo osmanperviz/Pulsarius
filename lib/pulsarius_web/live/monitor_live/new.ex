@@ -10,6 +10,7 @@ defmodule PulsariusWeb.MonitorLive.New do
 
     socket =
       socket
+      |> assign(:page_title, "New Monitor")
       |> assign(:monitor, monitor)
 
     {:ok, socket}

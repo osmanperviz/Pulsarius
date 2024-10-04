@@ -3,6 +3,8 @@ defmodule PulsariusWeb.UserAuth do
   Ensures all data related to user authentication and
   authorisation are correctly added to the assigns.
   """
+  alias Phoenix.LiveDashboard.Router
+  alias Timex.Parse.DateTime.Parsers.ISO8601Extended
   alias Pulsarius.Accounts
   alias PulsariusWeb.Authorisation
 
@@ -27,41 +29,22 @@ defmodule PulsariusWeb.UserAuth do
     end
   end
 
-  def on_mount(:ensure_authorized, _params, _session, socket) do
+  def on_mount(:ensure_authorized, params, session, socket) do
     socket =
       socket
-      |> Phoenix.LiveView.attach_hook(:auth_hook, :handle_params, fn _params, url, socket ->
-        %{assigns: %{current_user: current_user}} = socket
-
-        case Authorisation.authorized?(current_user, url, "GET", nil) do
+      |> Phoenix.LiveView.attach_hook(:auth_hook, :handle_params, fn params, url, socket ->
+        case Authorisation.authorized?(
+               socket.assigns.account,
+               url
+             ) do
           true ->
-            socket =
-              socket
-              |> Phoenix.Component.assign(:live_url, url)
-
-            {:cont, socket}
+            {:cont, Phoenix.Component.assign(socket, :live_url, url)}
 
           false ->
             socket =
               socket
               |> Phoenix.LiveView.put_flash(:error, "Not Authorized")
-              |> Phoenix.LiveView.redirect(to: "/")
-
-            {:halt, socket}
-        end
-      end)
-      |> Phoenix.LiveView.attach_hook(:auth_hook_event, :handle_event, fn event,
-                                                                          _params,
-                                                                          socket ->
-        %{assigns: %{current_user: current_user, live_url: url}} = socket
-        case Authorisation.authorized?(current_user, url, "GET", event) do
-          true ->
-            {:cont, socket}
-
-          false ->
-            socket =
-              socket
-              |> Phoenix.LiveView.put_flash(:error, "Not Authorized")
+              |> Phoenix.LiveView.redirect(to: "/monitors")
 
             {:halt, socket}
         end

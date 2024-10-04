@@ -68,7 +68,9 @@ config :pulsarius, :feature_plans,
     monitoring_interval: 180,
     ssl_monitor: false,
     notification_types: 5,
-    keyword_monitor: true
+    keyword_monitor: true,
+    domain_monitor: false,
+    ssl_monitor: false
   },
   small_team: %{
     monitoring_limit: 50,
@@ -76,6 +78,7 @@ config :pulsarius, :feature_plans,
     monitoring_interval: 60,
     sms_notifications: true,
     keyword_monitor: true,
+    domain_monitor: true,
     ssl_monitor: true
   },
   bussines: %{
@@ -84,7 +87,8 @@ config :pulsarius, :feature_plans,
     sms_notifications: true,
     monitoring_interval: 30,
     keyword_monitor: true,
-    ssl_monitor: true
+    domain_monitor: false,
+    ssl_monitor: false
   }
 
 config :pulsarius, :frequency_check_policy,

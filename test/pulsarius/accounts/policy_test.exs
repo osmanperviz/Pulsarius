@@ -25,7 +25,7 @@ defmodule Pulsarius.Accounts.PolicyTest do
 
     test "can? returns true when monitor limit is not exceeded", %{socket: socket} do
       with_mock Monitoring, list_monitoring: fn _account_id -> [] end do
-        result = Policy.can?(socket.assigns.account, :save_monitor)
+        result = Policy.can?(socket.assigns.account, :create_monitor)
 
         assert result == true
       end
@@ -33,7 +33,7 @@ defmodule Pulsarius.Accounts.PolicyTest do
 
     test "can? returns false when monitor limit is exceeded", %{socket: socket} do
       with_mock Monitoring, list_monitoring: fn _account_id -> [%{}, %{}, %{}, %{}] end do
-        result = Policy.can?(socket.assigns.account, :save_monitor)
+        result = Policy.can?(socket.assigns.account, :create_monitor)
 
         assert result == false
       end

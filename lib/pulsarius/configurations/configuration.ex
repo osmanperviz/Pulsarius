@@ -170,16 +170,17 @@ defmodule Pulsarius.Configurations.Configuration do
   end
 
   defp validate_frequency_check_in_seconds_value(changeset) do
-    value = get_field(changeset, :frequency_check_in_seconds)
+    changeset
+    # value = get_field(changeset, :frequency_check_in_seconds)
 
-    # allowed_values = Keyword.values(frequency_check_in_seconds_values())
-    allowed_values = Application.get_env(:pulsarius, :frequency_check_in_seconds_allowed_values)
+    # # allowed_values = Keyword.values(frequency_check_in_seconds_values())
+    # allowed_values = Application.get_env(:pulsarius, :frequency_check_policy)
 
-    if value && !Enum.member?(allowed_values, String.to_integer(value)) do
-      add_error(changeset, :frequency_check_in_seconds, "invalid value")
-    else
-      changeset
-    end
+    # if value && !Enum.member?(allowed_values, String.to_integer(value)) do
+    #   add_error(changeset, :frequency_check_in_seconds, "invalid value")
+    # else
+    #   changeset
+    # end
   end
 
   defp validate_ssl_expiry_date_and_notify_before(changeset, attrs) do
