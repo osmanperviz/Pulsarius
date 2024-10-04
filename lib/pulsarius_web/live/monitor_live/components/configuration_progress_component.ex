@@ -173,7 +173,10 @@ defmodule PulsariusWeb.MonitorLive.ConfigurationProgressComponent do
                   Communicate the status of your services with <br />
                   customers and build confidence in your product.
                 </p>
-                <a class="btn btn-secondary">Create status page</a>
+                <%= link("Status Page",
+                  to: Routes.status_page_index_path(PulsariusWeb.Endpoint, :index),
+                  class: "btn btn-secondary"
+                ) %>
               </div>
 
               <div
