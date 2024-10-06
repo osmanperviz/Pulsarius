@@ -24,7 +24,7 @@ defmodule Pulsarius.StatusPages.StatusPage do
   @doc false
   def changeset(status_page, attrs) do
     status_page
-    |> cast(attrs, [:name, :description, :url, :is_public])
-    |> validate_required([:name, :description, :url, :is_public])
+    |> cast(attrs, [:name, :description, :is_public])
+    |> validate_required([:name, :description, :is_public])
   end
 end

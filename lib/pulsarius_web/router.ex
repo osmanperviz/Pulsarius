@@ -111,7 +111,7 @@ defmodule PulsariusWeb.Router do
 
       live "/status", PulsariusWeb.StatusPageLive.Index, :index
       live "/status_pages/new", PulsariusWeb.StatusPageLive.Index, :new
-      live "/status_pages/:id/edit", PulsariusWeb.StatusPageLive.Index, :edit
+      live "/status_pages/:id/edit", PulsariusWeb.StatusPageLive.Edit, :edit
 
       live "/status_pages/:id", PulsariusWeb.StatusPageLive.Show, :show
       live "/status_pages/:id/show/edit", PulsariusWeb.StatusPageLive.Show, :edit
