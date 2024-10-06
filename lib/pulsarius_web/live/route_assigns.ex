@@ -12,7 +12,7 @@ defmodule PulsariusWeb.RouteAssigns do
            "bi bi-shield-exclamation fs-6"},
           {"Team", Routes.user_index_path(socket, :index), "bi bi-people fs-6"},
           {"Integrations", Routes.integrations_index_path(socket, :index), "bi bi-globe fs-6"},
-          {"Status Page", Routes.integrations_index_path(socket, :index),
+          {"Status Page", Routes.status_page_index_path(socket, :index),
            "bi bi-file-earmark-play fs-6"},
           {"Pricing", Routes.subscription_pricing_path(socket, :pricing), "bi bi-bag fs-6"}
         ]

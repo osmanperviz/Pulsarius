@@ -17,8 +17,11 @@ defmodule Pulsarius.StatusPages do
       [%StatusPage{}, ...]
 
   """
-  def list_status_pages do
-    Repo.all(StatusPage)
+  def list_for_account(account_id) do
+    StatusPage
+    |> where([s], s.account_id == ^account_id)
+    |> preload(:monitors)
+    |> Repo.all()
   end
 
   @doc """

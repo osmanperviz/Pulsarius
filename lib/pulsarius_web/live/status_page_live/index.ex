@@ -5,8 +5,9 @@ defmodule PulsariusWeb.StatusPageLive.Index do
   alias Pulsarius.StatusPages.StatusPage
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :status_pages, list_status_pages())}
+  def mount(_params, _session, %{assigns: assigns} = socket) do
+    status_pages = StatusPages.list_for_account(assigns.account.id)
+    {:ok, assign(socket, :status_pages, status_pages)}
   end
 
   @impl true

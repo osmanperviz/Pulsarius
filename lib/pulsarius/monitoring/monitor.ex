@@ -32,6 +32,8 @@ defmodule Pulsarius.Monitoring.Monitor do
       foreign_key: :account_id,
       type: :binary_id
 
+    belongs_to :status_page, Pulsarius.StatusPages, type: :binary_id
+
     has_many :users, through: [:account, :users]
     has_many :incidents, Incident, on_replace: :delete
     has_many :status_response, StatusResponse, on_replace: :delete

@@ -76,6 +76,7 @@ defmodule PulsariusWeb.MonitorLive.IncidentsComponents do
     """
   end
 
+  @spec incident_icon(map()) :: Phoenix.LiveView.Rendered.t()
   def incident_icon(assigns) do
     fs = Map.get(assigns, :fs, "fs-6")
 
