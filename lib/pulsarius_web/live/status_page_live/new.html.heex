@@ -13,13 +13,13 @@
   <div>
     <.live_component
       module={PulsariusWeb.StatusPageLive.FormComponent}
-      id={@status_page.id || :new}
-      title="Configure Status Page"
       monitors={@monitors}
+      id={:new}
+      title="Configure Status Page"
       action={@live_action}
       status_page={@status_page}
-      account_id={nil}
       return_to={Routes.status_page_index_path(@socket, :index)}
+      account_id={@account_id}
     />
   </div>
 </div>

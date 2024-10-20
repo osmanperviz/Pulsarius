@@ -21,12 +21,6 @@ defmodule PulsariusWeb.StatusPageLive.Index do
     |> assign(:status_page, StatusPages.get_status_page!(id))
   end
 
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Status page")
-    |> assign(:status_page, %StatusPage{})
-  end
-
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Status pages")

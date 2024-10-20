@@ -3,13 +3,11 @@ defmodule PulsariusWeb.StatusPageLive.FormComponent do
 
   alias Pulsarius.StatusPages
   alias Pulsarius.StatusPages.StatusPage
-  alias Pulsarius.Monitoring
   alias ExAws.S3
 
   @impl true
-  def update(%{status_page: status_page} = assigns, socket) do
+  def update(%{status_page: status_page, monitors: monitors} = assigns, socket) do
     changeset = StatusPages.change_status_page(status_page)
-    monitors = Monitoring.list_monitoring_for_account(status_page.account_id)
 
     available_monitors =
       monitors
@@ -118,7 +116,12 @@ defmodule PulsariusWeb.StatusPageLive.FormComponent do
   end
 
   defp save_status_page(socket, :new, status_page_params) do
-    status_page_params = Map.put(status_page_params, "monitors", socket.assigns.selected_monitors)
+    status_page_params =
+      status_page_params
+      |> Map.merge(%{
+        "monitors" => socket.assigns.selected_monitors,
+        "account_id" => socket.assigns.account_id
+      })
 
     case StatusPages.create_status_page(status_page_params) do
       {:ok, _status_page} ->

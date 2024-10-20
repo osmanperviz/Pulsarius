@@ -109,8 +109,8 @@ defmodule PulsariusWeb.Router do
       live "/integrations/teams/new", PulsariusWeb.IntegrationsLive.Teams.New, :new
       live "/integrations/teams", PulsariusWeb.IntegrationsLive.Teams.Index, :index
 
-      live "/status", PulsariusWeb.StatusPageLive.Index, :index
-      live "/status_pages/new", PulsariusWeb.StatusPageLive.Index, :new
+      live "/status_pages", PulsariusWeb.StatusPageLive.Index, :index
+      live "/status_pages/new", PulsariusWeb.StatusPageLive.New, :new
       live "/status_pages/:id/edit", PulsariusWeb.StatusPageLive.Edit, :edit
 
       live "/status_pages/:id", PulsariusWeb.StatusPageLive.Show, :show

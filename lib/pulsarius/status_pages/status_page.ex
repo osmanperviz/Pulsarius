@@ -27,14 +27,44 @@ defmodule Pulsarius.StatusPages.StatusPage do
   @doc false
   def changeset(status_page, attrs) do
     status_page
-    |> cast(attrs, [:name, :homepage_url, :is_public, :layout, :logo_url, :status_history_in_days])
+    |> cast(attrs, [
+      :name,
+      :homepage_url,
+      :is_public,
+      :layout,
+      :logo_url,
+      :status_history_in_days,
+      :account_id
+    ])
     |> validate_required([
       :name,
       :homepage_url,
       :is_public,
       :layout,
-      # :logo_url,
-      :status_history_in_days
+      :status_history_in_days,
+      :account_id
+    ])
+    |> Ecto.Changeset.put_assoc(:monitors, attrs["monitors"])
+  end
+
+  def create_changeset(status_page, attrs) do
+    status_page
+    |> cast(attrs, [
+      :name,
+      :homepage_url,
+      :is_public,
+      :layout,
+      :logo_url,
+      :status_history_in_days,
+      :account_id
+    ])
+    |> validate_required([
+      :name,
+      :homepage_url,
+      :is_public,
+      :layout,
+      :status_history_in_days,
+      :account_id
     ])
     |> Ecto.Changeset.put_assoc(:monitors, attrs["monitors"])
   end
