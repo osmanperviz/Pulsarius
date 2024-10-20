@@ -4,8 +4,18 @@ defmodule PulsariusWeb.StatusPageLiveTest do
   import Phoenix.LiveViewTest
   import Pulsarius.StatusPagesFixtures
 
-  @create_attrs %{name: "some name", description: "some description", url: "some url", is_public: true}
-  @update_attrs %{name: "some updated name", description: "some updated description", url: "some updated url", is_public: false}
+  @create_attrs %{
+    name: "some name",
+    description: "some description",
+    url: "some url",
+    is_public: true
+  }
+  @update_attrs %{
+    name: "some updated name",
+    description: "some updated description",
+    url: "some updated url",
+    is_public: false
+  }
   @invalid_attrs %{name: nil, description: nil, url: nil, is_public: false}
 
   defp create_status_page(_) do

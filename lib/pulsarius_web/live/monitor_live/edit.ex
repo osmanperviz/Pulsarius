@@ -5,7 +5,8 @@ defmodule PulsariusWeb.MonitorLive.Edit do
 
   @impl true
   def mount(params, _session, socket) do
-    monitor = Monitoring.get_monitor!(params["id"])
+    monitor =
+      Monitoring.get_monitor!(params["id"])
 
     socket =
       socket

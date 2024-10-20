@@ -73,6 +73,7 @@ defmodule Pulsarius.StatusPages do
   def update_status_page(%StatusPage{} = status_page, attrs) do
     status_page
     |> StatusPage.changeset(attrs)
+    |> tap(&IO.inspect(&1, label: "=================+>"))
     |> Repo.update()
   end
 

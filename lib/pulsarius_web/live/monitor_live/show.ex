@@ -66,7 +66,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
   # @doc """
   # Handle incoming events from endpoint_checker.
   # """
-  
+
   @impl true
   def handle_info(%StatusResponse{} = status_response, socket) do
     IO.inspect("HIT status response =============>")
@@ -79,7 +79,7 @@ defmodule PulsariusWeb.MonitorLive.Show do
   # @doc """
   # Handle incoming events from endpoint_checker.
   # """
-   @impl true
+  @impl true
   def handle_info(%Monitor{} = monitor, socket) do
     incidents = Incidents.list_incidents(monitor.id)
     avalability_statistics = AvailabilityStatistics.calculate(incidents)
@@ -257,5 +257,3 @@ defmodule PulsariusWeb.MonitorLive.Show do
     end
   end
 end
-
-

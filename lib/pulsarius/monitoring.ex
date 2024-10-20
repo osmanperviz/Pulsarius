@@ -8,15 +8,31 @@ defmodule Pulsarius.Monitoring do
   alias Pulsarius.Monitoring.{Monitor, StatusResponse, AvailabilityStatistics}
 
   @doc """
-  Returns the list of monitoring for given account.
+  Returns the list of monitoring for given account without assosiations.
 
   ## Examples
 
-      iex> list_monitoring(some_account_id)
+      iex> list_monitoring_for_account(some_account_id)
       [%Monitor{}, ...]
 
   """
-  def list_monitoring(account_id) do
+  def list_monitoring_for_account(account_id) do
+    Monitor
+    |> where(account_id: ^account_id)
+    |> order_by(asc: :inserted_at)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the list of monitoring for given account with assosiations.
+
+  ## Examples
+
+      iex> list_monitoring_with_preloads(some_account_id)
+      [%Monitor{}, ...]
+
+  """
+  def list_monitoring_with_preloads(account_id) do
     Monitor
     |> where(account_id: ^account_id)
     |> order_by(asc: :inserted_at)
@@ -25,7 +41,7 @@ defmodule Pulsarius.Monitoring do
   end
 
   def list_monitoring_with_daily_statistics(account_id) do
-    list_monitoring(account_id)
+    list_monitoring_with_preloads(account_id)
     |> Enum.map(fn monitor ->
       statistics =
         Map.merge(AvailabilityStatistics.calculate(monitor.incidents), %{

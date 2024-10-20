@@ -16,8 +16,8 @@ defmodule PulsariusWeb.UserAssigns do
       socket.assigns.current_user
       |> Pulsarius.Repo.preload([:account])
 
-      Component.assign_new(socket, :account, fn ->
-        current_user.account
-      end)
+    Component.assign_new(socket, :account, fn ->
+      current_user.account
+    end)
   end
 end

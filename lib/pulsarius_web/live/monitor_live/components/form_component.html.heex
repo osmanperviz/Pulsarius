@@ -130,8 +130,13 @@
                     class: "form-control search-monitors"
                   ) %>
                   <%= error_tag(c, :ssl_notify_before_in_days) %>
-                 <%= if !@can_ssl_monitor? do %>
-                   <div class="form-text">Available only in Small team and Bussines plans. <a href={Routes.subscription_pricing_path(@socket, :pricing)}>Upgrade now</a></div>
+                  <%= if !@can_ssl_monitor? do %>
+                    <div class="form-text">
+                      Available only in Small team and Bussines plans.
+                      <a href={Routes.subscription_pricing_path(@socket, :pricing)}>
+                        Upgrade now
+                      </a>
+                    </div>
                   <% end %>
                 </div>
                 <div class="flex-grow-1">
@@ -147,8 +152,13 @@
                     class: "form-control search-monitors"
                   ) %>
                   <%= error_tag(c, :domain_notify_before_in_days) %>
-                   <%= if !@can_domain_monitor? do %>
-                   <div class="form-text">Available only in Small Team and Bussines plans. <a href={Routes.subscription_pricing_path(@socket, :pricing)}>Upgrade now</a></div>
+                  <%= if !@can_domain_monitor? do %>
+                    <div class="form-text">
+                      Available only in Small Team and Bussines plans.
+                      <a href={Routes.subscription_pricing_path(@socket, :pricing)}>
+                        Upgrade now
+                      </a>
+                    </div>
                   <% end %>
                 </div>
               </div>

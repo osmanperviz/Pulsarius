@@ -7,6 +7,7 @@ defmodule Pulsarius.StatusResponseSeedImporter do
       [],
       fn date, acc ->
         params = build_params(date)
+
         case Monitoring.create_status_response(monitor_id, params) do
           {:ok, response} -> {:cont, [response | acc]}
           {:error, _reason} -> {:halt, acc}
@@ -17,7 +18,7 @@ defmodule Pulsarius.StatusResponseSeedImporter do
 
   defp generate_date_range(start_date, end_date, interval) do
     Stream.iterate(start_date, &DateTime.add(&1, interval.seconds, :second))
-    |> Stream.take_while(&DateTime.compare(&1, end_date) != :gt)
+    |> Stream.take_while(&(DateTime.compare(&1, end_date) != :gt))
   end
 
   defp build_params(occurred_at) do

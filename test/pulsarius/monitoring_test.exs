@@ -18,8 +18,8 @@ defmodule Pulsarius.MonitoringTest do
     setup [:setup_monitor]
     alias Pulsarius.Monitoring.Monitor
 
-    test "list_monitoring/0 returns all monitoring", %{monitor: monitor} do
-      assert Monitoring.list_monitoring() == [monitor]
+    test "list_monitoring_with_preloads/0 returns all monitoring", %{monitor: monitor} do
+      assert Monitoring.list_monitoring_with_preloads() == [monitor]
     end
 
     test "get_monitor!/1 returns the monitor with given id", %{monitor: monitor} do

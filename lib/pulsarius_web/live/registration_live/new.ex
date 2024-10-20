@@ -29,14 +29,12 @@ defmodule PulsariusWeb.RegistrationLive.New do
                   <%= error_tag(f, :last_name) %>
                 </div>
                 <div class="col-lg-6">
-                <%= inputs_for f, :account, fn a -> %>
-                  <%= label(a, :organization_name, class: "mb-2 mt-3") %>
-                  <%= text_input(a, :organization_name,
-                    class: "form-control search-monitors"
-                  ) %>
-   
-                  <%= error_tag(a, :organization_name) %>
-                <% end %>
+                  <%= inputs_for f, :account, fn a -> %>
+                    <%= label(a, :organization_name, class: "mb-2 mt-3") %>
+                    <%= text_input(a, :organization_name, class: "form-control search-monitors") %>
+
+                    <%= error_tag(a, :organization_name) %>
+                  <% end %>
                 </div>
                 <div class="col-lg-6">
                   <%= label(f, :phone_number, class: "mb-2 mt-3") %>
@@ -57,7 +55,13 @@ defmodule PulsariusWeb.RegistrationLive.New do
                 ) %>
               </div>
               <p class="gray-color mt-3 text-center" style="font-size: 0.8rem">
-                Already have account?  <.link href={Routes.login_new_path(PulsariusWeb.Endpoint, :new)} class="ml-2 text-decoration-none">Login</.link>
+                Already have account?
+                <.link
+                  href={Routes.login_new_path(PulsariusWeb.Endpoint, :new)}
+                  class="ml-2 text-decoration-none"
+                >
+                  Login
+                </.link>
               </p>
             </.form>
           </div>

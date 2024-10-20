@@ -8,7 +8,13 @@ defmodule Pulsarius.Notifications.NotificationServer do
   end
 
   def init(state) do
-    topics_to_subscribe = ["incidents", "invitations", "monitor", "deliver_magic_link", "deliver_welcome_email"]
+    topics_to_subscribe = [
+      "incidents",
+      "invitations",
+      "monitor",
+      "deliver_magic_link",
+      "deliver_welcome_email"
+    ]
 
     topics_to_subscribe
     |> Enum.map(&Pulsarius.subscribe/1)

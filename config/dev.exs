@@ -65,7 +65,12 @@ config :pulsarius, PulsariusWeb.Endpoint,
   ]
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, level: :errro, format: "[$level] $message\n"
+config :logger, :console,
+  level: :errro,
+  format: "[$level] $message\n",
+  compile_time_purge_matching: [
+    [application: :elixir, level_lower_than: :warn]
+  ]
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
@@ -87,14 +92,14 @@ config :stripity_stripe,
   public_key:
     "pk_test_514sdHiGzlqiGxcQvFCNI4UCe557cUsgDVIsy81M39VNlCzkQh7KcfIFb6OZdnIiaJkaw5xrtj5HgPPvFgQgYarDE00CzG1sEDk"
 
-# config :ex_aws,
-#   access_key_id: "AKIAX2SE3I2SX4W6YLEX",
-#   secret_access_key: "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",
-#   bucket_name: "pulsarius-dev",
-#   s3: [
-#     scheme: "https://",
-#     host: "pulsarius-dev.s3.amazonaws.com",
-#     region: "eu-central-1"
-#   ]
+config :ex_aws,
+  access_key_id: "AKIAX2SE3I2SX4W6YLEX",
+  secret_access_key: "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",
+  bucket_name: "pulsarius-dev",
+  s3: [
+    scheme: "https://",
+    host: "pulsarius-dev.s3.amazonaws.com",
+    region: "eu-central-1"
+  ]
 
 config :rollbax, enabled: false

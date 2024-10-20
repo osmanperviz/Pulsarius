@@ -1,32 +1,262 @@
 <div>
-  <h2><%= @title %></h2>
-
   <.form
     :let={f}
     for={@changeset}
     id="status_page-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="save">
-  
-    <%= label f, :name %>
-    <%= text_input f, :name %>
-    <%= error_tag f, :name %>
-  
-    <%= label f, :description %>
-    <%= textarea f, :description %>
-    <%= error_tag f, :description %>
-  
-    <%= label f, :url %>
-    <%= text_input f, :url %>
-    <%= error_tag f, :url %>
-  
-    <%= label f, :is_public %>
-    <%= checkbox f, :is_public %>
-    <%= error_tag f, :is_public %>
-  
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
+    phx-submit="save"
+  >
+    <div class="col-lg-12 d-flex">
+      <div class="col-lg-4">
+        <h5>Basic information</h5>
+        <p class="count-down">
+          A public status page informs your users about the uptime of your services.
+        </p>
+      </div>
+      <div class="col-lg-8">
+        <div class="card box pb-2 pt-2 w-100">
+          <div class="card-body pt-4 pb-4 ">
+            <div class="col-lg-12 d-flex gap-5">
+              <div class="flex-grow-1">
+                <%= label(f, :name, class: "mb-2") %>
+                <%= text_input(f, :name, class: "form-control search-monitors") %>
+                <%= error_tag(f, :name) %>
+                <div class="form-text">
+                  E.g. your brand. It is used in status page heading, title, etc.
+                </div>
+              </div>
+              <div class="flex-grow-1">
+                <%= label(f, :homepage_URL, class: "mb-2") %>
+                <%= text_input(f, :homepage_url, class: "form-control search-monitors") %>
+                <%= error_tag(f, :homepage_url) %>
+                <div class="form-text">
+                  The link target for the logo (or main title) on status page. Usually leads to your homepage.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12 d-flex">
+      <div class="col-lg-4">
+        <h5>Monitors</h5>
+        <p class="count-down">
+          A public status page informs your users about the uptime of your services.
+        </p>
+      </div>
+      <div class="col-lg-8">
+        <div class="card box pb-2 pt-2 w-100">
+          <div class="card-body pt-4 pb-4">
+            <div class="dropdown form-control search-monitors">
+              <%= text_input(:test, :monitor_filter,
+                class: "form-control",
+                "phx-change": "filter-monitors",
+                id: "monitors",
+                placeholder: "Add monitor",
+                "data-bs-toggle": "dropdown",
+                "aria-expanded": "false",
+                "phx-debounce": "300"
+              ) %>
+              <ul class="dropdown-menu w-100" aria-labelledby="resourceInput">
+                <li class="dropdown-header">Monitors</li>
+                <%= for {monitor, index} <- Enum.with_index(@available_monitors) do %>
+                  <li>
+                    <a
+                      class="dropdown-item d-flex align-items-center"
+                      href="#"
+                      phx-value-id={monitor.id}
+                      phx-click="add_monitor"
+                      phx-target={@myself}
+                    >
+                      <i class="bi bi-globe me-2"></i><%= monitor.name %>
+                    </a>
+                  </li>
+                  <%= if index < length(@available_monitors) - 1 do %>
+                    <li><hr class="dropdown-divider" /></li>
+                  <% end %>
+                <% end %>
+              </ul>
+            </div>
+            <%= for selected_monitor <- @selected_monitors do %>
+              <div class="list-group" id={selected_monitor.id} phx-update="replace">
+                <div class="list-group-item d-flex justify-content-between align-items-center mt-1 rounded p-3 status-page-option">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-globe me-2"></i>
+                    <span><%= selected_monitor.name %></span>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <a
+                      href="#"
+                      class="abc"
+                      phx-click="remove-monitoring"
+                      phx-value-id={selected_monitor.id}
+                      phx-target={@myself}
+                    >
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12 d-flex">
+      <div class="col-lg-4">
+        <h5>Personalization</h5>
+        <p class="count-down">
+          Upload your logo to personalize the look & feel of your status page.
+        </p>
+      </div>
+      <div class="col-lg-8">
+        <div class="card box pb-2 pt-2 w-100">
+          <div class="card-body pt-4 pb-4 ">
+            <div class="header-layout p-1">
+              <p class="count-down">Header layout</p>
+              <div class="layout-options layout-option selected d-flex align-items-center">
+                <div
+                  class={"pb-4  #{@layout == :vertical && "selected"}"}
+                  phx-click="change-layout"
+                  phx-value-layout="vertical"
+                  phx-target={@myself}
+                >
+                  <div class="option-content d-flex">
+                    <div class="layout-image vertical">
+                      <img
+                        src="/images/vertical-layout.png"
+                        alt="Vertical Layout"
+                        class="img-fluid"
+                      />
+                    </div>
+                    <div class="layout-details">
+                      <div class="layout-title">
+                        <%!-- <%= text_input(f, :vertical, type: "radio",  name: "layout", id: "vertical_layout" , checked: @layout == :vertical) %> --%>
+                        <%= radio_button(f, :layout, "vertical", checked: @layout == :vertical) %>
+                        <span>Vertical layout</span>
+                      </div>
+                      <div class="layout-description">
+                        Prominently display your overall status
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class={"pb-4 #{@layout == :horizontal && "selected"}"}
+                  phx-click="change-layout"
+                  phx-value-layout="horizontal"
+                  phx-target={@myself}
+                >
+                  <div class="option-content d-flex">
+                    <div class="layout-image vertical">
+                      <img
+                        src="/images/horizontal-layout.png"
+                        alt="Vertical Layout"
+                        class="img-fluid"
+                      />
+                    </div>
+                    <div class="layout-details">
+                      <div class="layout-title">
+                        <%!-- <%= text_input(f, :horizontal, type: "radio",  name: "layout", id: "horisontal_layout" , checked: @layout == :horizontal) %> --%>
+                        <%= radio_button(f, :layout, "horizontal",
+                          checked: @layout == :horizontal
+                        ) %>
+                        <span>Horizontal layout</span>
+                      </div>
+                      <div class="layout-description">
+                        Save vertical space to show more content
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="count-down mt-4">Logo</p>
+
+            <div class="upload-area" id="upload-area" phx-hook="UploadArea">
+              <.live_file_input upload={@uploads.logo} class="d-none" />
+              <%= if @uploads.logo.entries == [] && @status_page.logo_url == nil do %>
+                <div class="upload-placeholder">
+                  <i class="bi bi-cloud-upload upload-icon"></i>
+                  <p>Drag & drop or click to choose</p>
+                </div>
+              <% end %>
+
+              <%= if logo_url = @status_page.logo_url do %>
+                <div class="uploaded-logo mt-3 d-flex align-items-center">
+                  <img src={logo_url} class="img-fluid img-thumbnail" style="max-width: 150px;" />
+                  <div class="ms-3">
+                    <button
+                      type="button"
+                      class="btn btn-link text-danger p-0 remove-uploaded-logo"
+                      phx-click="remove-uploaded-logo"
+                      phx-target={@myself}
+                    >
+                      <i class="bi bi-trash"></i> Remove
+                    </button>
+                  </div>
+                </div>
+              <% end %>
+
+              <%= for entry <- @uploads.logo.entries do %>
+                <div class="uploaded-file d-flex align-items-center justify-content-between">
+                  <div class="d-flex align-items-center">
+                    <.live_img_preview
+                      entry={entry}
+                      class="img-thumbnail me-2"
+                      height="50"
+                      width="50"
+                    />
+                    <span class="file-name"><%= entry.client_name %></span>
+                  </div>
+                  <div class="actions">
+                    <button
+                      type="button"
+                      class="btn btn-link remove-btn"
+                      phx-click="remove-logo"
+                      phx-value-ref={entry.ref}
+                      phx-target={@myself}
+                    >
+                      <i class="bi bi-trash text-danger"></i> Remove
+                    </button>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12 d-flex">
+      <div class="col-lg-4">
+        <h5>Status history</h5>
+        <p class="count-down">How many days do you want to report on your status page?.</p>
+      </div>
+      <div class="col-lg-8">
+        <div class="card box pb-2 pt-2 w-100">
+          <div class="card-body pt-4 pb-4 col-lg-6 ">
+            <%= label(f, :status_history_in_days, "How many days to display?", class: "mb-2") %>
+            <%= select(
+              f,
+              :status_history_in_days,
+              Pulsarius.StatusPages.StatusPage.status_history_in_days(),
+              "phx-throttle": "300",
+              class: "form-control search-monitors"
+            ) %>
+          </div>
+        </div>
+        <div class="col-lg-12 pb-5 pt-5 text-center">
+          <%= submit("Save Configuration",
+            phx_disable_with: "Saving...",
+            class: "btn btn-primary btn-lg btn-block"
+          ) %>
+        </div>
+      </div>
     </div>
   </.form>
 </div>

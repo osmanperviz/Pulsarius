@@ -38,9 +38,12 @@ defmodule PulsariusWeb.LoginLive.New do
 
   def login_form(assigns) do
     ~H"""
-    <div class="col-lg-12 d-flex h-100 align-items-center justify-content-center" phx-mounted={
+    <div
+      class="col-lg-12 d-flex h-100 align-items-center justify-content-center"
+      phx-mounted={
         JS.show(transition: {"fade-in duration-000", "opacity-0", "opacity-100"}, time: 50000)
-      }>
+      }
+    >
       <div class="col-lg-5">
         <div class="card box pb-2 pt-2 w-100">
           <div class=" mt-3 pb-0 text-center">
@@ -82,7 +85,10 @@ defmodule PulsariusWeb.LoginLive.New do
 
   def success_message(assigns) do
     ~H"""
-    <div class="col-lg-12 d-flex h-100 align-items-center justify-content-center" style="transition: opacity 7s;">
+    <div
+      class="col-lg-12 d-flex h-100 align-items-center justify-content-center"
+      style="transition: opacity 7s;"
+    >
       <div class="col-lg-5">
         <div class="card box pb-2 pt-2 w-100">
           <div class=" mt-3 pb-0 text-center">

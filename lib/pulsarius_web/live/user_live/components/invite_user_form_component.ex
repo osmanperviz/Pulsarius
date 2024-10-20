@@ -10,7 +10,7 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
 
   @topic "invitations"
 
-  def mount( socket) do
+  def mount(socket) do
     {:ok, assign(socket, form: UserInvitation.changeset(%UserInvitation{}))}
   end
 
@@ -38,6 +38,7 @@ defmodule PulsariusWeb.UserLive.InviteUserFormComponent do
         {:noreply,
          socket
          |> assign(form: changeset)}
+
         #  |> put_flash(:info, "Something went wrong!")
         #  |> push_redirect(to: Routes.user_index_path(socket, :index))}
     end

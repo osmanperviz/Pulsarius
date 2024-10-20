@@ -8,13 +8,13 @@
     </.link>
   </div>
   <div class="col-lg-12 mb-5">
-    <h3>Edit configuration</h3>
+    <h3>Configure Status Page</h3>
   </div>
   <div>
-   <.live_component
+    <.live_component
       module={PulsariusWeb.StatusPageLive.FormComponent}
       id={@status_page.id || :new}
-      title={"Configure Status Page"}
+      title="Configure Status Page"
       action={@live_action}
       status_page={@status_page}
       return_to={Routes.status_page_index_path(@socket, :index)}

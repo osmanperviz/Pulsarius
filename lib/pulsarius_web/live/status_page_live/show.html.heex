@@ -14,7 +14,6 @@
 <% end %>
 
 <ul>
-
   <li>
     <strong>Name:</strong>
     <%= @status_page.name %>
@@ -34,8 +33,12 @@
     <strong>Is public:</strong>
     <%= @status_page.is_public %>
   </li>
-
 </ul>
 
-<span><%= live_patch "Edit", to: Routes.status_page_show_path(@socket, :edit, @status_page), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.status_page_index_path(@socket, :index) %></span>
+<span>
+  <%= live_patch("Edit",
+    to: Routes.status_page_show_path(@socket, :edit, @status_page),
+    class: "button"
+  ) %>
+</span>
+| <span><%= live_redirect("Back", to: Routes.status_page_index_path(@socket, :index)) %></span>

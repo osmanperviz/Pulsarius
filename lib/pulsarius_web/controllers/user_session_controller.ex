@@ -28,5 +28,4 @@ defmodule PulsariusWeb.UserSessionController do
         |> redirect(to: Routes.monitor_index_path(conn, :index))
     end
   end
-
 end

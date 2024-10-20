@@ -132,9 +132,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
                   <%= @avalability_statistics.today.availability_percentage %>%
                 </td>
                 <td class="table-text">
-                  <%= display_humanized_duration(
-                    @avalability_statistics.today.downtime_minutes
-                  ) %>
+                  <%= display_humanized_duration(@avalability_statistics.today.downtime_minutes) %>
                 </td>
                 <td class="table-text">
                   <%= @avalability_statistics.today.incident_count %>
@@ -151,9 +149,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
                   <%= @avalability_statistics.weekly.availability_percentage %>%
                 </td>
                 <td class="table-text">
-                  <%= display_humanized_duration(
-                    @avalability_statistics.weekly.downtime_minutes
-                  ) %>
+                  <%= display_humanized_duration(@avalability_statistics.weekly.downtime_minutes) %>
                 </td>
                 <td class="table-text">
                   <%= @avalability_statistics.weekly.incident_count %>
@@ -170,9 +166,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
                   <%= @avalability_statistics.monthly.availability_percentage %>%
                 </td>
                 <td class="table-text">
-                  <%= display_humanized_duration(
-                    @avalability_statistics.monthly.downtime_minutes
-                  ) %>
+                  <%= display_humanized_duration(@avalability_statistics.monthly.downtime_minutes) %>
                 </td>
                 <td class="table-text">
                   <%= @avalability_statistics.monthly.incident_count %>
@@ -189,9 +183,7 @@ defmodule PulsariusWeb.MonitorLive.MonitoringComponents do
                   <%= @avalability_statistics.annual.availability_percentage %>%
                 </td>
                 <td class="table-text">
-                  <%= display_humanized_duration(
-                    @avalability_statistics.annual.downtime_minutes
-                  ) %>
+                  <%= display_humanized_duration(@avalability_statistics.annual.downtime_minutes) %>
                 </td>
                 <td class="table-text">
                   <%= @avalability_statistics.annual.incident_count %>

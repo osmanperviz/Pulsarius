@@ -22,7 +22,7 @@ defmodule Pulsarius.Monitoring.AvailabilityStatistics do
       today: 1440,
       weekly: 10080,
       monthly: 43200,
-      annual: 525600
+      annual: 525_600
     ]
 
     Enum.reduce(periods, %__MODULE__{}, fn {period, minutes}, acc ->
@@ -56,8 +56,6 @@ defmodule Pulsarius.Monitoring.AvailabilityStatistics do
     from = Timex.shift(today, days: Map.fetch!(@day_ranges, period))
     until = Timex.end_of_day(today)
 
-    
-
     Enum.filter(incidents, &in_date_range?(&1, from, until))
   end
 
@@ -68,7 +66,7 @@ defmodule Pulsarius.Monitoring.AvailabilityStatistics do
 
   defp calculate_availability(incidents, total_minutes) do
     unavailability = calculate_unavailability_minutes(incidents)
-    Float.round(((total_minutes - unavailability) / total_minutes) * 100, 2)
+    Float.round((total_minutes - unavailability) / total_minutes * 100, 2)
   end
 
   defp calculate_unavailability_minutes(incidents) do

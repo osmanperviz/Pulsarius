@@ -62,7 +62,7 @@ import_config "#{config_env()}.exs"
 
 config :pulsarius, :feature_plans,
   freelancer: %{
-    monitoring_limit: 1,
+    monitoring_limit: 10,
     user_seats: 1,
     sms_notifications: false,
     monitoring_interval: 180,

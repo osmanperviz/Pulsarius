@@ -18,32 +18,31 @@ config :rollbax,
   enabled: true,
   enable_crash_reports: true
 
+stripe_api_key =
+  System.get_env("STRIPE_API_KEY") ||
+    raise """
+    environment variable STRIPE_API_KEY is missing.
+    You can obtain it from the stripe dashboard: https://dashboard.stripe.com/test/apikeys
+    """
 
- stripe_api_key =
-    System.get_env("STRIPE_API_KEY") ||
-      raise """
-      environment variable STRIPE_API_KEY is missing.
-      You can obtain it from the stripe dashboard: https://dashboard.stripe.com/test/apikeys
-      """
+stripe_webhook_key =
+  System.get_env("STRIPE_WEBHOOK_SIGNING_SECRET") ||
+    raise """
+    environment variable STRIPE_WEBHOOK_SIGNING_SECRET is missing.
+    You can obtain it from the stripe dashboard: https://dashboard.stripe.com/account/webhooks
+    """
 
-  stripe_webhook_key =
-    System.get_env("STRIPE_WEBHOOK_SIGNING_SECRET") ||
-      raise """
-      environment variable STRIPE_WEBHOOK_SIGNING_SECRET is missing.
-      You can obtain it from the stripe dashboard: https://dashboard.stripe.com/account/webhooks
-      """
+stripe_public_key =
+  System.get_env("STRIPE_PUBLIC_KEY") ||
+    raise """
+    environment variable STRIPE_PUBLIC_KEY is missing.
+    You can obtain it from the stripe dashboard: https://dashboard.stripe.com/account/webhooks
+    """
 
-  stripe_public_key =
-    System.get_env("STRIPE_PUBLIC_KEY") ||
-      raise """
-      environment variable STRIPE_PUBLIC_KEY is missing.
-      You can obtain it from the stripe dashboard: https://dashboard.stripe.com/account/webhooks
-      """
-
-  config :stripity_stripe,
-    api_key: stripe_api_key,
-    signing_secret: stripe_webhook_key,
-    public_key: stripe_public_key
+config :stripity_stripe,
+  api_key: stripe_api_key,
+  signing_secret: stripe_webhook_key,
+  public_key: stripe_public_key
 
 # ## SSL Support
 #

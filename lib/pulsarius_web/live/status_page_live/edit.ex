@@ -3,10 +3,16 @@ defmodule PulsariusWeb.StatusPageLive.Edit do
 
   alias Pulsarius.StatusPages
   alias Pulsarius.StatusPages.StatusPage
+  alias Pulsarius.Monitoring
 
   @impl true
   def mount(%{"id" => id} = params, _session, socket) do
-    status_page = StatusPages.get_status_page!(id)
-    {:ok, assign(socket, :status_page, status_page)}
+    status_page =
+      StatusPages.get_status_page!(id)
+      |> Pulsarius.Repo.preload(:monitors)
+
+    {:ok,
+     socket
+     |> assign(:status_page, status_page)}
   end
 end

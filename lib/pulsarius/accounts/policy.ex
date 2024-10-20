@@ -6,7 +6,7 @@ defmodule Pulsarius.Accounts.Policy do
 
   def can?(account, :create_monitor) do
     max_monitors = get_config(account, :monitoring_limit)
-    number_of_monitors = Monitoring.list_monitoring(account.id) |> Enum.count()
+    number_of_monitors = Monitoring.list_monitoring_with_preloads(account.id) |> Enum.count()
 
     max_monitors > number_of_monitors
   end

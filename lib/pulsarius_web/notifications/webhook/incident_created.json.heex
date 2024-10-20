@@ -1,58 +1,58 @@
 %{
-      "channel" => "#monitoring_test",
-      "blocks" => [
-        %{
-          "type" => "section",
-          "text" => %{
-            "type" => "mrkdwn",
-            "text" => "New incident for *#{incident.monitor.name}*"
-          }
-        },
-        %{
-          "type" => "section",
-          "fields" => [
-            %{
-              "type" => "mrkdwn",
-              "text" => "*Monitor:* #{incident.monitor.name} "
-            },
-            %{
-              "type" => "mrkdwn",
-              "text" => "*Cause:* #{incident.status_code}"
-            },
-            %{
-              "type" => "mrkdwn",
-              "text" => "*Checked URL:*  #{incident.monitor.configuration.url_to_monitor}"
-            },
-            %{
-              "type" => "mrkdwn",
-              "text" => "*Response:* #{incident.page_response}"
-            }
-          ]
-        },
-        %{
-          "type" => "actions",
-          "elements" => [
-            %{
-              "type" => "button",
-              "text" => %{
-                "type" => "plain_text",
-                "emoji" => true,
-                "text" => "Approve"
-              },
-              "style" => "primary",
-              "value" => "some"
-            },
-            %{
-              "type" => "button",
-              "text" => %{
-                "type" => "plain_text",
-                "emoji" => true,
-                "text" => "Deny"
-              },
-              "style" => "danger",
-              "value" => "some"
-            }
-          ]
-        }
-      ]
-    }
+"channel" => "#monitoring_test",
+"blocks" => [
+%{
+"type" => "section",
+"text" => %{
+"type" => "mrkdwn",
+"text" => "New incident for *#{incident.monitor.name}*"
+}
+},
+%{
+"type" => "section",
+"fields" => [
+%{
+"type" => "mrkdwn",
+"text" => "*Monitor:* #{incident.monitor.name} "
+},
+%{
+"type" => "mrkdwn",
+"text" => "*Cause:* #{incident.status_code}"
+},
+%{
+"type" => "mrkdwn",
+"text" => "*Checked URL:*  #{incident.monitor.configuration.url_to_monitor}"
+},
+%{
+"type" => "mrkdwn",
+"text" => "*Response:* #{incident.page_response}"
+}
+]
+},
+%{
+"type" => "actions",
+"elements" => [
+%{
+"type" => "button",
+"text" => %{
+"type" => "plain_text",
+"emoji" => true,
+"text" => "Approve"
+},
+"style" => "primary",
+"value" => "some"
+},
+%{
+"type" => "button",
+"text" => %{
+"type" => "plain_text",
+"emoji" => true,
+"text" => "Deny"
+},
+"style" => "danger",
+"value" => "some"
+}
+]
+}
+]
+}

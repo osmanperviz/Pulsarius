@@ -137,6 +137,6 @@ defmodule PulsariusWeb.IntegrationsLive.Index do
     # redirect_url = "localhost:4000/account/1ddcbd17-e99d-4054-82a8-2f5a5a292caf/integrations/slack"
 
     # "https://slack.com/oauth/v2/authorize?client_id=#{client_id}&redirect_uri=#{redirect_url}&scope=users:read,users:read.email,incoming-webhook&user_scope="
-     "https://slack.com/oauth/v2/authorize?client_id=#{client_id}&scope=users:read,users:read.email,incoming-webhook&user_scope="
+    "https://slack.com/oauth/v2/authorize?client_id=#{client_id}&scope=users:read,users:read.email,incoming-webhook&user_scope="
   end
 end

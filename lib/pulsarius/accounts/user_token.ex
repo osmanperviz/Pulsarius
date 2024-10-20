@@ -12,7 +12,9 @@ defmodule Pulsarius.Accounts.UserToken do
   schema "users_token" do
     field :sent_to, :string
     field :token, :binary
-    belongs_to :user, Pulsarius.Accounts.User, foreign_key: :user_id,
+
+    belongs_to :user, Pulsarius.Accounts.User,
+      foreign_key: :user_id,
       type: :binary_id
 
     timestamps(updated_at: false)

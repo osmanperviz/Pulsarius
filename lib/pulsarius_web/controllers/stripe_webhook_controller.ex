@@ -21,10 +21,10 @@ defmodule PulsariusWeb.StripeWebhookController do
            conn.assigns[:raw_body],
            conn.assigns[:stripe_signature],
            "whsec_d2a82c11224e8f58fb3df1dc685b10b360646395bdb6a9fd159346fe43f84ee3"
-          #  key
-          #  "whsec_8YxTl2HVrRU4Zn0WHFdbdS1hoLTD3vSg"
-          #  "whsec_d2a82c11224e8f58fb3df1dc685b10b360646395bdb6a9fd159346fe43f84ee3"
-          #  "whsec_RXmak4kvwYK34ThAXXJc3GAA2MOXIigB"
+           #  key
+           #  "whsec_8YxTl2HVrRU4Zn0WHFdbdS1hoLTD3vSg"
+           #  "whsec_d2a82c11224e8f58fb3df1dc685b10b360646395bdb6a9fd159346fe43f84ee3"
+           #  "whsec_RXmak4kvwYK34ThAXXJc3GAA2MOXIigB"
            # @webhook_signing_key
          ) do
       {:ok, %{} = event} ->

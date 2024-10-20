@@ -2,7 +2,7 @@ defmodule Pulsarius.Integrations.Slack.SlackClient do
   @moduledoc """
   Handles communication with the Slack API for OAuth token fetching.
   """
-  
+
   alias HTTPoison
   alias HTTPoison.Response
   alias HTTPoison.Error
@@ -32,8 +32,9 @@ defmodule Pulsarius.Integrations.Slack.SlackClient do
 
   defp handle_response({:ok, %Response{status_code: 200, body: body}}) do
     case Jason.decode(body) do
-      {:ok, decoded} -> 
+      {:ok, decoded} ->
         {:ok, decoded}
+
       error ->
         Logger.error("Failed to parse JSON: #{inspect(error)}")
         {:error, :invalid_json}

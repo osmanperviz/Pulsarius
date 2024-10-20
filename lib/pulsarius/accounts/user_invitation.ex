@@ -35,14 +35,18 @@ defmodule Pulsarius.Accounts.UserInvitation do
     user_invitation
     |> cast(attrs, [:token, :email, :type])
     |> validate_required([:token, :email])
-    |> unique_constraint(:email, message: "An invitation has already been sent to this email address.")
+    |> unique_constraint(:email,
+      message: "An invitation has already been sent to this email address."
+    )
   end
 
   def link_invitation_changeset(user_invitation, attrs) do
     user_invitation
     |> cast(attrs, [:token, :type])
     |> validate_required([:token, :type])
-    |> unique_constraint(:email, message: "An invitation has already been sent to this email address.")
+    |> unique_constraint(:email,
+      message: "An invitation has already been sent to this email address."
+    )
     |> validate_format(:email, ~r/@/)
   end
 

@@ -373,7 +373,7 @@ defmodule Pulsarius.Accounts do
     )
   end
 
-    @doc """
+  @doc """
   Delivers a welcome & confirmation email to a user's email
   """
   def deliver_welcome_email(user) do
@@ -385,7 +385,6 @@ defmodule Pulsarius.Accounts do
       {:send_welcome_email, %{user: user, token: email_token}}
     )
   end
-
 
   def get_user_by_email_token(token) do
     with {:ok, query} <- UserToken.verify_email_token_query(token),
